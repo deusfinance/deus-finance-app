@@ -1,0 +1,5 @@
+node_modules/
+public/
+.next/
+.eslintrc.js
+next.config.js
