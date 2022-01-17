@@ -1,19 +1,32 @@
 import { useEffect, useState } from 'react'
 import { Web3Provider } from '@ethersproject/providers'
 import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
-import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
 import { isMobile } from 'react-device-detect'
 
 import { injected } from '../connectors'
-import { NETWORK_CONTEXT_NAME } from 'constants/misc'
-import { SupportedChainId } from 'constants/chains'
 
-export default function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
-  chainId?: SupportedChainId
-} {
-  const context = useWeb3ReactCore<Web3Provider>()
-  const contextNetwork = useWeb3ReactCore<Web3Provider>(NETWORK_CONTEXT_NAME)
-  return context.active ? context : contextNetwork
+/**
+  This function fakes a context with chainId = 1 if not connected. We can use it so we don't have to check !chainId on each useWeb3() instance + in regards to type-checking chainId is always defined as SupportedChain instead of | undefined.
+
+  TODO: migrate dependencies to !account instead of !chainId so we can use this function.
+
+  import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
+  import { NETWORK_CONTEXT_NAME } from 'constants/misc'
+  import { SupportedChainId } from 'constants/chains'
+
+  export default function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
+    chainId: SupportedChainId
+  } {
+    const context = useWeb3ReactCore<Web3Provider>()
+    const contextNetwork = useWeb3ReactCore<Web3Provider>(NETWORK_CONTEXT_NAME)
+    return context.active ? context : contextNetwork
+  }
+
+ */
+
+// Strictly allows connected wallets
+export default function useWeb3React() {
+  return useWeb3ReactCore<Web3Provider>()
 }
 
 export function useEagerConnect() {
