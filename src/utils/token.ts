@@ -1,14 +1,14 @@
 import { isAddress } from './account'
 
 export interface IToken {
-  chainId: number,
-  address: string,
-  decimals: number,
-  symbol: string,
-  name: string,
-  logo: StaticImageData,
-  isNative: boolean,
-  isToken: boolean,
+  chainId: number
+  address: string
+  decimals: number
+  symbol: string
+  name: string
+  logo: StaticImageData
+  isNative: boolean
+  isToken: boolean
 }
 
 export class Token implements IToken {
@@ -21,14 +21,7 @@ export class Token implements IToken {
   isNative: boolean
   isToken: boolean
 
-  constructor(
-    chainId: number,
-    address: string,
-    decimals: number,
-    symbol: string,
-    name: string,
-    logo: StaticImageData,
-  ) {
+  constructor(chainId: number, address: string, decimals: number, symbol: string, name: string, logo: StaticImageData) {
     this.chainId = chainId
     this.address = address
     this.decimals = decimals

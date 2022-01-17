@@ -1,4 +1,3 @@
-import { ChainInfo } from './chainInfo'
 import { INFURA_KEY } from './keys'
 
 export enum SupportedChainId {
@@ -16,7 +15,7 @@ export const SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedCh
   (id) => typeof id === 'number'
 ) as SupportedChainId[]
 
-export const NETWORK_URLS: {[key in SupportedChainId]: string } = {
+export const NETWORK_URLS = {
   [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.BSC]: 'https://bsc-dataseed1.binance.org',

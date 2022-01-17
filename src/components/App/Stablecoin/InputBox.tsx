@@ -1,7 +1,7 @@
 import { useMemo, useEffect } from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
-import { find } from 'lodash'
+import find from 'lodash/find'
 
 import useWeb3React from 'hooks/useWeb3'
 import useERC20Balance from 'hooks/useERC20Balances'
@@ -23,7 +23,7 @@ const Wrapper = styled.div<{
   position: relative;
   justify-content: flex-start;
   width: 100%;
-  min-height: ${props => props.autoHeight ? 'auto' : '100px'};
+  min-height: ${(props) => (props.autoHeight ? 'auto' : '100px')};
   background: rgba(255, 255, 255, 0.2);
   border-radius: 15px;
   padding: 5px;
@@ -75,7 +75,7 @@ const InputWrapper = styled.div`
 
   & > * {
     &:last-child {
-      margin-left: auto
+      margin-left: auto;
     }
   }
 `
@@ -92,7 +92,7 @@ const MaxButton = styled.div<{
   border-radius: 6px;
   transition: transform 0.4s ease;
   &:hover {
-    cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+    cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
     font-size: 13px;
   }
 `
@@ -103,12 +103,7 @@ function DropdownOption(tokens: IToken[]): JSX.Element {
       {tokens.map((token, index) => (
         <div key={index}>
           {index > 0 && <div>+</div>}
-          <Image
-            src={token.logo}
-            alt={`${token.name} Logo`}
-            width={20}
-            height={20}
-          />
+          <Image src={token.logo} alt={`${token.name} Logo`} width={20} height={20} />
           {token.symbol}
         </div>
       ))}
@@ -116,17 +111,17 @@ function DropdownOption(tokens: IToken[]): JSX.Element {
   )
 }
 
-const InputOption = ({ 
-  token, 
-  amount, 
+const InputOption = ({
+  token,
+  amount,
   setAmount,
   setInsufficientBalance,
-  disabled, 
-} : {
-  token: IToken,
-  amount: string,
-  setAmount: (amount: string) => void,
-  setInsufficientBalance: (val: boolean) => void,
+  disabled,
+}: {
+  token: IToken
+  amount: string
+  setAmount: (amount: string) => void
+  setInsufficientBalance: (val: boolean) => void
   disabled?: boolean
 }): JSX.Element => {
   const { address, symbol, decimals, isToken } = token
@@ -139,41 +134,35 @@ const InputOption = ({
     } else {
       setInsufficientBalance(balanceBN.lt(toWei(amount, decimals, true)))
     }
-  }, [balanceUser, amount, decimals])
+  }, [balanceBN, amount, decimals])
 
   return (
     <>
-      <BalanceLabel
-        onClick={() => !disabled && setAmount(balanceUser)}
-      >{balanceLabel} {symbol}</BalanceLabel>
+      <BalanceLabel onClick={() => !disabled && setAmount(balanceUser)}>
+        {balanceLabel} {symbol}
+      </BalanceLabel>
       <InputWrapper>
-        <Input
-          placeholder='0.00'
-          value={amount}
-          onChange={setAmount}
-          disabled={disabled}
-        />
-        <MaxButton
-          onClick={() => !disabled && setAmount(balanceUser)}
-          disabled={disabled}
-        >MAX</MaxButton>
+        <Input placeholder="0.00" value={amount} onChange={setAmount} disabled={disabled} />
+        <MaxButton onClick={() => !disabled && setAmount(balanceUser)} disabled={disabled}>
+          MAX
+        </MaxButton>
       </InputWrapper>
     </>
   )
 }
 
-export default function InputBox ({
+export default function InputBox({
   options = [],
   selected = [],
-  setSelected = () => {},
+  setSelected = () => null,
   amount1 = '',
   amount2 = '',
-  setAmount1 = () => {},
-  setAmount2 = () => {},
-  setInsufficientBalance = () => {},
+  setAmount1 = () => null,
+  setAmount2 = () => null,
+  setInsufficientBalance = () => null,
   disabled = false,
-} : {
-  options: Array<IToken[]>,
+}: {
+  options: Array<IToken[]>
   selected: string[]
   setSelected?: (addresses: string[]) => void
   amount1: string
@@ -189,7 +178,7 @@ export default function InputBox ({
   const dropdownOptions = useMemo(() => {
     return options.map((tokens: IToken[]) => {
       return {
-        value: tokens.map(token => token.address).join(':'),
+        value: tokens.map((token) => token.address).join(':'),
         label: DropdownOption(tokens),
       }
     })
@@ -214,9 +203,7 @@ export default function InputBox ({
 
     // Remove duplicates
     return all.filter((obj, index, self) => {
-      return index === self.findIndex((t) => (
-        t.address == obj.address
-      ))
+      return index === self.findIndex((t) => t.address == obj.address)
     })
   }, [options])
 
@@ -242,28 +229,22 @@ export default function InputBox ({
   return (
     <Wrapper autoHeight={dropdownOptions.length == 1}>
       <div>
-        <Dropdown
-          options={dropdownOptions}
-          placeholder={'Select token'}
-          onSelect={onSelect}
-          disabled={disabled}
-        />
-        <HorPartition/>
+        <Dropdown options={dropdownOptions} placeholder={'Select token'} onSelect={onSelect} disabled={disabled} />
+        <HorPartition />
       </div>
       {inputFields.map((token: IToken, index) => {
         const amount = index == 0 ? amount1 : amount2
         const setAmount = index == 0 ? setAmount1 : setAmount2
-        return selected.includes(token.address)
-          ? (
-            <InputOption
-              token={token}
-              amount={amount}
-              setAmount={setAmount}
-              setInsufficientBalance={setInsufficientBalance}
-              disabled={disabled}
-              key={index}
-            />
-          ) : null
+        return selected.includes(token.address) ? (
+          <InputOption
+            token={token}
+            amount={amount}
+            setAmount={setAmount}
+            setInsufficientBalance={setInsufficientBalance}
+            disabled={disabled}
+            key={index}
+          />
+        ) : null
       })}
     </Wrapper>
   )

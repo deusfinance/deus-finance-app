@@ -1,9 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 
-import { 
-  addTransaction, 
-  clearAllTransactions, 
-  checkedTransaction, 
+import {
+  addTransaction,
+  clearAllTransactions,
+  checkedTransaction,
   finalizeTransaction,
   SerializableTransactionReceipt,
 } from './actions'
@@ -11,12 +11,12 @@ import {
 const now = () => new Date().getTime()
 
 export interface Approval {
-  tokenAddress: string,
-  spender: string,
+  tokenAddress: string
+  spender: string
 }
 
-export interface Mint { 
-  addressMap: string,
+export interface Mint {
+  addressMap: string
 }
 
 export interface TransactionDetails {
@@ -72,7 +72,7 @@ export default createReducer(initialState, (builder) =>
         tx.lastCheckedBlockNumber = Math.max(blockNumber, tx.lastCheckedBlockNumber)
       }
     })
-    .addCase(finalizeTransaction, (transactions, { payload: { hash, chainId, receipt  } }) => {
+    .addCase(finalizeTransaction, (transactions, { payload: { hash, chainId, receipt } }) => {
       const tx = transactions[chainId]?.[hash]
       if (!tx) {
         return

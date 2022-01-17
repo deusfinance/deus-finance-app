@@ -25,7 +25,7 @@ if (typeof window !== 'undefined' && !!window.ethereum) {
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ReduxProvider store={store}>
-      <GlobalStyle/>
+      <GlobalStyle />
       <Web3ReactProvider getLibrary={getLibrary}>
         <Web3ProviderNetwork getLibrary={getLibrary}>
           <Web3ReactManager>

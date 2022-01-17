@@ -1,10 +1,10 @@
-import styled, { css, keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { Settings as SettingsIcon } from 'react-feather'
 
 interface SvgStyledProps {
-  className?: string,
-  size?: string,
-  color?: string,
+  className?: string
+  size?: string
+  color?: string
 }
 
 const rotate = keyframes`
@@ -23,8 +23,8 @@ const rotate = keyframes`
 export const ConfirmationAnimation = styled(({ size = '15px', color = '#919191', ...props }) => (
   <SettingsIcon {...props} />
 ))<SvgStyledProps>`
-  width: ${props => props.size};
-  height: ${props => props.size};
-  color: ${props => props.color};
+  width: ${(props) => props.size};
+  height: ${(props) => props.size};
+  color: ${(props) => props.color};
   animation: ${rotate} 15s linear infinite;
 `

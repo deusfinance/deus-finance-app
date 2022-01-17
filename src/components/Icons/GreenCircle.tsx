@@ -18,7 +18,7 @@ const Wrapper = styled.div`
 export default function GreenCircle() {
   return (
     <Wrapper>
-      <div/>
+      <div />
     </Wrapper>
   )
 }

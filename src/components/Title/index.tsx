@@ -6,7 +6,7 @@ export const Title = styled.div`
   justify-content: center;
   font-size: 30px;
   line-height: 39px;
-  color: #EFEFEF;
+  color: #efefef;
   margin: 0 auto;
   margin-top: 60px;
 `
@@ -20,5 +20,5 @@ export const SectionTitle = styled.div`
   margin-top: 40px;
   font-size: 20px;
   line-height: 26px;
-  color: #EFEFEF;
+  color: #efefef;
 `

@@ -16,7 +16,7 @@ const Text = styled.p`
   font-weight: bold;
 `
 
-export default function Web3Network () {
+export default function Web3Network() {
   const { chainId } = useWeb3React()
   const toggleNetworkModal = useNetworkModalToggle()
   if (!chainId) return null

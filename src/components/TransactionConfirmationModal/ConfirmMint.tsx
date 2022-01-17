@@ -30,7 +30,7 @@ const InputsOutputs = styled.div`
   flex-flow: column nowrap;
   justify-content: flex-start;
   gap: 5px;
-` 
+`
 
 const HeaderItem = styled.div`
   display: flex;
@@ -83,7 +83,7 @@ const Disclaimer = styled.div`
   padding: 10px;
 `
 
-export default function ConfirmMint ({
+export default function ConfirmMint({
   isOpen,
   onDismiss,
   onConfirm,
@@ -112,9 +112,9 @@ export default function ConfirmMint ({
   amount2: string
   amountOut: string
 }) {
-  const slippagePercentage = useUserSlippageToleranceWithDefault(0.50) // TODO upgrade to gas-dependent calculation
+  const slippagePercentage = useUserSlippageToleranceWithDefault(0.5) // TODO upgrade to gas-dependent calculation
   const mintingFeePercentage = useMintingFee()
-  
+
   const minimumAmountOut: string = useMemo(() => {
     const slippageFactor = new BN(1 - slippagePercentage / 100)
     return new BN(amountOut).times(slippageFactor).toFixed(3, 1) // ROUND_DOWN
@@ -126,35 +126,26 @@ export default function ConfirmMint ({
 
   const summary = useMemo(() => {
     if (!amount1 || !amountOut || !Token1) return ''
-    const base = (Token2 && amount2) 
-      ? `${dynamicPrecision(amount1, 0.99)} ${Token1.symbol} + ${dynamicPrecision(amount2, 0.99)} ${Token2.symbol}`
-      : `${dynamicPrecision(amount1)} ${Token1.symbol}`
+    const base =
+      Token2 && amount2
+        ? `${dynamicPrecision(amount1, 0.99)} ${Token1.symbol} + ${dynamicPrecision(amount2, 0.99)} ${Token2.symbol}`
+        : `${dynamicPrecision(amount1)} ${Token1.symbol}`
     return `Mint ${dynamicPrecision(amountOut)} DEI for ${base}`
   }, [Token1, Token2, amount1, amount2, amountOut])
 
-  function getInputsOutputs (): JSX.Element {
+  function getInputsOutputs(): JSX.Element {
     return (
       <InputsOutputs>
         {Token1 && (
           <HeaderItem>
-            <Image
-              src={Token1.logo}
-              alt={`${Token1.name} Logo`}
-              width={40}
-              height={40}
-            />
+            <Image src={Token1.logo} alt={`${Token1.name} Logo`} width={40} height={40} />
             <div>{dynamicPrecision(amount1)}</div>
             <div>{Token1.symbol}</div>
           </HeaderItem>
         )}
         {Token2 && (
           <HeaderItem>
-            <Image
-              src={Token2.logo}
-              alt={`${Token2.name} Logo`}
-              width={40}
-              height={40}
-            />
+            <Image src={Token2.logo} alt={`${Token2.name} Logo`} width={40} height={40} />
             <div>{dynamicPrecision(amount2)}</div>
             <div>{Token2.symbol}</div>
           </HeaderItem>
@@ -164,12 +155,7 @@ export default function ConfirmMint ({
         </ArrowWrapper>
         {DEIToken && (
           <HeaderItem>
-            <Image
-              src={DEIToken.logo}
-              alt={`${DEIToken.name} Logo`}
-              width={40}
-              height={40}
-            />
+            <Image src={DEIToken.logo} alt={`${DEIToken.name} Logo`} width={40} height={40} />
             <div>{dynamicPrecision(amountOut)}</div>
             <div>{DEIToken.symbol}</div>
           </HeaderItem>
@@ -178,15 +164,15 @@ export default function ConfirmMint ({
     )
   }
 
-  function getConfirmationContent () {
+  function getConfirmationContent() {
     return (
       <ConfirmationContent
-        title='Confirm Mint'
+        title="Confirm Mint"
         onDismiss={onDismiss}
         mainContent={
           <MainWrapper>
             {getInputsOutputs()}
-            <InfoRow style={{marginTop: '10px'}}>
+            <InfoRow style={{ marginTop: '10px' }}>
               <div>Minimum DEI Received: </div>
               <div>{minimumAmountOut} DEI</div>
             </InfoRow>
@@ -202,16 +188,12 @@ export default function ConfirmMint ({
               <div>Slippage Tolerance:</div>
               <div>{slippagePercentage}%</div>
             </InfoRow>
-          </MainWrapper>          
+          </MainWrapper>
         }
         bottomContent={
           <BottomWrapper>
-            <Disclaimer>
-              Output is estimated, you will receive at least {minimumAmountOut} DEI.
-            </Disclaimer>
-            <PrimaryButton onClick={onConfirm}>
-              Mint DEI
-            </PrimaryButton>
+            <Disclaimer>Output is estimated, you will receive at least {minimumAmountOut} DEI.</Disclaimer>
+            <PrimaryButton onClick={onConfirm}>Mint DEI</PrimaryButton>
           </BottomWrapper>
         }
       />
@@ -228,7 +210,7 @@ export default function ConfirmMint ({
       tokenToAdd={DEIToken}
       content={
         mintErrorMessage ? (
-          <TransactionErrorContent onDismiss={onDismiss} message={mintErrorMessage}/>
+          <TransactionErrorContent onDismiss={onDismiss} message={mintErrorMessage} />
         ) : (
           getConfirmationContent()
         )

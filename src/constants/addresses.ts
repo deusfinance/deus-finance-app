@@ -11,10 +11,7 @@ interface ProxyPath {
   }
 }
 
-function constructSameAddressMap (
-  address: string,
-  chainMapping: number[]
-): AddressMap {
+function constructSameAddressMap(address: string, chainMapping: number[]): AddressMap {
   return chainMapping.reduce((acc: AddressMap, chainId: number) => {
     acc[chainId] = address
     return acc
@@ -72,21 +69,10 @@ export const MINT__PATHS: ProxyPath = {
       Tokens.DEI[SupportedChainId.MAINNET]['address'],
       Collateral[SupportedChainId.MAINNET],
     ],
-    ETH: [
-      Tokens.WETH[SupportedChainId.MAINNET]['address'],
-      Collateral[SupportedChainId.MAINNET],
-    ],
-    USDC: [
-      Collateral[SupportedChainId.MAINNET],
-    ],
-    DAI: [
-      Tokens.DAI[SupportedChainId.MAINNET]['address'],
-      Collateral[SupportedChainId.MAINNET],
-    ],
-    DEI: [
-      Tokens.DEI[SupportedChainId.MAINNET]['address'],
-      Collateral[SupportedChainId.MAINNET],
-    ],
+    ETH: [Tokens.WETH[SupportedChainId.MAINNET]['address'], Collateral[SupportedChainId.MAINNET]],
+    USDC: [Collateral[SupportedChainId.MAINNET]],
+    DAI: [Tokens.DAI[SupportedChainId.MAINNET]['address'], Collateral[SupportedChainId.MAINNET]],
+    DEI: [Tokens.DEI[SupportedChainId.MAINNET]['address'], Collateral[SupportedChainId.MAINNET]],
     WBTC: [
       Tokens.WBTC[SupportedChainId.MAINNET]['address'],
       Tokens.WETH[SupportedChainId.MAINNET]['address'],
@@ -100,20 +86,9 @@ export const MINT__PATHS: ProxyPath = {
       Tokens.DEI[SupportedChainId.POLYGON]['address'],
       Collateral[SupportedChainId.POLYGON],
     ],
-    DEI: [
-      Tokens.DEI[SupportedChainId.POLYGON]['address'],
-      Collateral[SupportedChainId.POLYGON],
-    ],
-    WETH: [
-      Tokens.WETH[SupportedChainId.POLYGON]['address'],
-      Collateral[SupportedChainId.POLYGON],
-    ],
-    USDC: [
-      Collateral[SupportedChainId.POLYGON],
-    ],
-    MATIC: [
-      Tokens.WMATIC[SupportedChainId.POLYGON]['address'],
-      Collateral[SupportedChainId.POLYGON],
-    ],
+    DEI: [Tokens.DEI[SupportedChainId.POLYGON]['address'], Collateral[SupportedChainId.POLYGON]],
+    WETH: [Tokens.WETH[SupportedChainId.POLYGON]['address'], Collateral[SupportedChainId.POLYGON]],
+    USDC: [Collateral[SupportedChainId.POLYGON]],
+    MATIC: [Tokens.WMATIC[SupportedChainId.POLYGON]['address'], Collateral[SupportedChainId.POLYGON]],
   },
 }

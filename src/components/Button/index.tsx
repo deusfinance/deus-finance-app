@@ -1,8 +1,8 @@
 import styled, { css, keyframes } from 'styled-components'
 
 type ButtonProps = {
-  active?: boolean,
-  disabled?: boolean,
+  active?: boolean
+  disabled?: boolean
 }
 
 const gradient = keyframes`
@@ -46,27 +46,31 @@ export const PrimaryButton = styled.div<ButtonProps>`
   height: 50px;
   width: 100%;
   font-size: 1rem;
-  background: #FFA76A;
-  border: 1px solid #FF9C6F;
+  background: #ffa76a;
+  border: 1px solid #ff9c6f;
   border-radius: 10px;
   padding: 0 10px;
-  color: #FFFFFF;
+  color: #ffffff;
 
-  ${props => props.disabled && `
+  ${(props) =>
+    props.disabled &&
+    `
     background: transparent;
     border: 1px solid gray;
     pointer-events: none;
   `}
 
-  ${props => props.active && css`
-    background: linear-gradient(88deg, #ffb463, #7b450a);
-    background-size: 400% 400%;
-    -webkit-animation: ${gradient} 8s ease infinite;
-    -moz-animation: ${gradient} 8s ease infinite;
-    animation: ${gradient} 8s ease infinite;
-    border: 1px solid transparent;
-    color: #FFFFFF;
-  `}
+  ${(props) =>
+    props.active &&
+    css`
+      background: linear-gradient(88deg, #ffb463, #7b450a);
+      background-size: 400% 400%;
+      -webkit-animation: ${gradient} 8s ease infinite;
+      -moz-animation: ${gradient} 8s ease infinite;
+      animation: ${gradient} 8s ease infinite;
+      border: 1px solid transparent;
+      color: #ffffff;
+    `}
 
   &:hover {
     cursor: pointer;

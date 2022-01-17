@@ -4,19 +4,19 @@ import Image from 'next/image'
 import LoaderGif from 'assets/images/fallback/loader.gif'
 import NotFound from 'assets/images/fallback/not_found.png'
 
-export default function ImageWithFallback ({ 
-  src, 
-  alt, 
-  width, 
-  height, 
-  loading = false, 
+export default function ImageWithFallback({
+  src,
+  alt,
+  width,
+  height,
+  loading = false,
   ...rest
 }: {
-  src: StaticImageData,
-  alt: string,
-  width: number,
-  height: number,
-  loading?: boolean,
+  src: StaticImageData
+  alt: string
+  width: number
+  height: number
+  loading?: boolean
   [x: string]: any
 }) {
   const [imgSrc, setImgSrc] = useState<StaticImageData>(src)
@@ -31,10 +31,7 @@ export default function ImageWithFallback ({
   }
 
   return loading ? (
-    <Image
-      src={LoaderGif}
-      {...getProps()}
-    />
+    <Image src={LoaderGif} {...getProps()} />
   ) : (
     <Image
       src={imgSrc || NotFound}

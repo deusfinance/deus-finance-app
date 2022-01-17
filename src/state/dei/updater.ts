@@ -1,71 +1,80 @@
 import { useEffect, useMemo } from 'react'
-import { useAppDispatch } from 'state'
+import { useAppDispatch, AppThunkDispatch } from 'state'
 import BN from 'bignumber.js'
 
 import useWeb3React from 'hooks/useWeb3'
-import { useSingleCallResult, useSingleContractMultipleMethods } from 'state/multicall/hooks'
+import { useSingleContractMultipleMethods } from 'state/multicall/hooks'
 import { useCollateralPoolContract, useDeiContract } from 'hooks/useContract'
 
 import { useCollateralPrice } from './hooks'
 import { DeiSupportedChains, DeiStatus, Scales, NUMBER_OF_POOLS, fetchPrices } from './reducer'
-import { 
+import {
   updateStatus,
-  updateCollateralRatio, 
+  updateCollateralRatio,
   updatePoolBalance,
-  updatePoolCeiling, 
-  updateMintingFee, 
+  updatePoolCeiling,
+  updateMintingFee,
   updateRedemptionFee,
 } from './reducer'
 
 export default function Updater(): null {
   const { chainId } = useWeb3React()
   const dispatch = useAppDispatch()
+  const thunkDispatch: AppThunkDispatch = useAppDispatch()
   const DeiContract = useDeiContract()
   const CollateralPoolContract = useCollateralPoolContract()
   const collateralPrice = useCollateralPrice()
 
   const isSupported: boolean = useMemo(() => {
-    return DeiSupportedChains.includes(chainId)
+    return chainId ? Object.values(DeiSupportedChains).includes(chainId) : false
   }, [chainId])
 
   // Returns a range of undefined if !isSupported (indirectly)
-  const [collateralRatioScale, feeScale, poolCeilingScale, poolBalanceScale]: Array<number | undefined> = useMemo(() => {
-    return [
-      Scales[chainId]?.collateralRatio,
-      Scales[chainId]?.fee,
-      Scales[chainId]?.poolCeiling,
-      Scales[chainId]?.poolBalance,
-    ]
-  }, [chainId])
+  const [collateralRatioScale, feeScale, poolCeilingScale, poolBalanceScale]: Array<number | undefined> =
+    useMemo(() => {
+      const scale = chainId ? Scales[chainId] : undefined
+      return [scale?.collateralRatio, scale?.fee, scale?.poolCeiling, scale?.poolBalance]
+    }, [chainId])
 
-  const priceMapping: number[] | null = useMemo(() => {
-    if (!collateralPrice) return null
-    if (!isSupported) return null
+  const priceMapping: number[] = useMemo(() => {
+    if (!isSupported || !chainId || !collateralPrice || collateralRatioScale == undefined) return []
     const LEN = NUMBER_OF_POOLS[chainId]
-    
+
     if (!LEN) {
       console.error('Number of pools is not defined for chainId: ', chainId)
       dispatch(updateStatus(DeiStatus.ERROR))
-      return null
+      return []
     }
 
-    let result = []
+    const result = []
     for (let i = 0; i < LEN; i++) {
       result.push(collateralPrice * collateralRatioScale)
     }
     return result
-  }, [isSupported, collateralPrice, collateralRatioScale])
+  }, [dispatch, isSupported, chainId, collateralPrice, collateralRatioScale])
 
-  const infoCalls = useMemo(() => !isSupported ? [] : [
-    { methodName: 'dei_info', callInputs: [priceMapping] },
-  ], [priceMapping])
+  const infoCalls = useMemo(
+    () => 
+      !isSupported && priceMapping.length
+        ? [] 
+        : [
+          { methodName: 'dei_info', callInputs: [priceMapping] }
+        ],
+    [isSupported, priceMapping]
+  )
 
-  const poolCalls = useMemo(() => !isSupported ? [] : [
-    { methodName: 'minting_fee', callInputs: [] },
-    { methodName: 'redemption_fee', callInputs: [] },
-    { methodName: 'pool_ceiling', callInputs: [] },
-    { methodName: 'collatDollarBalance', callInputs: [collateralPrice] },
-  ], [collateralPrice])
+  const poolCalls = useMemo(
+    () =>
+      !isSupported
+        ? []
+        : [
+            { methodName: 'minting_fee', callInputs: [] },
+            { methodName: 'redemption_fee', callInputs: [] },
+            { methodName: 'pool_ceiling', callInputs: [] },
+            { methodName: 'collatDollarBalance', callInputs: [collateralPrice] },
+          ],
+    [isSupported, collateralPrice]
+  )
 
   // using singleContractMultipleMethods just so we can default if !isSupported
   // const infoResponse = useSingleCallResult(DeiContract, 'dei_info', [priceMapping])
@@ -73,6 +82,7 @@ export default function Updater(): null {
   const poolResponse = useSingleContractMultipleMethods(CollateralPoolContract, poolCalls)
 
   useEffect(() => {
+    if (!collateralRatioScale || !feeScale || !poolCeilingScale || !poolBalanceScale) return
     const [mintingFee, redemptionFee, poolCeiling, poolBalance] = poolResponse
 
     if (infoResponse[0]?.result) {
@@ -95,13 +105,22 @@ export default function Updater(): null {
       const result = new BN(poolBalance.result[0].toString()).div(poolBalanceScale).toNumber()
       dispatch(updatePoolBalance(result))
     }
-  }, [isSupported, infoResponse, collateralRatioScale, poolResponse, feeScale, poolCeilingScale, poolBalanceScale])
+  }, [
+    dispatch,
+    isSupported,
+    infoResponse,
+    collateralRatioScale,
+    poolResponse,
+    feeScale,
+    poolCeilingScale,
+    poolBalanceScale,
+  ])
 
   useEffect(() => {
     if (chainId && isSupported) {
-      dispatch(fetchPrices({ chainId })) // TODO do we need to poll every block?
+      thunkDispatch(fetchPrices({ chainId })) // TODO do we need to poll every block?
     }
-  }, [dispatch, chainId, isSupported])
+  }, [thunkDispatch, chainId, isSupported])
 
   return null
 }

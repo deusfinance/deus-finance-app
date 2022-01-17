@@ -4,7 +4,7 @@ import { UnsupportedChainIdError } from '@web3-react/core'
 import { Activity } from 'react-feather'
 
 import useWeb3React from 'hooks/useWeb3'
-import { useWalletModalToggle  } from 'state/application/hooks'
+import { useWalletModalToggle } from 'state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
 import { truncateAddress } from 'utils/account'
@@ -13,8 +13,7 @@ import WalletModal from 'components/WalletModal'
 import { NavButton } from 'components/Button'
 import { Connected as ConnectedIcon } from 'components/Icons'
 
-const ConnectButton = styled(NavButton)`
-`
+const ConnectButton = styled(NavButton)``
 
 const ConnectedButton = styled(NavButton)`
   & > * {
@@ -82,10 +81,7 @@ export default function Web3Status() {
   return (
     <>
       <Web3StatusInner />
-      <WalletModal
-        pendingTransactions={pending} 
-        confirmedTransactions={confirmed}
-      />
+      <WalletModal pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )
 }

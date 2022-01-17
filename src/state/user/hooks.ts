@@ -5,13 +5,16 @@ import { updateUserSlippageTolerance } from './actions'
 
 export function useSetUserSlippageTolerance(): (slippageTolerance: number | 'auto') => void {
   const dispatch = useAppDispatch()
-  return useCallback((userSlippageTolerance: number | 'auto') => {
-    dispatch(
-      updateUserSlippageTolerance({
-        userSlippageTolerance,
-      })
-    )
-  }, [dispatch])
+  return useCallback(
+    (userSlippageTolerance: number | 'auto') => {
+      dispatch(
+        updateUserSlippageTolerance({
+          userSlippageTolerance,
+        })
+      )
+    },
+    [dispatch]
+  )
 }
 
 /**
@@ -27,7 +30,7 @@ export function useUserSlippageTolerance(): number | 'auto' {
  * Same as above but replaces the auto with a default value
  * @param defaultSlippageTolerance the default value to replace auto with
  */
- export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: number): number {
+export function useUserSlippageToleranceWithDefault(defaultSlippageTolerance: number): number {
   const allowedSlippage = useUserSlippageTolerance()
   return useMemo(
     () => (allowedSlippage === 'auto' ? defaultSlippageTolerance : allowedSlippage),

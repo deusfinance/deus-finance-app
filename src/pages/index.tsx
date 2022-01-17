@@ -35,7 +35,9 @@ const Column = styled.div<{
     font-size: 23px;
   }
 
-  ${props => props.disabled && `
+  ${(props) =>
+    props.disabled &&
+    `
     pointer-events: none;
     opacity: 0.2
   `}
@@ -45,9 +47,7 @@ export default function Home() {
   return (
     <Container>
       <Link href={'/stablecoin'}>
-        <Column a={0.01}>
-          Stablecoin
-        </Column>
+        <Column a={0.01}>Stablecoin</Column>
       </Link>
       <Link href={'/swap'}>
         <Column a={0.02} disabled>

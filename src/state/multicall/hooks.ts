@@ -151,7 +151,7 @@ function toCallState(
     valid: true,
     loading: false,
     syncing,
-    result: result,
+    result,
     error: !success,
   }
 }

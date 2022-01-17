@@ -37,34 +37,36 @@ const Row = styled.div`
 `
 
 const Title = styled.div`
-  color: #6F7077;
+  color: #6f7077;
   font-size: 15px;
 `
 
 const WalletAction = styled.button<{
-  hide?: boolean,
-  disable?: boolean,
+  hide?: boolean
+  disable?: boolean
 }>`
-  background: #0064FA;
+  background: #0064fa;
   border-radius: 10px;
   outline: none;
   flex: 1;
   height: 25px;
-  display: ${props => props.hide ? 'none' : 'flex'};
+  display: ${(props) => (props.hide ? 'none' : 'flex')};
   justify-content: center;
   align-items: center;
   font-size: 12.5px;
   line-height: 30px;
   text-align: center;
-  color: #FFFFFF;
+  color: #ffffff;
   width: 100px;
 
   &:hover {
-    background: #0050C8;
+    background: #0050c8;
     cursor: pointer;
   }
 
-  ${props => props.disable && `
+  ${(props) =>
+    props.disable &&
+    `
     pointer-events: none;
     opacity: 0.3;
   `}
@@ -73,7 +75,7 @@ const WalletAction = styled.button<{
 const MiddleRow = styled(Row)`
   justify-content: flex-start;
   align-items: center;
-  color: #EFEFEF;
+  color: #efefef;
   gap: 5px;
   font-size: 20px;
 `
@@ -81,21 +83,21 @@ const MiddleRow = styled(Row)`
 const BottomRow = styled(Row)`
   justify-content: flex-start;
   align-items: center;
-  color: #EFEFEF;
+  color: #efefef;
   gap: 5px;
   font-size: 12.5px;
 `
 
 const AddressLink = styled.div`
   display: flex;
-  color: #0064FA;
+  color: #0064fa;
   align-self: center;
   gap: 4px;
   font-size: 12.5px;
   margin-left: 10px;
 
   &:hover {
-    color: #0050C8;
+    color: #0050c8;
   }
 `
 
@@ -157,13 +159,12 @@ export default function AccountDetails({
   function getConnectorName() {
     const isMetaMask = !!(window.ethereum && window.ethereum.isMetaMask)
     const name = Object.keys(SUPPORTED_WALLETS)
-      .filter(k => SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK')))
+      .filter(
+        (k) =>
+          SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
+      )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
-    return (
-      <Title>
-        Connected with {name}
-      </Title>
-    )
+    return <Title>Connected with {name}</Title>
   }
 
   const clearAllTransactionsCallback = useCallback(() => {
@@ -201,16 +202,12 @@ export default function AccountDetails({
           {account && truncateAddress(account)}
         </MiddleRow>
         <BottomRow>
-          {account && <Copy toCopy={account} text={'Copy Address'}/>}
+          {account && <Copy toCopy={account} text={'Copy Address'} />}
           {chainId && account && (
-            <ExplorerLink
-              type={ExplorerDataType.ADDRESS}
-              chainId={chainId}
-              value={account}
-            >
+            <ExplorerLink type={ExplorerDataType.ADDRESS} chainId={chainId} value={account}>
               <AddressLink>
                 View on Explorer
-                <LinkIcon size={12} style={{ transform: 'translateY(1px)'}} />
+                <LinkIcon size={12} style={{ transform: 'translateY(1px)' }} />
               </AddressLink>
             </ExplorerLink>
           )}
@@ -219,21 +216,15 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <TransactionsWrapper>
           <div>
-            <div>
-              Recent Transactions
-            </div>
-            <div onClick={clearAllTransactionsCallback}>
-              (clear all)
-            </div>
+            <div>Recent Transactions</div>
+            <div onClick={clearAllTransactionsCallback}>(clear all)</div>
           </div>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}
         </TransactionsWrapper>
       ) : (
         <TransactionsWrapper>
-          <div style={{fontSize: '13px'}}>
-            Your transactions will appear here...
-          </div>
+          <div style={{ fontSize: '13px' }}>Your transactions will appear here...</div>
         </TransactionsWrapper>
       )}
     </>

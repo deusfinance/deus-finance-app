@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useState, useEffect } from 'react'
 import { formatUnits } from '@ethersproject/units'
 import { BigNumber } from 'bignumber.js'
-import { debounce } from 'lodash'
+import debounce from 'lodash/debounce'
 import { useAppDispatch } from 'state'
 
 import useWeb3React from './useWeb3'
@@ -19,7 +19,7 @@ import { setIsProxyMinter, setProxyLoading, setProxyValues, useMintState } from 
 export default function useMintPage(
   TokenIn1: IToken | null,
   TokenIn2: IToken | null,
-  TokenOut1: IToken | null,
+  TokenOut1: IToken | null
 ): {
   amount1: string
   amount2: string
@@ -39,7 +39,7 @@ export default function useMintPage(
   const [amount1, setAmount1] = useState<string>('')
   const [amount2, setAmount2] = useState<string>('')
   const [amountOut, setAmountOut] = useState<string>('')
-  
+
   useEffect(() => {
     let result = false
 
@@ -59,11 +59,7 @@ export default function useMintPage(
   }, [dispatch, chainId, cRatio, TokenIn1, TokenIn2])
 
   const [collateralRatio, collateralPrice, deusPrice]: BigNumber[] = useMemo(() => {
-    return [
-      new BigNumber(cRatio),
-      new BigNumber(cPrice),
-      new BigNumber(dPrice),
-    ]
+    return [new BigNumber(cRatio), new BigNumber(cPrice), new BigNumber(dPrice)]
   }, [cRatio, cPrice, dPrice])
 
   const feeFactorBN: BigNumber = useMemo(() => {
@@ -75,23 +71,23 @@ export default function useMintPage(
     TokenIn1?.decimals,
     TokenIn1?.symbol,
     collateralPrice,
-    deusPrice,
+    deusPrice
   )
 
   const [inputUnit1, inputUnit2] = useMemo(() => {
-    return [
-      collateralRatio.eq(0) ? deusPrice : collateralPrice,
-      deusPrice,
-    ]
+    return [collateralRatio.eq(0) ? deusPrice : collateralPrice, deusPrice]
   }, [collateralRatio, collateralPrice, deusPrice])
 
-  const updateProxyValues = useCallback((val: any) => {
-    if (!val) {
-      dispatch(setProxyValues([]))
-    } else {
-      dispatch(setProxyValues(val.map((v: BigNumber) => v.toString()))) 
-    }
-  }, [dispatch])
+  const updateProxyValues = useCallback(
+    (val: any) => {
+      if (!val) {
+        dispatch(setProxyValues([]))
+      } else {
+        dispatch(setProxyValues(val.map((v: BigNumber) => v.toString())))
+      }
+    },
+    [dispatch]
+  )
 
   const debounceUserInput1 = useCallback(
     debounce(async (amount: string) => {
@@ -103,8 +99,12 @@ export default function useMintPage(
 
       const inputAmount1 = new BigNumber(amount)
       if (!isProxyMinter) {
-        const inputAmount2 = inputAmount1.times(inputUnit1).times(BN_ONE.minus(collateralRatio)).div(collateralRatio).div(inputUnit2)
-        const outputAmount = (inputAmount1.times(inputUnit1).plus(inputAmount2.times(inputUnit2))).times(feeFactorBN)
+        const inputAmount2 = inputAmount1
+          .times(inputUnit1)
+          .times(BN_ONE.minus(collateralRatio))
+          .div(collateralRatio)
+          .div(inputUnit2)
+        const outputAmount = inputAmount1.times(inputUnit1).plus(inputAmount2.times(inputUnit2)).times(feeFactorBN)
 
         setAmount2(inputAmount2.toString())
         setAmountOut(outputAmount.toString())
@@ -112,7 +112,7 @@ export default function useMintPage(
         dispatch(setProxyLoading(true))
         const result = await proxiedAmountOutCallback(inputAmount1)
         dispatch(setProxyLoading(false))
-        
+
         if (!result) {
           setAmountOut('')
           return
@@ -123,7 +123,16 @@ export default function useMintPage(
         updateProxyValues(result)
       }
     }, 300),
-    [updateProxyValues, isProxyMinter, collateralRatio, proxiedAmountOutCallback, TokenOut1,  inputUnit1, inputUnit2, feeFactorBN]
+    [
+      updateProxyValues,
+      isProxyMinter,
+      collateralRatio,
+      proxiedAmountOutCallback,
+      TokenOut1,
+      inputUnit1,
+      inputUnit2,
+      feeFactorBN,
+    ]
   )
 
   const debounceUserInput2 = useCallback(
@@ -135,8 +144,12 @@ export default function useMintPage(
       }
 
       const inputAmount2 = new BigNumber(amount)
-      const inputAmount1 = inputAmount2.times(inputUnit2).times(collateralRatio).div(BN_ONE.minus(collateralRatio)).div(inputUnit1)
-      const outputAmount = (inputAmount1.times(inputUnit1).plus(inputAmount2.times(inputUnit2))).times(feeFactorBN)
+      const inputAmount1 = inputAmount2
+        .times(inputUnit2)
+        .times(collateralRatio)
+        .div(BN_ONE.minus(collateralRatio))
+        .div(inputUnit1)
+      const outputAmount = inputAmount1.times(inputUnit1).plus(inputAmount2.times(inputUnit2)).times(feeFactorBN)
 
       setAmount1(inputAmount1.toString())
       setAmountOut(outputAmount.toString())
@@ -158,8 +171,8 @@ export default function useMintPage(
       }
 
       const outputAmount = new BigNumber(amount)
-      let inputAmount1 = outputAmount.div(feeFactorBN).times(collateralRatio).div(inputUnit1)
-      let inputAmount2 = outputAmount.div(feeFactorBN).times(BN_ONE.minus(collateralRatio)).div(inputUnit2)
+      const inputAmount1 = outputAmount.div(feeFactorBN).times(collateralRatio).div(inputUnit1)
+      const inputAmount2 = outputAmount.div(feeFactorBN).times(BN_ONE.minus(collateralRatio)).div(inputUnit2)
 
       setAmount1(inputAmount1.toString())
       setAmount2(inputAmount2.toString())
@@ -167,18 +180,18 @@ export default function useMintPage(
     [isProxyMinter, collateralRatio, inputUnit1, inputUnit2, feeFactorBN]
   )
 
-  const onUserInput1 = (amount: string):void => {
+  const onUserInput1 = (amount: string): void => {
     setAmount1(amount)
     debounceUserInput1(amount)
   }
 
-  const onUserInput2 = (amount: string):void => {
+  const onUserInput2 = (amount: string): void => {
     setAmount2(amount)
     updateProxyValues(null)
     debounceUserInput2(amount)
   }
 
-  const onUserOutput = (amount: string):void => {
+  const onUserOutput = (amount: string): void => {
     setAmountOut(amount)
     updateProxyValues(null)
     debounceUserOutput(amount)

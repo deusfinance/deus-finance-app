@@ -30,8 +30,8 @@ const LoadingMessage = styled.div<{
   justify-content: flex-start;
   border-radius: 12px;
   margin-bottom: 20px;
-  color: ${({ error }) => error ? 'red' : 'inherit'};
-  border: 1px solid ${({ error }) => error ? 'red' : '#FFFFFF'};
+  color: ${({ error }) => (error ? 'red' : 'inherit')};
+  border: 1px solid ${({ error }) => (error ? 'red' : '#FFFFFF')};
   & > * {
     padding: 1rem;
   }
@@ -65,7 +65,7 @@ const LoadingWrapper = styled.div`
   width: 100%;
 `
 
-export default function PendingView ({
+export default function PendingView({
   connector,
   error = false,
   setPendingError,
@@ -89,7 +89,7 @@ export default function PendingView ({
                   setPendingError(false)
                   connector && tryActivation(connector)
                 }}
-                style={{marginLeft: 'auto'}}
+                style={{ marginLeft: 'auto' }}
               >
                 Try Again
               </ErrorButton>

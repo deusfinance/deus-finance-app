@@ -29,11 +29,7 @@ export default function Transaction({ hash }: { hash: string }) {
   if (!chainId) return null
 
   return (
-    <ExplorerLink
-      type={ExplorerDataType.TRANSACTION}
-      chainId={chainId}
-      value={hash}
-    >
+    <ExplorerLink type={ExplorerDataType.TRANSACTION} chainId={chainId} value={hash}>
       <Row>
         <div>{summary ?? hash} ↗</div>
         {success ? (
@@ -41,8 +37,8 @@ export default function Transaction({ hash }: { hash: string }) {
         ) : cancelled ? (
           <CheckMark color={'red'} />
         ) : (
-          <Loader size={'12px'} stroke='blue'/>
-        )} 
+          <Loader size={'12px'} stroke="blue" />
+        )}
       </Row>
     </ExplorerLink>
   )

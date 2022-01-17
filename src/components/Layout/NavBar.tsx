@@ -26,7 +26,7 @@ const Wrapper = styled.div`
 const AppButton = styled.div`
   width: 150px;
   height: 35px;
-  background: #0064FA;
+  background: #0064fa;
   border-radius: 10px;
   box-shadow: inset 0px 4px 4px rgba(0, 71, 255, 0.45);
   text-align: center;
@@ -39,7 +39,7 @@ const AppButton = styled.div`
   }
 `
 
-export default function NavBar () {
+export default function NavBar() {
   const { pathname } = useRouter()
   const isHomePage = useMemo(() => {
     return pathname === '/'
@@ -47,15 +47,15 @@ export default function NavBar () {
 
   return (
     <Wrapper>
-      <NavLogo/>
+      <NavLogo />
       {isHomePage ? (
-        <Link href='/swap'>
+        <Link href="/stablecoin">
           <AppButton>OPEN APP</AppButton>
         </Link>
       ) : (
         <>
-          <Web3Status/>
-          <Web3Network/>
+          <Web3Status />
+          <Web3Network />
         </>
       )}
     </Wrapper>

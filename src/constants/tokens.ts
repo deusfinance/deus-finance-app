@@ -19,7 +19,7 @@ function duplicateTokenByChainId(
   decimals: number,
   name: string,
   symbol: string,
-  logo: StaticImageData,
+  logo: StaticImageData
 ): TokenMap {
   return SUPPORTED_CHAIN_IDS.reduce((acc: TokenMap, chainId: number) => {
     acc[chainId] = new Token(chainId, address, decimals, name, symbol, logo)
@@ -27,7 +27,7 @@ function duplicateTokenByChainId(
   }, {})
 }
 
-export const Tokens: {[key: string]: TokenMap} = {
+export const Tokens: { [key: string]: TokenMap } = {
   USDC: {
     1: new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USDC', USDC_LOGO),
     137: new Token(137, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USDC', USDC_LOGO),

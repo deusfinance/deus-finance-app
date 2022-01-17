@@ -30,7 +30,7 @@ const SuccessBox = styled.div`
   align-items: center;
   margin-top: 15px;
   background: #293241;
-  border: 1px solid #00E376;
+  border: 1px solid #00e376;
   border-radius: 10px;
   height: 35px;
   padding: 10px;
@@ -48,15 +48,15 @@ const SuccessBox = styled.div`
   }
 `
 
-export default function TransactionPopup({ 
+export default function TransactionPopup({
   hash,
   success,
-  summary, 
-  removeThisPopup 
-} : {
-  hash: string,
-  success?: boolean,
-  summary?: string,
+  summary,
+  removeThisPopup,
+}: {
+  hash: string
+  success?: boolean
+  summary?: string
   removeThisPopup: () => void
 }) {
   const { chainId } = useWeb3React()
@@ -72,11 +72,7 @@ export default function TransactionPopup({
 
   const getBox = () => {
     return (
-      <ExplorerLink
-        chainId={chainId}
-        type={ExplorerDataType.TRANSACTION}
-        value={hash}
-      >
+      <ExplorerLink chainId={chainId ?? 1} type={ExplorerDataType.TRANSACTION} value={hash}>
         <SuccessBox color={success ? '#00E376' : 'red'}>
           <CheckMark color={success ? '#00E376' : 'red'} />
           <div>Transaction {success ? 'successful' : 'failed'}</div>

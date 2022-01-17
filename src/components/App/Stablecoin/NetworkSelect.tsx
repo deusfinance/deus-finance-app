@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import useWeb3React from 'hooks/useWeb3'
 import useRpcChangerCallback from 'hooks/useRpcChangerCallback'
-import { SUPPORTED_CHAIN_IDS } from 'constants/chains'
+import { SupportedChainId, SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { ChainInfo } from 'constants/chainInfo'
 
 const Wrapper = styled.div`
@@ -23,13 +23,15 @@ const Item = styled.div<{
   align-items: center;
   background: rgba(13, 18, 29, 0.5);
   border: 1px solid #212936;
-  color: #7E7E7E;
+  color: #7e7e7e;
 
   &:hover {
     cursor: pointer;
   }
 
-  ${props => props.active && `
+  ${(props) =>
+    props.active &&
+    `
     filter: drop-shadow(0px 0px 45px rgba(0, 0, 0, 0.05));
     background: #0D121D;
     border: 1px solid #FFA76A;
@@ -45,19 +47,17 @@ const Item = styled.div<{
   }
 `
 
-export default function NetworkSelect ({ chains = [] }: { chains?: number[] }) {
+export default function NetworkSelect({ chains = [] }: { chains?: number[] }) {
   const { chainId } = useWeb3React()
   const rpcChangerCallback = useRpcChangerCallback()
 
   return (
     <Wrapper>
-      {(chains ?? SUPPORTED_CHAIN_IDS).map((id: number, index) => {
+      {(chains ?? SUPPORTED_CHAIN_IDS).map((id: SupportedChainId, index) => {
         return (
-          <Item
-            active={id == chainId}
-            onClick={() => rpcChangerCallback(id)}
-            key={index}
-          >{ChainInfo[id]['label']}</Item>
+          <Item active={id == chainId} onClick={() => rpcChangerCallback(id)} key={index}>
+            {ChainInfo[id]['label']}
+          </Item>
         )
       })}
     </Wrapper>

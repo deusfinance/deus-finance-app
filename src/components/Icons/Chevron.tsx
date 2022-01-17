@@ -8,7 +8,7 @@ import {
 export const ChevronLeft = styled(ChevronLeftIcon)<{
   color?: string
 }>`
-  color: ${props => props.color ?? 'white'};
+  color: ${(props) => props.color ?? 'white'};
   &:hover {
     cursor: pointer;
     opacity: 0.6;
@@ -18,7 +18,7 @@ export const ChevronLeft = styled(ChevronLeftIcon)<{
 export const ChevronDown = styled(ChevronDownIcon)<{
   color?: string
 }>`
-  color: ${props => props.color ?? 'white'};
+  color: ${(props) => props.color ?? 'white'};
   &:hover {
     cursor: pointer;
     opacity: 0.6;
@@ -28,7 +28,7 @@ export const ChevronDown = styled(ChevronDownIcon)<{
 export const ChevronUp = styled(ChevronUpIcon)<{
   color?: string
 }>`
-  color: ${props => props.color ?? 'white'};
+  color: ${(props) => props.color ?? 'white'};
   &:hover {
     cursor: pointer;
     opacity: 0.6;

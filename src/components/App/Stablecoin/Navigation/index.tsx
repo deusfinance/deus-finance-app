@@ -19,37 +19,45 @@ const Item = styled.div<{
   &:hover {
     cursor: pointer;
   }
-  ${props => props.selected ? `
+  ${(props) =>
+    props.selected
+      ? `
     border-bottom: 1px solid white;
-  ` : `
+  `
+      : `
     color: rgba(255, 255, 255, 0.5);
   `}
 `
 
 export enum NavigationTypes {
-  MINT = 'Mint',
-  REDEEM = 'Redeem',
-  ZAP = 'Zap',
-  FARMS = 'Farms',
+  MINT = 'MINT',
+  REDEEM = 'REDEEM',
+  ZAP = 'ZAP',
+  FARMS = 'FARMS',
 }
 
-export default function Navigation({ 
-  selected, 
-  setSelected 
+const NavigationLabels = {
+  [NavigationTypes.MINT]: 'Mint',
+  [NavigationTypes.REDEEM]: 'Redeem',
+  [NavigationTypes.ZAP]: 'Zap',
+  [NavigationTypes.FARMS]: 'Farms',
+}
+
+export default function Navigation({
+  selected,
+  setSelected,
 }: {
   selected: string
-  setSelected: (value: string) => void
+  setSelected: (value: NavigationTypes) => void
 }) {
   return (
     <Wrapper>
       {(Object.keys(NavigationTypes) as Array<keyof typeof NavigationTypes>).map((key, index) => {
-        const label = NavigationTypes[key]
+        const label = NavigationLabels[key]
         return (
-          <Item
-            selected={label == selected}
-            onClick={() => setSelected(NavigationTypes[key])}
-            key={index}
-          >{label}</Item>
+          <Item selected={key == selected} onClick={() => setSelected(NavigationTypes[key])} key={index}>
+            {label}
+          </Item>
         )
       })}
     </Wrapper>

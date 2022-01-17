@@ -14,7 +14,7 @@ const Container = styled.div`
 const InlineModal = styled(Card)<{
   isOpen: boolean
 }>`
-  display: ${props => props.isOpen ? 'flex' : 'none'};
+  display: ${(props) => (props.isOpen ? 'flex' : 'none')};
   position: absolute;
   gap: 16px;
   width: 250px;
@@ -37,18 +37,19 @@ const InputRow = styled(Row)<{
   active?: boolean
   warning?: boolean
 }>`
-  background: rgba(255,255,255, 0.2);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   color: rgba(255, 255, 255, 0.7);
   padding: 8px;
-  border: ${({ active, warning }) => active ? `1px solid ${warning ? 'red' : 'rgba(255, 255, 255, 0.3)'}` : '1px solid transparent'}
+  border: ${({ active, warning }) =>
+    active ? `1px solid ${warning ? 'red' : 'rgba(255, 255, 255, 0.3)'}` : '1px solid transparent'};
 `
 
 const WarningRow = styled.div<{
   error: boolean
 }>`
   display: block;
-  color: ${props => props.error ? 'red' : '#FFB463'};
+  color: ${(props) => (props.error ? 'red' : '#FFB463')};
   font-size: 0.8rem;
 `
 
@@ -57,7 +58,7 @@ const SlippageEmojiContainer = styled.span`
   margin-right: 5px;
   width: 30px;
   @media only screen and (max-width: 468px) {
-    display: none
+    display: none;
   }
 `
 
@@ -71,22 +72,22 @@ const Input = styled.input`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  color: ${props => props.color === 'red' ? 'red' : 'rgba(255, 255, 255, 0.8)'};
+  color: ${(props) => (props.color === 'red' ? 'red' : 'rgba(255, 255, 255, 0.8)')};
   border: none;
 `
 
 const Option = styled.button<{
   active: boolean
 }>`
-  background: ${props => props.active ? '#0064FA' : 'rgba(255,255,255, 0.2)'};
+  background: ${(props) => (props.active ? '#0064FA' : 'rgba(255,255,255, 0.2)')};
   border-radius: 12px;
   text-align: center;
   height: 100%;
   font-size: 0.8rem;
   padding: 0 10px;
 
-  &:hover { 
-    background: #0044FA
+  &:hover {
+    background: #0044fa;
   }
 `
 
@@ -94,12 +95,10 @@ enum SlippageError {
   InvalidInput = 'InvalidInput',
 }
 
-export default function TransactionSettings ({ ...rest }: {
-  [x: string]: any
-}) {
+export default function TransactionSettings({ ...rest }: { [x: string]: any }) {
   const ref = useRef(null)
   const [isOpen, setIsOpen] = useState(false)
-  const toggle = () => setIsOpen(prev => !prev)
+  const toggle = () => setIsOpen((prev) => !prev)
   useOnOutsideClick(ref, () => setIsOpen(false))
 
   const userSlippageTolerance = useUserSlippageTolerance()
@@ -133,24 +132,23 @@ export default function TransactionSettings ({ ...rest }: {
 
   return (
     <Container ref={ref} {...rest}>
-      <SettingsIcon onClick={toggle} size='18px' isOpen={isOpen}/>
+      <SettingsIcon onClick={toggle} size="18px" isOpen={isOpen} />
       <InlineModal isOpen={isOpen}>
         Slippage Tolerance
         <Row>
-          <Option 
-            onClick={() => parseSlippageInput('')}
-            active={userSlippageTolerance === 'auto'}
-          >Auto</Option>
+          <Option onClick={() => parseSlippageInput('')} active={userSlippageTolerance === 'auto'}>
+            Auto
+          </Option>
           <InputRow active={userSlippageTolerance !== 'auto'} warning={!!slippageError}>
             {tooLow || tooHigh ? (
               <SlippageEmojiContainer>
                 <span role="img" aria-label="warning">
                   ⚠️
                 </span>
-             </SlippageEmojiContainer>
+              </SlippageEmojiContainer>
             ) : null}
             <Input
-              placeholder='0.10'
+              placeholder="0.10"
               value={
                 slippageInput.length > 0
                   ? slippageInput
@@ -170,13 +168,11 @@ export default function TransactionSettings ({ ...rest }: {
         </Row>
         {slippageError || tooLow || tooHigh ? (
           <WarningRow error={!!slippageError}>
-            {slippageError ? (
-              'Enter a valid slippage percentage'
-            ) : tooLow ? (
-              'Your transaction may fail'
-            ) : (
-              'Your transaction may be frontrun'
-            )}
+            {slippageError
+              ? 'Enter a valid slippage percentage'
+              : tooLow
+              ? 'Your transaction may fail'
+              : 'Your transaction may be frontrun'}
           </WarningRow>
         ) : null}
       </InlineModal>

@@ -18,17 +18,14 @@ export enum ApprovalState {
 }
 
 export default function useApproveCallback(
-  token: IToken | null,
-  spender: string | undefined,
+  token: IToken | null | undefined,
+  spender: string | null | undefined
 ): [ApprovalState, () => Promise<void>] {
   const { chainId, account } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const [tokenAddress, tokenSymbol] = useMemo(() => {
-    return [
-      token?.address ?? '',
-      token?.symbol ?? '',
-    ]
+    return [token?.address ?? '', token?.symbol ?? '']
   }, [token])
 
   const currentAllowance = useERC20Allowance(token, spender)
@@ -39,12 +36,12 @@ export default function useApproveCallback(
     if (!tokenAddress) return ApprovalState.UNKNOWN
     if (!spender) return ApprovalState.UNKNOWN
     if (tokenAddress == '0x') return ApprovalState.APPROVED
-    
+
     return currentAllowance.gt(0)
       ? ApprovalState.APPROVED
       : pendingApproval
-        ? ApprovalState.PENDING
-        : ApprovalState.NOT_APPROVED
+      ? ApprovalState.PENDING
+      : ApprovalState.NOT_APPROVED
   }, [tokenAddress, spender, currentAllowance, pendingApproval])
 
   const approve = useCallback(async () => {
@@ -74,10 +71,9 @@ export default function useApproveCallback(
     }
 
     const estimatedGas = await TokenContract.estimateGas.approve(spender, MaxUint256)
-    return TokenContract
-      .approve(spender, MaxUint256, {
-        gasLimit: calculateGasMargin(estimatedGas),
-      })
+    return TokenContract.approve(spender, MaxUint256, {
+      gasLimit: calculateGasMargin(estimatedGas),
+    })
       .then((response: TransactionResponse) => {
         addTransaction(response, {
           summary: 'Approve ' + tokenSymbol,

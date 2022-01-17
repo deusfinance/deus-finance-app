@@ -34,28 +34,28 @@ export const formatAmount = (num: number | undefined, digits = 2) => {
   })
 }
 
-export function toBN (num: string): BigNumber {
+export function toBN(num: string): BigNumber {
   return new BigNumber(num)
 }
 
 export const BN_ZERO: BigNumber = toBN('0')
 export const BN_ONE: BigNumber = toBN('1')
 
-export function removeTrailingZeros (str: string): string {
-  return str.replace(/\.?0+$/, "")
+export function removeTrailingZeros(str: string): string {
+  return str.replace(/\.?0+$/, '')
 }
 
 /**
  * Returns an amount rounded down to the least significant number by percentile.
  * Rounds down, so results are not EXACT but sufficient for displaying.
  */
- export function dynamicPrecision(
+export function dynamicPrecision(
   val: string,
   threshold = 0.99999999 // 99.999999%
 ): string {
   const value = parseFloat(val)
   if (isNaN(value)) return '0'
-  
+
   if (value > 1e6) {
     return value.toFixed(3)
   } else if (value > 1e5) {
@@ -68,7 +68,7 @@ export function removeTrailingZeros (str: string): string {
 
   let shift = 1
   let part = 0
-  
+
   do {
     shift *= 10
     part = Math.floor(value * shift) / shift

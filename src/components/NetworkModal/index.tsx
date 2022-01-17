@@ -28,7 +28,7 @@ const Option = styled.div<{
   justify-content: space-between;
   background: rgb(28, 28, 28);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #EFEFEF;
+  color: #efefef;
   font-size: 20px;
   border-radius: 5px;
   outline: none;
@@ -36,14 +36,16 @@ const Option = styled.div<{
   align-items: center;
   padding: 12px 20px;
 
-  ${props => props.active && `
+  ${(props) =>
+    props.active &&
+    `
     background: #0D121D;
     border: 1px solid #0064FA;
   `}
 
   &:focus,
   &:hover {
-    background: #0D121D;
+    background: #0d121d;
     cursor: pointer;
   }
 
@@ -54,7 +56,7 @@ const Option = styled.div<{
   }
 `
 
-export default function NetworkModal () {
+export default function NetworkModal() {
   const { chainId } = useWeb3React()
   const modalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleModal = useNetworkModalToggle()
@@ -65,7 +67,7 @@ export default function NetworkModal () {
     <Modal isOpen={modalOpen} onBackgroundClick={toggleModal} onEscapeKeydown={toggleModal}>
       <ModalHeader onClose={toggleModal} title="Select a Network" />
       <Wrapper>
-        {SUPPORTED_CHAIN_IDS.map((id: number, index) => {
+        {Object.values(SUPPORTED_CHAIN_IDS).map((id: SupportedChainId, index) => {
           const active = chainId == id
           return (
             <Option

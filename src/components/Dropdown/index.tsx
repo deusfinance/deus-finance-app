@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react'
 import styled, { css } from 'styled-components'
-import { find } from 'lodash'
+import find from 'lodash/find'
 
 import useOnOutsideClick from 'hooks/useOnOutsideClick'
 import { ChevronDown } from 'components/Icons'
@@ -8,12 +8,12 @@ import { ChevronDown } from 'components/Icons'
 const Wrapper = styled.div`
   display: block;
   overflow: hidden;
-  color: #888C92;
+  color: #888c92;
   z-index: 1000;
 `
 
 const Header = styled.div<{
-  noHover?: boolean,
+  noHover?: boolean
   isOpen?: boolean
 }>`
   display: flex;
@@ -27,13 +27,17 @@ const Header = styled.div<{
   align-items: center;
   height: 40px;
 
-  ${props => !props.noHover && `
+  ${(props) =>
+    !props.noHover &&
+    `
     &:hover {
       cursor: pointer;
     }
   `}
 
-  ${props => props.isOpen && `
+  ${(props) =>
+    props.isOpen &&
+    `
     background: rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-bottom: none;
@@ -41,16 +45,16 @@ const Header = styled.div<{
   `}
 `
 
-const StyledChevron = styled(({ isOpen, ...props}) => (
-  <ChevronDown {...props}/>
-))<{
-  isOpen?: boolean,
+const StyledChevron = styled(({ isOpen, ...props }) => <ChevronDown {...props} />)<{
+  isOpen?: boolean
 }>`
   transition: transform 0.5s ease-out;
   width: 15px;
-  ${props => props.isOpen && css`
-    transform: scaleY(-1);
-  `};
+  ${(props) =>
+    props.isOpen &&
+    css`
+      transform: scaleY(-1);
+    `};
 `
 
 const List = styled.ul<{
@@ -83,29 +87,29 @@ const ListItem = styled.li`
 
   &:hover {
     cursor: pointer;
-    background: #FFB463;
+    background: #ffb463;
   }
 `
 
 interface Option {
-  value: string,
-  label: JSX.Element | string,
+  value: string
+  label: JSX.Element | string
 }
 
-export default function Dropdown ({
+export default function Dropdown({
   options = [],
   placeholder = 'Select',
   onSelect,
   disabled = false,
 }: {
-  options: Option[],
-  placeholder: string,
-  onSelect: (addresses: string[]) => void,
+  options: Option[]
+  placeholder: string
+  onSelect: (addresses: string[]) => void
   disabled?: boolean
 }) {
-  const ref = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const [ isOpen, setIsOpen ] = useState<boolean>(false)
-  const [ selectedOption, setSelectedOption ] = useState<string[]>([])
+  const ref = useRef() as React.MutableRefObject<HTMLInputElement>
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [selectedOption, setSelectedOption] = useState<string[]>([])
 
   useOnOutsideClick(ref, () => setIsOpen(false))
 
@@ -117,10 +121,10 @@ export default function Dropdown ({
     }
   }, [options])
 
-  const header:JSX.Element | string = useMemo(() => {
-    const option:Option | undefined = find(options, (obj) => obj.value == selectedOption.join(':'))
+  const header: JSX.Element | string = useMemo(() => {
+    const option: Option | undefined = find(options, (obj) => obj.value == selectedOption.join(':'))
     return option?.label ?? placeholder
-  }, [options, selectedOption])
+  }, [options, selectedOption, placeholder])
 
   const toggle = () => {
     !disabled && setIsOpen(!isOpen)
@@ -146,16 +150,19 @@ export default function Dropdown ({
     <Wrapper ref={ref}>
       <Header onClick={toggle} isOpen={isOpen}>
         {header}
-        {!disabled && <StyledChevron isOpen={isOpen}/>}
+        {!disabled && <StyledChevron isOpen={isOpen} />}
       </Header>
       <List isOpen={isOpen}>
         {options.map((option, i) => (
-          <ListItem key={i} onClick={() => {
-            const selected = option.value.split(':')
-            onSelect(selected)
-            setSelectedOption(selected)
-            toggle()
-          }}>
+          <ListItem
+            key={i}
+            onClick={() => {
+              const selected = option.value.split(':')
+              onSelect(selected)
+              setSelectedOption(selected)
+              toggle()
+            }}
+          >
             {option.label}
           </ListItem>
         ))}

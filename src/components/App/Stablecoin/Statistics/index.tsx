@@ -3,13 +3,7 @@ import styled from 'styled-components'
 
 import { formatAmount } from 'utils/numbers'
 
-import { 
-  useDeiStatus,
-  useDeiPrice,
-  useCollateralRatio,
-  usePoolBalance,
-  usePoolCeiling,
-} from 'state/dei/hooks'
+import { useDeiStatus, useDeiPrice, useCollateralRatio, usePoolBalance, usePoolCeiling } from 'state/dei/hooks'
 import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { Card } from 'components/Card'
 import useWeb3React from 'hooks/useWeb3'
@@ -27,7 +21,7 @@ const Stat = styled.div`
   & > * {
     &:nth-child(2) {
       margin-top: 3px;
-      color: #FFB463;
+      color: #ffb463;
     }
   }
 `
@@ -41,32 +35,30 @@ export default function Statistics() {
 
   const [isSupported, loading, error]: boolean[] = useMemo(() => {
     return [
-      DeiSupportedChains.includes(chainId),
+      chainId ? Object.values(DeiSupportedChains).includes(chainId) : false,
       deiStatus == DeiStatus.LOADING,
       deiStatus == DeiStatus.ERROR,
     ]
   }, [deiStatus, chainId])
 
   const deiPriceLabel = useMemo(() => {
-    return (loading || !isSupported) ? 'Loading' : error ? 'Error' : deiPrice.toFixed(5)
+    return loading || !isSupported ? 'Loading' : error ? 'Error' : deiPrice.toFixed(5)
   }, [deiPrice, isSupported, loading, error])
 
   const collateralRatioLabel = useMemo(() => {
-    return(loading || !isSupported) ? 'Loading' : error ? 'Error' : `${(collateralRatio * 100).toFixed(2)}%`
+    return loading || !isSupported ? 'Loading' : error ? 'Error' : `${(collateralRatio * 100).toFixed(2)}%`
   }, [collateralRatio, isSupported, loading, error])
 
   const poolLabel = useMemo(() => {
-    return (loading || !isSupported) ? 'Loading' : error ? 'Error' : `${
-      formatAmount(poolBalance)
-    } / ${
-      formatAmount(poolCeiling)
-    }`
+    return loading || !isSupported
+      ? 'Loading'
+      : error
+      ? 'Error'
+      : `${formatAmount(poolBalance)} / ${formatAmount(poolCeiling)}`
   }, [poolBalance, poolCeiling, isSupported, loading, error])
-  
+
   const mintLabel = useMemo(() => {
-    return (loading || !isSupported) ? 'Loading' : error ? 'Error' : `${
-      formatAmount(poolCeiling - poolBalance)
-    }`
+    return loading || !isSupported ? 'Loading' : error ? 'Error' : `${formatAmount(poolCeiling - poolBalance)}`
   }, [poolBalance, poolCeiling, isSupported, loading, error])
 
   return (

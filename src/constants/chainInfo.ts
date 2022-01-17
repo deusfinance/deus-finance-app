@@ -13,7 +13,7 @@ interface Info {
   blockExplorerUrl: string
 }
 
-export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
+export const ChainInfo: { [chainId in SupportedChainId]: Info } = {
   [SupportedChainId.MAINNET]: {
     chainId: '0x1',
     chainName: 'Ethereum Mainnet',

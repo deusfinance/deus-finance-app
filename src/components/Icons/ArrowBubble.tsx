@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function ArrowBubble ({ 
-  size = 12, 
-  color = 'white', 
-  ...rest 
+export default function ArrowBubble({
+  size = 12,
+  color = 'white',
+  ...rest
 }: {
   size?: number
   color?: string
@@ -11,14 +11,8 @@ export default function ArrowBubble ({
 }) {
   const fill = color == 'white' ? 'black' : 'white'
   return (
-    <svg 
-      width={size} 
-      height={size} 
-      viewBox="0 0 30 30" 
-      fill="none"
-      {...rest}
-    >
-      <circle cx="15" cy="15" r="14.5" transform="rotate(90 15 15)" fill={fill} stroke={color}/>
+    <svg width={size} height={size} viewBox="0 0 30 30" fill="none" {...rest}>
+      <circle cx="15" cy="15" r="14.5" transform="rotate(90 15 15)" fill={fill} stroke={color} />
       <path
         fillRule="evenodd"
         clipRule="evenodd"

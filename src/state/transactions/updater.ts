@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state'
 
 import useWeb3React from 'hooks/useWeb3'
-import { retry, RetryableError  } from 'utils/retry'
+import { retry, RetryableError } from 'utils/retry'
 import { updateBlockNumber } from 'state/application/actions'
 import { useBlockNumber, useAddPopup } from 'state/application/hooks'
 import { checkedTransaction, finalizeTransaction } from './actions'
@@ -44,21 +44,24 @@ export default function Updater(): null {
   // Show popup on confirm
   const addPopup = useAddPopup()
 
-  const getReceipt = useCallback((hash: string) => {
-    if (!library || !chainId) throw new Error('No library or chainId')
-    const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
-    return retry(
-      () =>
-        library.getTransactionReceipt(hash).then((receipt) => {
-          if (receipt === null) {
-            console.debug('Retrying for hash', hash)
-            throw new RetryableError()
-          }
-          return receipt
-        }),
-      retryOptions
-    )
-  }, [chainId, library])
+  const getReceipt = useCallback(
+    (hash: string) => {
+      if (!library || !chainId) throw new Error('No library or chainId')
+      const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
+      return retry(
+        () =>
+          library.getTransactionReceipt(hash).then((receipt) => {
+            if (receipt === null) {
+              console.debug('Retrying for hash', hash)
+              throw new RetryableError()
+            }
+            return receipt
+          }),
+        retryOptions
+      )
+    },
+    [chainId, library]
+  )
 
   useEffect(() => {
     if (!chainId || !library || !lastBlockNumber) return

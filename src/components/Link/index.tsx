@@ -16,11 +16,11 @@ const Link = styled.a`
 `
 
 export const ExternalLink = ({
-  href ='#',
+  href = '#',
   target = '_blank',
-  rel ='noopener noreferrer',
+  rel = 'noopener noreferrer',
   children,
-} : {
+}: {
   href: string
   target?: string
   rel?: string
@@ -33,20 +33,16 @@ export const ExternalLink = ({
   )
 }
 
-export const ExplorerLink = ({ 
-  chainId, 
-  type, 
-  value, 
-  children 
-} : {
+export const ExplorerLink = ({
+  chainId,
+  type,
+  value,
+  children,
+}: {
   chainId: number
   type: ExplorerDataType
   value: string
   children: React.ReactNode
 }) => {
-  return (
-    <ExternalLink href={getExplorerLink(chainId, type, value)}>
-      {children}
-    </ExternalLink>
-  )
+  return <ExternalLink href={getExplorerLink(chainId, type, value)}>{children}</ExternalLink>
 }
