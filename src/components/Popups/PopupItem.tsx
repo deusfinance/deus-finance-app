@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   background: #212936;
   border-radius: 10px;
   box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.7);
-  -moz-box-shadow:    inset 0px 0px 1px rgba(255, 255, 255, 0.7);
+  -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.7);
   -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.7);
 `
 
@@ -37,10 +37,10 @@ export default function PopupItem({
   removeAfterMs,
   content,
   popKey,
-} : {
-  removeAfterMs: number | null,
-  content: PopupContent,
-  popKey: string,
+}: {
+  removeAfterMs: number | null
+  content: PopupContent
+  popKey: string
 }) {
   const removePopup = useRemovePopup()
   const removeThisPopup = useCallback(() => removePopup(popKey), [popKey, removePopup])
@@ -64,8 +64,10 @@ export default function PopupItem({
 
   function getPopupContent(): JSX.Element | null {
     if ('txn' in content) {
-      const { txn: { hash, success, summary }} = content
-      return <TransactionPopup hash={hash} success={success} summary={summary} removeThisPopup={removeThisPopup}/>
+      const {
+        txn: { hash, success, summary },
+      } = content
+      return <TransactionPopup hash={hash} success={success} summary={summary} removeThisPopup={removeThisPopup} />
     } else {
       return null
     }
@@ -74,7 +76,7 @@ export default function PopupItem({
   return (
     <Wrapper>
       {getPopupContent()}
-      {removeAfterMs !== null ? <AnimatedFader style={faderStyle}/> : null}
+      {removeAfterMs !== null ? <AnimatedFader style={faderStyle} /> : null}
     </Wrapper>
   )
 }

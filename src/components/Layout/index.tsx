@@ -24,10 +24,8 @@ const Content = styled.div`
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Wrapper>
-      <NavBar/>
-      <Content>
-        {children}
-      </Content >
+      <NavBar />
+      <Content>{children}</Content>
     </Wrapper>
   )
 }

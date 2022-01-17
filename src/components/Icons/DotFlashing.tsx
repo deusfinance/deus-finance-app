@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 const FlashingAnimation = keyframes`
   0% {
@@ -26,14 +26,14 @@ export const Dot = styled.div<{
 }>`
   background-color: black;
   border-radius: 50%;
-  width: ${props => props.size};
-  height: ${props => props.size};
-  margin: 0 ${props => props.gap};
+  width: ${(props) => props.size};
+  height: ${(props) => props.size};
+  margin: 0 ${(props) => props.gap};
   animation: ${FlashingAnimation} 1s infinite linear alternate;
   animation-delay: ${(props) => props.delay};
 `
 
-export default function DotFlashing ({
+export default function DotFlashing({
   size = '5px',
   gap = '1.5px',
   ...rest
@@ -44,9 +44,9 @@ export default function DotFlashing ({
 }) {
   return (
     <Wrapper {...rest}>
-      <Dot delay="0s" size={size} gap={gap}/>
-      <Dot delay="0.35s" size={size} gap={gap}/>
-      <Dot delay="0.7s" size={size} gap={gap}/>
+      <Dot delay="0s" size={size} gap={gap} />
+      <Dot delay="0.35s" size={size} gap={gap} />
+      <Dot delay="0.7s" size={size} gap={gap} />
     </Wrapper>
   )
 }

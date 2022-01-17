@@ -1,9 +1,19 @@
 import { SupportedChainId } from './chains'
 
+// TODO add proper logos
+import MainnetLogo from 'assets/images/network/mainnet.jpg'
+import RinkebyLogo from 'assets/images/network/rinkeby.jpg'
+import BinanceLogo from 'assets/images/network/binance.jpg'
+import xDaiLogo from 'assets/images/network/xdai.jpg'
+import HecoLogo from 'assets/images/network/heco.jpg'
+import PolygonLogo from 'assets/images/network/polygon.jpg'
+import FantomLogo from 'assets/images/network/fantom.jpg'
+
 interface Info {
   chainId: string
   chainName: string
   label: string
+  logoUrl: StaticImageData
   nativeCurrency: {
     name: string
     symbol: string
@@ -13,11 +23,12 @@ interface Info {
   blockExplorerUrl: string
 }
 
-export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
+export const ChainInfo: { [chainId in SupportedChainId]: Info } = {
   [SupportedChainId.MAINNET]: {
     chainId: '0x1',
     chainName: 'Ethereum Mainnet',
-    label: 'ETH',
+    label: 'Ethereum',
+    logoUrl: MainnetLogo,
     nativeCurrency: {
       name: 'ETH',
       symbol: 'ETH',
@@ -30,6 +41,7 @@ export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
     chainId: '0x4',
     chainName: 'Rinkeby',
     label: 'Rinkeby',
+    logoUrl: RinkebyLogo,
     nativeCurrency: {
       name: 'ETH',
       symbol: 'ETH',
@@ -42,6 +54,7 @@ export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
     chainId: '0x38',
     chainName: 'Binance Smart Chain Mainnet',
     label: 'BSC',
+    logoUrl: BinanceLogo,
     nativeCurrency: {
       name: 'BNB',
       symbol: 'BNB',
@@ -54,6 +67,7 @@ export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
     chainId: '0x64',
     chainName: 'xDAI Chain',
     label: 'xDAI',
+    logoUrl: xDaiLogo,
     nativeCurrency: {
       name: 'xDAI',
       symbol: 'xDAI',
@@ -66,6 +80,7 @@ export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
     chainId: '0x80',
     chainName: 'Huobi ECO Chain Mainnet',
     label: 'HECO',
+    logoUrl: HecoLogo,
     nativeCurrency: {
       name: 'HT',
       symbol: 'HT',
@@ -78,6 +93,7 @@ export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
     chainId: '0x89',
     chainName: 'Matic Mainnet',
     label: 'Polygon',
+    logoUrl: PolygonLogo,
     nativeCurrency: {
       name: 'Matic',
       symbol: 'Matic',
@@ -90,6 +106,7 @@ export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
     chainId: '0xfa',
     chainName: 'Fantom Opera',
     label: 'Fantom',
+    logoUrl: FantomLogo,
     nativeCurrency: {
       name: 'FTM',
       symbol: 'FTM',
@@ -98,16 +115,17 @@ export const ChainInfo: { readonly [chainId in SupportedChainId]: Info } = {
     rpcUrl: 'https://rpc.ftm.tools',
     blockExplorerUrl: 'https://ftmscan.com',
   },
-  [SupportedChainId.AVALANCHE]: {
-    chainId: '0xa86a',
-    chainName: 'Avalanche Mainnet C-chain',
-    label: 'Avalanche',
-    nativeCurrency: {
-      name: 'AVAX',
-      symbol: 'AVAX',
-      decimals: 18,
-    },
-    rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
-    blockExplorerUrl: 'https://snowtrace.io',
-  },
+  // [SupportedChainId.AVALANCHE]: {
+  //   chainId: '0xa86a',
+  //   chainName: 'Avalanche Mainnet C-chain',
+  //   label: 'Avalanche',
+  //   logoUrl: AvalancheLogo,
+  //   nativeCurrency: {
+  //     name: 'AVAX',
+  //     symbol: 'AVAX',
+  //     decimals: 18,
+  //   },
+  //   rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
+  //   blockExplorerUrl: 'https://snowtrace.io',
+  // },
 }

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef } from 'react'
 import { Contract } from '@ethersproject/contracts'
+import { BigNumber } from '@ethersproject/bignumber'
 import { AppState, useAppDispatch, useAppSelector } from 'state'
 
 import { chunkArray } from 'utils/array'
@@ -34,20 +35,33 @@ async function fetchChunk(
     )
 
     if (process.env.NODE_ENV === 'development') {
-      returnData.forEach(({ gasUsed, returnData, success }, i) => {
-        if (
-          !success &&
-          returnData.length === 2 &&
-          gasUsed.gte(Math.floor((chunk[i].gasRequired ?? DEFAULT_GAS_REQUIRED) * 0.95))
-        ) {
-          console.warn(
-            `A call failed due to requiring ${gasUsed.toString()} vs. allowed ${
-              chunk[i].gasRequired ?? DEFAULT_GAS_REQUIRED
-            }`,
-            chunk[i]
-          )
+      returnData.forEach(
+        (
+          {
+            gasUsed,
+            returnData,
+            success,
+          }: {
+            gasUsed: BigNumber
+            returnData: any
+            success: boolean
+          },
+          i: number
+        ) => {
+          if (
+            !success &&
+            returnData.length === 2 &&
+            gasUsed.gte(Math.floor((chunk[i].gasRequired ?? DEFAULT_GAS_REQUIRED) * 0.95))
+          ) {
+            console.warn(
+              `A call failed due to requiring ${gasUsed.toString()} vs. allowed ${
+                chunk[i].gasRequired ?? DEFAULT_GAS_REQUIRED
+              }`,
+              chunk[i]
+            )
+          }
         }
-      })
+      )
     }
     return returnData
   } catch (error) {

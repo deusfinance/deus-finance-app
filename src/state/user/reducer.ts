@@ -11,8 +11,7 @@ export const initialState: UserState = {
 }
 
 export default createReducer(initialState, (builder) =>
-  builder
-    .addCase(updateUserSlippageTolerance, (state, action) => {
-      state.userSlippageTolerance = action.payload.userSlippageTolerance
-    })
+  builder.addCase(updateUserSlippageTolerance, (state, action) => {
+    state.userSlippageTolerance = action.payload.userSlippageTolerance
+  })
 )

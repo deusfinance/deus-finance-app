@@ -7,7 +7,7 @@ const InputWrapper = styled.div`
   gap: 3px;
   white-space: nowrap;
   overflow: hidden;
-  background: rgb(28,28,28);
+  background: rgb(28, 28, 28);
   border-radius: 5px;
   padding: 5px;
   align-items: center;
@@ -32,18 +32,23 @@ export const InputField = styled.input<{
   &:focus {
     outline: none;
   }
-  &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  &::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: rgba(255, 255, 255, 0.4);
     opacity: 1; /* Firefox */
   }
-  &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+  &:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
     color: rgba(255, 255, 255, 0.4);
   }
-  &::-ms-input-placeholder { /* Microsoft Edge */
+  &::-ms-input-placeholder {
+    /* Microsoft Edge */
     color: rgba(255, 255, 255, 0.4);
   }
 
-  ${props => props.disabled && `
+  ${(props) =>
+    props.disabled &&
+    `
     cursor: not-allowed;
   `}
 `
@@ -53,26 +58,22 @@ export default function Input({
   value,
   onChange,
   onBlur,
-  showError,
-  showWarning,
   disabled,
   ...rest
-} : {
+}: {
   placeholder: string
   value: string
   onChange: (val: string) => void
   onBlur?: () => void
   disabled?: boolean
-  showError?: boolean
-  showWarning?: boolean
   [x: string]: any
 }) {
   const onChangeProxy = (evt: React.ChangeEvent<HTMLInputElement>) => {
     // Remove non-numeric characters but allow points
     let output = evt.target.value.replace(/[^\d.]/g, '')
     // Remove additional commas (for decimals), to prevent stuff like: 19.800.9 => 19.800
-    output = output.replace( /^([^.]*\.)(.*)$/, ( a, b, c ) => {
-      return b + c.replace( /\./g, '' )
+    output = output.replace(/^([^.]*\.)(.*)$/, (a, b, c) => {
+      return b + c.replace(/\./g, '')
     })
     onChange(output)
   }
@@ -84,6 +85,7 @@ export default function Input({
     <InputWrapper>
       <InputField
         onChange={onChangeProxy}
+        onBlur={onBlur}
         inputMode="decimal"
         autoComplete="off"
         autoCorrect="off"

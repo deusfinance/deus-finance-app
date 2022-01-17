@@ -30,7 +30,7 @@ class MyDocument extends Document {
 
   render() {
     return (
-      <Html lang='en'>
+      <Html lang="en">
         <Head>
           <>
             <meta charSet="utf-8" />
@@ -44,9 +44,9 @@ class MyDocument extends Document {
             <title>DEUS Finance</title>
             <meta name="description" content="Build decentralized financial instruments using DEUS Finance." />
 
-            <link rel="preconnect" href="https://fonts.googleapis.com"/>
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true"/>
-            <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet"/>
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
+            <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet" />
           </>
         </Head>
         <body>

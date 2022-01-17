@@ -5,7 +5,6 @@ declare global {
       NEXT_PUBLIC_INFURA_KEY: string
       NEXT_PUBLIC_PORTIS_ID?: string
       NEXT_PUBLIC_FORTMATIC_KEY?: string
-      NEXT_PUBLIC_MUON_NODE_GATEWAY?: string
     }
   }
 

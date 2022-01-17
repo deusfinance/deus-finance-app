@@ -41,23 +41,23 @@ enum WALLET_VIEWS {
   PENDING = 'pending',
 }
 
-export default function WalletModal ({
+export default function WalletModal({
   pendingTransactions,
   confirmedTransactions,
-} : {
-  pendingTransactions: string[], // hashes of pending
-  confirmedTransactions: string[], // hashes of confirmed
+}: {
+  pendingTransactions: string[] // hashes of pending
+  confirmedTransactions: string[] // hashes of confirmed
 }) {
   const { active, account, connector, activate, error } = useWeb3React()
   const [walletView, setWalletView] = useState(WALLET_VIEWS.ACCOUNT)
 
   const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>()
-  
+
   const [pendingError, setPendingError] = useState<boolean>(false)
 
   const walletModalOpen = useModalOpen(ApplicationModal.WALLET)
   const toggleWalletModal = useWalletModalToggle()
-  
+
   const previousAccount = usePrevious(account)
 
   // close on connection, when logged out before
@@ -100,14 +100,13 @@ export default function WalletModal ({
     }
 
     if (connector) {
-      activate(connector, undefined, true)
-        .catch((error) => {
-          if (error instanceof UnsupportedChainIdError) {
-            activate(connector) // a little janky...can't use setError because the connector isn't set
-          } else {
-            setPendingError(true)
-          }
-        })
+      activate(connector, undefined, true).catch((error) => {
+        if (error instanceof UnsupportedChainIdError) {
+          activate(connector) // a little janky...can't use setError because the connector isn't set
+        } else {
+          setPendingError(true)
+        }
+      })
     }
   }
 
@@ -223,11 +222,7 @@ export default function WalletModal ({
     if (account && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
         <>
-          <ModalHeader
-            title={'Account'}
-            border={true}
-            onClose={toggleWalletModal}
-          />
+          <ModalHeader title={'Account'} border={true} onClose={toggleWalletModal} />
           <AccountDetails
             pendingTransactions={pendingTransactions}
             confirmedTransactions={confirmedTransactions}
@@ -249,11 +244,7 @@ export default function WalletModal ({
             onClose={toggleWalletModal}
           />
         ) : (
-          <ModalHeader
-            title={'Connect a wallet'}
-            border={true}
-            onClose={toggleWalletModal}
-          />
+          <ModalHeader title={'Connect a wallet'} border={true} onClose={toggleWalletModal} />
         )}
         <Wrapper>
           {walletView === WALLET_VIEWS.PENDING ? (
@@ -272,11 +263,7 @@ export default function WalletModal ({
   }
 
   return (
-    <Modal
-      isOpen={walletModalOpen}
-      onBackgroundClick={toggleWalletModal}
-      onEscapeKeydown={toggleWalletModal}
-    >
+    <Modal isOpen={walletModalOpen} onBackgroundClick={toggleWalletModal} onEscapeKeydown={toggleWalletModal}>
       {getModalContent()}
     </Modal>
   )

@@ -1,13 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import {
-  Banner,
-  Navigation,
-  NavigationTypes,
-  Mint,
-  Statistics,
-} from 'components/App/Stablecoin'
+import { Banner, Navigation, NavigationTypes, Mint, Statistics } from 'components/App/Stablecoin'
 
 const Container = styled.div`
   display: flex;
@@ -39,9 +33,9 @@ const Row = styled.div`
 `
 
 export default function Stablecoin() {
-  const [selected, setSelected] = useState(NavigationTypes.MINT)
+  const [selected, setSelected] = useState<NavigationTypes>(NavigationTypes.MINT)
 
-  const getAppComponent = ():JSX.Element => {
+  const getAppComponent = (): JSX.Element => {
     if (selected == NavigationTypes.MINT) {
       return <Mint />
     }
@@ -53,17 +47,14 @@ export default function Stablecoin() {
     }
     return <Mint /> // TODO
   }
-  
+
   return (
     <Container>
-      <Banner/>
-      <Navigation
-        selected={selected}
-        setSelected={setSelected}
-      />
+      <Banner />
+      <Navigation selected={selected} setSelected={setSelected} />
       <Row>
         {getAppComponent()}
-        <Statistics/>
+        <Statistics />
       </Row>
     </Container>
   )

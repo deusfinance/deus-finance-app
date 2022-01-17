@@ -1,49 +1,70 @@
 import { useCallback, useEffect, useState } from 'react'
+import { Block } from '@ethersproject/abstract-provider'
 import { useAppDispatch } from 'state'
 
 import useWeb3React from 'hooks/useWeb3'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import useDebounce from 'hooks/useDebounce'
-import { SUPPORTED_CHAIN_IDS } from 'constants/chains'
+import { SupportedChainId } from 'constants/chains'
 
-import { updateBlockNumber, updateChainId } from './actions'
+import { updateBlockNumber, updateBlockTimestamp, updateChainId } from './actions'
 
 export default function Updater(): null {
   const { library, chainId } = useWeb3React()
   const dispatch = useAppDispatch()
 
   const windowVisible = useIsWindowVisible()
-  const [state, setState] = useState({
+
+  const [state, setState] = useState<{
+    chainId: number | undefined
+    blockNumber: number | null
+    blockTimestamp: number | null
+  }>({
     chainId,
     blockNumber: null,
+    blockTimestamp: null,
   })
 
-  const blockNumberCallback = useCallback((blockNumber) => {
-    setState((state) => {
-      if (chainId === state.chainId) {
-        if (typeof state.blockNumber !== 'number') return { chainId, blockNumber }
-        return { chainId, blockNumber: Math.max(blockNumber, state.blockNumber) }
-      }
-      return state
-    })
-  }, [chainId, setState])
+  const blockCallback = useCallback(
+    (block: Block) => {
+      setState((state) => {
+        if (chainId === state.chainId) {
+          if (typeof state.blockNumber !== 'number' && typeof state.blockTimestamp !== 'number') {
+            return { chainId, blockNumber: block.number, blockTimestamp: block.timestamp }
+          }
+          return {
+            chainId,
+            blockNumber: Math.max(block.number, state.blockNumber ?? 0),
+            blockTimestamp: Math.max(block.timestamp, state.blockTimestamp ?? 0),
+          }
+        }
+        return state
+      })
+    },
+    [chainId, setState]
+  )
+
+  const onBlock = useCallback(
+    (number) => library && library.getBlock(number).then(blockCallback),
+    [blockCallback, library]
+  )
 
   // Attach/detach listeners
   useEffect(() => {
     if (!library || !chainId || !windowVisible) return undefined
 
-    setState({ chainId, blockNumber: null })
+    setState({ chainId, blockNumber: null, blockTimestamp: null })
 
     library
-      .getBlockNumber()
-      .then(blockNumberCallback)
-      .catch((error: any) => console.error(`Failed to get block number for chainId: ${chainId}`, error))
+      .getBlock('latest')
+      .then(blockCallback)
+      .catch((error) => console.error(`Failed to get block for chainId: ${chainId}`, error))
 
-    library.on('block', blockNumberCallback)
+    library.on('block', onBlock)
     return () => {
-      library.removeListener('block', blockNumberCallback)
+      library.removeListener('block', onBlock)
     }
-  }, [dispatch, chainId, library, blockNumberCallback, windowVisible])
+  }, [dispatch, chainId, library, windowVisible, blockCallback, onBlock])
 
   const debouncedState = useDebounce(state, 100)
 
@@ -53,13 +74,13 @@ export default function Updater(): null {
   }, [windowVisible, dispatch, debouncedState.blockNumber, debouncedState.chainId])
 
   useEffect(() => {
+    if (!debouncedState.chainId || !debouncedState.blockTimestamp || !windowVisible) return
+    dispatch(updateBlockTimestamp({ chainId: debouncedState.chainId, blockTimestamp: debouncedState.blockTimestamp }))
+  }, [windowVisible, dispatch, debouncedState.blockTimestamp, debouncedState.chainId])
+
+  useEffect(() => {
     dispatch(
-      updateChainId({ chainId: debouncedState.chainId
-        ? SUPPORTED_CHAIN_IDS.includes(debouncedState.chainId)
-          ? debouncedState.chainId
-          : null
-        : null
-      })
+      updateChainId({ chainId: debouncedState.chainId in SupportedChainId ? debouncedState.chainId ?? null : null })
     )
   }, [dispatch, debouncedState.chainId])
 

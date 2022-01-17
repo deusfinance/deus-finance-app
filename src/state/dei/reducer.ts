@@ -4,20 +4,31 @@ import { SupportedChainId } from 'constants/chains'
 import { ORACLE_BASE_URL } from 'constants/muon'
 import { makeHttpRequest } from 'utils/http'
 
-/**
- * Primarily used by the /stablecoin/: route as an alternative to SUPPORTED_CHAIN_IDS
- * so people can still connect an unsupported chain (no user error) in our app, and 
- * then the wallet_switchEthereumChain still works. 
- */
-export const DeiSupportedChains = [
-  SupportedChainId.MAINNET,
-  SupportedChainId.POLYGON,
-]
+export const DeiSupportedChains = [SupportedChainId.MAINNET, SupportedChainId.POLYGON]
 
 export enum DeiStatus {
   OK = 'OK',
   LOADING = 'LOADING',
-  ERROR = 'ERROR'
+  ERROR = 'ERROR',
+}
+
+interface Scale {
+  collateralRatio: number
+  fee: number
+  poolCeiling: number
+  poolBalance: number
+}
+
+interface OracleResponse {
+  collateral_price: number
+  dei_price: number
+  deus_price: number
+}
+
+type Prices = {
+  collateral: number
+  dei: number
+  deus: number
 }
 
 const DEFAULT_SCALE = {
@@ -27,7 +38,7 @@ const DEFAULT_SCALE = {
   poolBalance: 1e12,
 }
 
-export const Scales = {
+export const Scales: { [chainId in SupportedChainId]?: Scale } = {
   [SupportedChainId.MAINNET]: DEFAULT_SCALE,
   [SupportedChainId.POLYGON]: DEFAULT_SCALE,
   [SupportedChainId.BSC]: {
@@ -37,7 +48,7 @@ export const Scales = {
   },
 }
 
-export const NUMBER_OF_POOLS: {[key: number]: number} = {
+export const NUMBER_OF_POOLS: { [chainId in SupportedChainId]?: number } = {
   [SupportedChainId.MAINNET]: 3,
   [SupportedChainId.POLYGON]: 4,
 }
@@ -56,27 +67,18 @@ const initialState = {
   poolCeiling: 0,
 }
 
-interface OracleResponse {
-  collateral_price: number,
-  dei_price: number,
-  deus_price: number,
-}
+export const fetchPrices = createAsyncThunk<Prices, { chainId: number }>('dei/fetchPrices', async ({ chainId }) => {
+  if (!chainId) throw new Error('No chainId present')
+  const { href: url } = new URL(`/dei/price?chainId=${chainId}`, ORACLE_BASE_URL)
 
-export const fetchPrices = createAsyncThunk(
-  'dei/fetchPrices',
-  async ({ chainId }: { chainId: number }) => {
-    if (!chainId) throw new Error('No chainId present')
-    const { href: url } = new URL(`/dei/price?chainId=${chainId}`, ORACLE_BASE_URL)
-
-    // Destruct the response directly so if these params don't exist it will throw an error.
-    const { collateral_price, dei_price, deus_price }: OracleResponse = await makeHttpRequest(url)
-    return {
-      collateral: collateral_price,
-      dei: dei_price,
-      deus: deus_price,
-    }
-  }
-)
+  // Destruct the response directly so if these params don't exist it will throw an error.
+  const { collateral_price, dei_price, deus_price }: OracleResponse = await makeHttpRequest(url)
+  return {
+    collateral: collateral_price,
+    dei: dei_price,
+    deus: deus_price,
+  } as Prices
+})
 
 const deiSlice = createSlice({
   name: 'dei',
@@ -101,7 +103,7 @@ const deiSlice = createSlice({
       state.redemptionFee = payload
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
       .addCase(fetchPrices.pending, (state) => {
         state.status = DeiStatus.LOADING
@@ -117,16 +119,16 @@ const deiSlice = createSlice({
           status: DeiStatus.ERROR,
         }
       })
-  }
+  },
 })
 
 const { actions, reducer } = deiSlice
-export const { 
+export const {
   updateStatus,
   updateCollateralRatio,
-  updatePoolBalance, 
+  updatePoolBalance,
   updatePoolCeiling,
-  updateMintingFee, 
-  updateRedemptionFee, 
+  updateMintingFee,
+  updateRedemptionFee,
 } = actions
 export default reducer

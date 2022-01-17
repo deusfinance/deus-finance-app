@@ -17,26 +17,26 @@ const Wrapper = styled.div`
   }
 `
 
-export default function Copy ({ 
-  toCopy, 
-  text, 
-  placement = 'left' 
-} : {
-  toCopy: string,
-  text: any,
-  placement?: 'left' | 'right',
+export default function Copy({
+  toCopy,
+  text,
+  placement = 'left',
+}: {
+  toCopy: string
+  text: any
+  placement?: 'left' | 'right'
 }): JSX.Element {
   const [isCopied, setCopied] = useCopyClipboard()
   return isCopied ? (
     <Wrapper>
       {placement == 'right' && 'Copied'}
-      <CheckMark size={12}/>
+      <CheckMark size={12} />
       {placement == 'left' && 'Copied'}
     </Wrapper>
   ) : (
-    <Wrapper onClick={() => setCopied(toCopy)} >
+    <Wrapper onClick={() => setCopied(toCopy)}>
       {placement == 'right' && text}
-      <CopyIcon size={12} style={{transform: 'translateY(-1px)'}}/>
+      <CopyIcon size={12} style={{ transform: 'translateY(-1px)' }} />
       {placement == 'left' && text}
     </Wrapper>
   )

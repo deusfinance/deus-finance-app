@@ -49,7 +49,7 @@ const Stat = styled.div`
   & > * {
     &:nth-child(2) {
       margin-top: 3px;
-      color: #FFB463;
+      color: #ffb463;
     }
   }
 `
@@ -75,19 +75,11 @@ export default function Banner() {
           </Stat>
           <Stat>
             <div>Contract</div>
-            <Copy
-              toCopy={DEI_ADDRESS}
-              text={truncateAddress(DEI_ADDRESS)}
-              placement='right'
-            />
+            <Copy toCopy={DEI_ADDRESS} text={truncateAddress(DEI_ADDRESS)} placement="right" />
           </Stat>
         </div>
       </Left>
-      <Image
-        src={BannerImage}
-        width={260}
-        height={190}
-      />
+      <Image src={BannerImage} width={260} height={190} alt="DEI Stablecoin" />
     </Wrapper>
   )
 }

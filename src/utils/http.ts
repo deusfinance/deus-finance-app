@@ -1,9 +1,9 @@
 export const makeHttpRequest = async function (
-  url: string, 
+  url: string,
   options: {
     [x: string]: string
   } = {
-    cache: 'no-cache'
+    cache: 'no-cache',
   }
 ) {
   try {

@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react'
+import { useMemo } from 'react'
 import { isAddress } from '@ethersproject/address'
 import { Contract } from '@ethersproject/contracts'
 import { AddressZero } from '@ethersproject/constants'
@@ -14,9 +14,10 @@ import MULTICALL2_ABI from 'constants/abi/MULTICALL2.json'
 import { Tokens } from 'constants/tokens'
 import { Providers } from 'constants/providers'
 import { Multicall2, CollateralPool, MintProxy } from 'constants/addresses'
+import { SupportedChainId } from 'constants/chains'
 
 export function useContract(
-  address: string,
+  address: string | null | undefined,
   ABI: any,
   withSignerIfPossible = true
 ): Contract | null {
@@ -32,32 +33,27 @@ export function useContract(
   }, [library, account, chainId, address, ABI, withSignerIfPossible])
 }
 
-export function useERC20Contract(
-  tokenAddress: string, 
-  withSignerIfPossible?: boolean
-) {
+export function useERC20Contract(tokenAddress: string | null | undefined, withSignerIfPossible?: boolean) {
   return useContract(tokenAddress, ERC20_ABI, withSignerIfPossible)
 }
 
-export function useProxyMinterContract () {
+export function useProxyMinterContract() {
   const { chainId } = useWeb3React()
   const address = useMemo(() => MintProxy[chainId ?? 1], [chainId])
   return useContract(address, PROXY_MINTER_ABI)
 }
 
-export function useCollateralPoolContract () {
+export function useCollateralPoolContract() {
   const { chainId } = useWeb3React()
   const address = useMemo(() => CollateralPool[chainId ?? 1], [chainId])
   return useContract(address, COLLATERAL_POOL_ABI)
 }
 
-export function useDeiContract (targetChainId?: number) {
+export function useDeiContract(targetChainId?: number) {
   const { chainId } = useWeb3React()
   const address = useMemo(() => {
-    return targetChainId
-      ? Tokens['DEI'][targetChainId]['address']
-      : Tokens['DEI'][chainId ?? 1]['address']
-  }, [chainId])
+    return targetChainId ? Tokens['DEI'][targetChainId]['address'] : Tokens['DEI'][chainId ?? 1]['address']
+  }, [chainId, targetChainId])
   return useContract(address, DEI_ABI)
 }
 
@@ -75,19 +71,19 @@ export function getSigner(library: any, account: string): any {
   return library.getSigner(account).connectUnchecked()
 }
 
-function getContract (
+function getContract(
   address: string,
   ABI: any,
   library: any,
   account: string | undefined,
-  targetChainId?: number
-) : Contract | null{
+  targetChainId?: SupportedChainId
+): Contract | null {
   if (!isAddress(address) || address === AddressZero) {
     if (address != '0x') {
       console.info(`Invalid 'address' parameter '${address}'.`)
     }
     return null
-  } 
+  }
   if (!account) return null
   let providerOrSigner
   if (targetChainId) {

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { AppState, useAppSelector } from 'state'
 
 // deiAmountOut, usdcAmountIn, deusAmountIn
-export interface ProxyValues extends Array<string>{}
+export type ProxyValues = Array<string>
 
 export interface MintState {
   value: string

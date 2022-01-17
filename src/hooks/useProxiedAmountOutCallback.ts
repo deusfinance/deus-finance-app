@@ -6,14 +6,14 @@ import { useProxyMinterContract } from './useContract'
 import { MINT__PATHS, Collateral } from 'constants/addresses'
 import { ProxyValues } from 'state/mint/reducer'
 
-interface Params extends Array<string | string[]>{}
+type Params = Array<string | string[]>
 
 enum CallMethods {
   ERC20 = 'getERC202DEIInputs',
-  USDC = 'getUSDC2DEIInputs'
+  USDC = 'getUSDC2DEIInputs',
 }
 
-export default function useProxiedAmountOutCallback (
+export default function useProxiedAmountOutCallback(
   address: string | undefined,
   decimals: number | undefined,
   symbol: string | undefined,
@@ -24,41 +24,45 @@ export default function useProxiedAmountOutCallback (
   const ProxyMinterContract = useProxyMinterContract()
 
   const method = useMemo(() => {
-    return address == Collateral[chainId ?? 1]
-      ? CallMethods.USDC
-      : CallMethods.ERC20
+    return address == Collateral[chainId ?? 1] ? CallMethods.USDC : CallMethods.ERC20
   }, [chainId, address])
 
-  const getParams = useCallback((inputAmount: BN): Params | null => {
-    if (inputAmount.isZero() || collateralPrice.isZero() || deusPrice.isZero()) return null
-    if (!chainId || !address || !decimals || !symbol) return null
+  const getParams = useCallback(
+    (inputAmount: BN): Params | null => {
+      if (inputAmount.isZero() || collateralPrice.isZero() || deusPrice.isZero()) return null
+      if (!chainId || !address || !decimals || !symbol) return null
 
-    let params: Params = [
-      inputAmount.times(new BN(10).pow(decimals)).toFixed(0),
-      deusPrice.times(new BN(10).pow(6)).toFixed(0),
-      collateralPrice.times(new BN(10).pow(6)).toFixed(0),
-    ]
+      const params: Params = [
+        inputAmount.times(new BN(10).pow(decimals)).toFixed(0),
+        deusPrice.times(new BN(10).pow(6)).toFixed(0),
+        collateralPrice.times(new BN(10).pow(6)).toFixed(0),
+      ]
 
-    const path = MINT__PATHS[chainId][symbol]
-    if (method == CallMethods.ERC20) {
-      if (!path) {
-        console.error("Unable to find a proxy path for: ", address)
-        return params
+      const path = MINT__PATHS[chainId][symbol]
+      if (method == CallMethods.ERC20) {
+        if (!path) {
+          console.error('Unable to find a proxy path for: ', address)
+          return params
+        }
+        params.push(path)
       }
-      params.push(path)
-    }
-    return params
-  }, [chainId, address, decimals, symbol, collateralPrice, deusPrice])
+      return params
+    },
+    [chainId, address, decimals, symbol, collateralPrice, deusPrice]
+  )
 
-  return useCallback(async (inputAmount: BN) => {
-    try {
-      const params = getParams(inputAmount)
-      if (!ProxyMinterContract || !params) return null
-      const result: ProxyValues = await ProxyMinterContract[method](...params)
-      return result
-    } catch (err) {
-      console.error(err)
-      return null
-    }
-  }, [method, getParams, ProxyMinterContract])
+  return useCallback(
+    async (inputAmount: BN) => {
+      try {
+        const params = getParams(inputAmount)
+        if (!ProxyMinterContract || !params) return null
+        const result: ProxyValues = await ProxyMinterContract[method](...params)
+        return result
+      } catch (err) {
+        console.error(err)
+        return null
+      }
+    },
+    [method, getParams, ProxyMinterContract]
+  )
 }

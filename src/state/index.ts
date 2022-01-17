@@ -1,11 +1,11 @@
-import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
+import { Action, AnyAction, configureStore, Store, ThunkAction, ThunkDispatch } from '@reduxjs/toolkit'
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 import reducer from './reducer'
 
-let store
+let store: Store<any, AnyAction>
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions']
 
@@ -36,16 +36,17 @@ function makeStore(preloadedState = undefined) {
 
 export const getOrCreateStore = (preloadedState = undefined) => {
   let _store = store ?? makeStore(preloadedState)
+  const formattedPreloadedState = preloadedState ?? {}
 
   // After navigating to a page with an initial Redux state, merge that state
   // with the current state in the store, and create a new store
   if (preloadedState && store) {
     _store = makeStore({
       ...store.getState(),
-      ...preloadedState,
+      ...formattedPreloadedState,
     })
     // Reset the current store
-    store = undefined
+    store = makeStore()
   }
 
   // For SSG and SSR always create a new store
@@ -60,8 +61,10 @@ export const getOrCreateStore = (preloadedState = undefined) => {
 store = getOrCreateStore()
 
 export type AppState = ReturnType<typeof store.getState>
+
 export type AppDispatch = typeof store.dispatch
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppState, unknown, Action<string>>
+export type AppThunkDispatch = ThunkDispatch<{}, void, AnyAction>
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector

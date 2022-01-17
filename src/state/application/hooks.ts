@@ -3,7 +3,7 @@ import { AppState, useAppDispatch, useAppSelector } from 'state'
 
 import useWeb3React from 'hooks/useWeb3'
 import { addPopup, removePopup, setOpenModal } from './actions'
-import { ApplicationModal, PopupContent } from './reducer'
+import { ApplicationModal, Popup, PopupContent, PopupList } from './reducer'
 import { REMOVE_AFTER_MS, L2_REMOVE_AFTER_MS } from 'constants/popup'
 
 export function useBlockNumber(): number | undefined {
@@ -30,23 +30,13 @@ export function useNetworkModalToggle(): () => void {
   return useToggleModal(ApplicationModal.NETWORK)
 }
 
-export function useTransactionModalToggle(): () => void {
-  return useToggleModal(ApplicationModal.TRANSACTION)
-}
-
-export function useAddPopup(): (
-  content: PopupContent,
-  key?: string,
-  removeAfterMs?: number,
-) => void {
+export function useAddPopup(): (content: PopupContent, key?: string, removeAfterMs?: number) => void {
   const dispatch = useAppDispatch()
   const { chainId } = useWeb3React()
 
   return useCallback(
     (content: PopupContent, key?: string, removeAfterMs?: number) => {
-      const ms = removeAfterMs ?? chainId == 1
-        ? REMOVE_AFTER_MS
-        : L2_REMOVE_AFTER_MS
+      const ms = removeAfterMs ?? chainId == 1 ? REMOVE_AFTER_MS : L2_REMOVE_AFTER_MS
       dispatch(addPopup({ content, key, removeAfterMs: ms }))
     },
     [dispatch, chainId]
@@ -63,9 +53,9 @@ export function useRemovePopup(): (key: string) => void {
   )
 }
 
-export function useActivePopups(): AppState['application']['popupList'] {
+export function useActivePopups(): PopupList {
   const list = useAppSelector((state: AppState) => {
     return state.application.popupList
   })
-  return useMemo(() => list.filter((item) => item.show), [list])
+  return useMemo(() => list.filter((item: Popup) => item.show), [list])
 }

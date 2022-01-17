@@ -3,7 +3,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
 export function createApolloClient(uri) {
   return new ApolloClient({
     link: new HttpLink({
-      uri: uri,
+      uri,
     }),
     shouldBatch: true,
     ssrMode: typeof window === 'undefined',

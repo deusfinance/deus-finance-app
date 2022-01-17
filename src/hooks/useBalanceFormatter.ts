@@ -6,7 +6,7 @@ const DEFAULT_PRECISION = 9
 
 export default function useBalanceFormatter(balanceBN: BigNumber, decimals: number) {
   const balanceUser: string = useMemo(() => {
-    return (balanceBN && balanceBN.gt(0)) ? formatUnits(balanceBN, decimals) : '0'
+    return balanceBN && balanceBN.gt(0) ? formatUnits(balanceBN, decimals) : '0'
   }, [balanceBN, decimals])
 
   const PRECISION = useMemo(() => {
@@ -16,7 +16,9 @@ export default function useBalanceFormatter(balanceBN: BigNumber, decimals: numb
   const balanceLabel: string = useMemo(() => {
     return !balanceUser
       ? '0.00'
-      : parseFloat(balanceUser).toFixed(PRECISION).replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/,'$1')
+      : parseFloat(balanceUser)
+          .toFixed(PRECISION)
+          .replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/, '$1')
   }, [balanceUser, PRECISION])
 
   return {

@@ -4,7 +4,7 @@ import { UnsupportedChainIdError } from '@web3-react/core'
 import { Activity } from 'react-feather'
 
 import useWeb3React from 'hooks/useWeb3'
-import { useWalletModalToggle  } from 'state/application/hooks'
+import { useWalletModalToggle } from 'state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
 import { truncateAddress } from 'utils/account'
@@ -13,8 +13,7 @@ import WalletModal from 'components/WalletModal'
 import { NavButton } from 'components/Button'
 import { Connected as ConnectedIcon } from 'components/Icons'
 
-const ConnectButton = styled(NavButton)`
-`
+const ConnectButton = styled(NavButton)``
 
 const ConnectedButton = styled(NavButton)`
   & > * {
@@ -69,12 +68,16 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
+  const { account } = useWeb3React()
   const allTransactions = useAllTransactions()
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
-    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
-  }, [allTransactions])
+    return txs
+      .filter(isTransactionRecent)
+      .sort(newTransactionsFirst)
+      .filter((tx) => tx.from == account)
+  }, [allTransactions, account])
 
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)
@@ -82,10 +85,7 @@ export default function Web3Status() {
   return (
     <>
       <Web3StatusInner />
-      <WalletModal
-        pendingTransactions={pending} 
-        confirmedTransactions={confirmed}
-      />
+      <WalletModal pendingTransactions={pending} confirmedTransactions={confirmed} />
     </>
   )
 }

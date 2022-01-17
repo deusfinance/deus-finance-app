@@ -40,13 +40,13 @@ const HeaderWrapper = styled.div<{
   align-items: center;
   padding: 20px;
   padding-bottom: 15px;
-  border-bottom: 1px solid ${props => props.border ? '#6D737D' : 'transparent'};
+  border-bottom: 1px solid ${(props) => (props.border ? '#6D737D' : 'transparent')};
 `
 
 const Text = styled.div<{
   size: string
 }>`
-  font-size: ${props => props.size}
+  font-size: ${(props) => props.size};
 `
 
 export const ModalHeader = ({
@@ -55,7 +55,7 @@ export const ModalHeader = ({
   border = false,
   onClose,
   onBack,
-}:{
+}: {
   title?: string
   headerSize?: string
   border?: boolean
@@ -66,7 +66,7 @@ export const ModalHeader = ({
     <HeaderWrapper border={border}>
       {onBack && <ChevronLeftIcon onClick={onBack} width={parseFloat(headerSize)} height={parseFloat(headerSize)} />}
       {title && <Text size={headerSize}>{title}</Text>}
-      <CloseIcon width={headerSize} height={headerSize} onClick={onClose}/>
+      <CloseIcon width={headerSize} height={headerSize} onClick={onClose} />
     </HeaderWrapper>
   )
 }

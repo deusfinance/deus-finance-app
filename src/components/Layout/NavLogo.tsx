@@ -30,24 +30,15 @@ const Wrapper = styled.div`
   }
 `
 
-export default function NavLogo () {
+export default function NavLogo() {
   return (
     <Link href="/">
       <Wrapper>
         <div>
-          <Image
-            src={NAV_LOGO}
-            alt='App Logo'
-            width={30}
-            height={30}
-          />
+          <Image src={NAV_LOGO} alt="App Logo" width={30} height={30} />
         </div>
         <div>
-          <Image
-            src={NAV_TEXT}
-            alt='App Logo'
-            height={22}
-          />
+          <Image src={NAV_TEXT} alt="App Logo" height={22} />
         </div>
       </Wrapper>
     </Link>

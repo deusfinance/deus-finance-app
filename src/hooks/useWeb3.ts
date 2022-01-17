@@ -1,16 +1,28 @@
 import { useEffect, useState } from 'react'
 import { Web3Provider } from '@ethersproject/providers'
-import { useWeb3React as useWeb3ReactCore} from '@web3-react/core'
-import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
+import { useWeb3React as useWeb3ReactCore } from '@web3-react/core'
 import { isMobile } from 'react-device-detect'
 
 import { injected } from '../connectors'
-import { NETWORK_CONTEXT_NAME } from 'constants/misc'
 
-export default function useWeb3React(): Web3ReactContextInterface<Web3Provider> {
-  const context = useWeb3ReactCore<Web3Provider>()
-  const contextNetwork = useWeb3ReactCore<Web3Provider>(NETWORK_CONTEXT_NAME)
-  return context.active ? context : contextNetwork
+import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
+import { SupportedChainId } from 'constants/chains'
+
+// TODO: I keep trying to find reasons to use the contextNetwork but fail to do everytime.
+// It introduces an incredible amount of bugs and unwanted behavior. Stick to using the
+// traditional way until there is more clarity.
+
+// export default function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
+//   chainId?: SupportedChainId
+// } {
+//   const context = useWeb3ReactCore<Web3Provider>()
+//   const contextNetwork = useWeb3ReactCore<Web3Provider>(NETWORK_CONTEXT_NAME)
+//   return context.active ? context : contextNetwork
+// }
+export default function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
+  chainId?: SupportedChainId
+} {
+  return useWeb3ReactCore<Web3Provider>()
 }
 
 export function useEagerConnect() {
@@ -51,15 +63,12 @@ export function useInactiveListener(suppress = false) {
   useEffect(() => {
     const { ethereum } = window
 
-    if (ethereum && ethereum.on && !active && !error && !suppress) {
+    if (ethereum && ethereum.on && ethereum.removeAllListeners && !active && !error && !suppress) {
       const handleChainChanged = () => {
         activate(injected, undefined, true).catch((error) => {
           console.error('Failed to activate after chain changed', error)
         })
       }
-
-      // hot fix for being unable to switch to Avalanche
-      ethereum.removeAllListeners(['networkChanged'])
 
       const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {

@@ -1,14 +1,15 @@
 import { Token, IToken } from 'utils/token'
 import { SUPPORTED_CHAIN_IDS } from './chains'
 
-import USDC_LOGO from 'assets/images/network/MAINNET.jpg'
-import USDT_LOGO from 'assets/images/network/MAINNET.jpg'
-import DAI_LOGO from 'assets/images/network/MAINNET.jpg'
-import DEI_LOGO from 'assets/images/network/MAINNET.jpg'
-import DEUS_LOGO from 'assets/images/network/MAINNET.jpg'
-import ETH_LOGO from 'assets/images/network/MAINNET.jpg'
-import WBTC_LOGO from 'assets/images/network/MAINNET.jpg'
-import MATIC_LOGO from 'assets/images/network/MAINNET.jpg'
+// TODO add proper logos
+import USDC_LOGO from 'assets/images/network/mainnet.jpg'
+import USDT_LOGO from 'assets/images/network/mainnet.jpg'
+import DAI_LOGO from 'assets/images/network/mainnet.jpg'
+import DEI_LOGO from 'assets/images/network/mainnet.jpg'
+import DEUS_LOGO from 'assets/images/network/mainnet.jpg'
+import ETH_LOGO from 'assets/images/network/mainnet.jpg'
+import WBTC_LOGO from 'assets/images/network/mainnet.jpg'
+import MATIC_LOGO from 'assets/images/network/mainnet.jpg'
 
 type TokenMap = {
   [key: number]: IToken
@@ -19,7 +20,7 @@ function duplicateTokenByChainId(
   decimals: number,
   name: string,
   symbol: string,
-  logo: StaticImageData,
+  logo: StaticImageData
 ): TokenMap {
   return SUPPORTED_CHAIN_IDS.reduce((acc: TokenMap, chainId: number) => {
     acc[chainId] = new Token(chainId, address, decimals, name, symbol, logo)
@@ -27,7 +28,7 @@ function duplicateTokenByChainId(
   }, {})
 }
 
-export const Tokens: {[key: string]: TokenMap} = {
+export const Tokens: { [key: string]: TokenMap } = {
   USDC: {
     1: new Token(1, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USDC', USDC_LOGO),
     137: new Token(137, '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174', 6, 'USDC', 'USDC', USDC_LOGO),

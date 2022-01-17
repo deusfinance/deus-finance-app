@@ -1,12 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
+import Image from 'next/image'
 
 import { GreenCircle } from 'components/Icons'
 import { ExternalLink } from 'components/Link'
 
 const Wrapper = styled.button<{
-  disabled?: boolean,
-  active?: boolean,
+  disabled?: boolean
+  active?: boolean
   clickable?: boolean
   onClick: () => void
 }>`
@@ -19,8 +20,8 @@ const Wrapper = styled.button<{
   border-radius: 5px;
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   outline: none;
-  color: #EFEFEF;
-  border: ${({ active }) => active ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.1)'};
+  color: #efefef;
+  border: ${({ active }) => (active ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.1)')};
   width: 100%;
   box-sizing: border-box;
 
@@ -30,7 +31,9 @@ const Wrapper = styled.button<{
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  ${props => !props.clickable && `
+  ${(props) =>
+    !props.clickable &&
+    `
     border: 1px solid #0064FA;
     &:hover,
     &:focus {
@@ -65,17 +68,17 @@ const SubHeader = styled.div`
   font-size: 12px;
 `
 
-export default function Option ({
+export default function Option({
   link = null,
   clickable = true,
   size = 24,
-  onClick = () => {},
+  onClick = () => null,
   color,
   header,
   subheader = null,
   icon,
   active = false,
-} : {
+}: {
   link?: string | null
   clickable?: boolean
   size?: number
@@ -99,7 +102,7 @@ export default function Option ({
         </HeaderText>
         {subheader && <SubHeader>{subheader}</SubHeader>}
       </WrapperLeft>
-      <img src={icon.src} alt={'Icon'} width={size} height={size}/>
+      <Image src={icon.src} alt={'Icon'} width={size} height={size} />
     </Wrapper>
   )
   if (link) {

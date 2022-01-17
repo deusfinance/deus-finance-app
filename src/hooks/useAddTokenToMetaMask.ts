@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 import useWeb3React from './useWeb3'
 import { IToken } from 'utils/token'
 
-export default function useAddTokenToMetaMask(token: IToken | undefined): {
+export default function useAddTokenToMetaMask(token: IToken | null | undefined): {
   addToken: () => void
   success: boolean | undefined
 } {

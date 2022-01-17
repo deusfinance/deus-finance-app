@@ -63,6 +63,7 @@ typings/
 
 # next.js build output
 .next
+out/
 
 # nuxt.js build output
 .nuxt
@@ -75,3 +76,4 @@ typings/
 
 # FuseBox cache
 .fusebox/
+*.svg

@@ -62,7 +62,7 @@ class MiniRpcProvider implements AsyncSendable {
         try {
           this.connector.changeChainId(parseInt((b.request.params as [{ chainId: string }])[0].chainId))
           b.resolve({ id: b.request.id })
-        } catch (error) {
+        } catch (error: any) {
           b.reject(error)
         }
         return false

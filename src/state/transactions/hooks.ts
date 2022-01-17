@@ -12,48 +12,51 @@ export interface TransactionResponseLight {
 export function useTransactionAdder(): (
   response: TransactionResponseLight,
   customData?: {
-    summary?: string,
-    approval?: Approval,
+    summary?: string
+    approval?: Approval
     mint?: Mint
   }
 ) => void {
   const { chainId, account } = useWeb3React()
   const dispatch = useAppDispatch()
 
-  return useCallback((
-    response: TransactionResponseLight,
-    {
-      summary,
-      approval,
-      mint,
-    }: {
-      summary?: string
-      approval?: Approval
-      mint?: Mint
-    } = {}
-  ) => {
-    if (!account || !chainId) return
-
-    const { hash } = response
-    if (!hash) {
-      throw new Error('No transaction hash found.')
-    }
-
-    dispatch(
-      addTransaction({
-        hash,
-        from: account,
-        chainId,
+  return useCallback(
+    (
+      response: TransactionResponseLight,
+      {
         summary,
         approval,
         mint,
-      })
-    )
-  }, [dispatch, chainId, account])
+      }: {
+        summary?: string
+        approval?: Approval
+        mint?: Mint
+      } = {}
+    ) => {
+      if (!account || !chainId) return
+
+      const { hash } = response
+      if (!hash) {
+        throw new Error('No transaction hash found.')
+      }
+
+      dispatch(
+        addTransaction({
+          hash,
+          from: account,
+          chainId,
+          summary,
+          approval,
+          mint,
+        })
+      )
+    },
+    [dispatch, chainId, account]
+  )
 }
 
 // Returns all the transactions for the current chain
-export function useAllTransactions(): { [txHash: string]: TransactionDetails }  {
+export function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const { chainId } = useWeb3React()
 
   const state: TransactionState = useAppSelector((state) => state.transactions)
@@ -74,7 +77,7 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
   return !transactions[transactionHash].receipt
 }
 
-export function useHasPendingApproval(tokenAddress: string | undefined, spender: string | undefined) {
+export function useHasPendingApproval(tokenAddress: string | null | undefined, spender: string | null | undefined) {
   const allTransactions = useAllTransactions()
   return useMemo(
     () =>
@@ -95,9 +98,7 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
   )
 }
 
-export function useHasPendingMint(
-  addressMap: string | undefined,
-) {
+export function useHasPendingMint(addressMap: string | null | undefined) {
   const allTransactions = useAllTransactions()
   return useMemo(
     () =>
