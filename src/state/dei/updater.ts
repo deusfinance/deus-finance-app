@@ -54,12 +54,7 @@ export default function Updater(): null {
   }, [dispatch, isSupported, chainId, collateralPrice, collateralRatioScale])
 
   const infoCalls = useMemo(
-    () => 
-      !isSupported && priceMapping.length
-        ? [] 
-        : [
-          { methodName: 'dei_info', callInputs: [priceMapping] }
-        ],
+    () => (!isSupported && priceMapping.length ? [] : [{ methodName: 'dei_info', callInputs: [priceMapping] }]),
     [isSupported, priceMapping]
   )
 

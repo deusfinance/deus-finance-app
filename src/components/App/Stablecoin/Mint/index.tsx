@@ -86,11 +86,11 @@ export default function Mint() {
   const [insufficientBalance, setInsufficientBalance] = useState<boolean>(false)
   const [txHash, setTxHash] = useState<string>('')
 
-  // Allow user to connect any chan globally, but restrict unsupported ones on this page
+  // Allow user to connect any chain globally, but restrict unsupported ones on this page
   const isSupportedChainId: boolean = useMemo(() => {
-    if (!chainId) return false
+    if (!chainId || !account) return false
     return DeiSupportedChains.includes(chainId)
-  }, [chainId])
+  }, [chainId, account])
 
   // Oracle + global DEI data
   const [loading, error] = useMemo(() => {
@@ -100,10 +100,8 @@ export default function Mint() {
   // Define dropdown options
   const [inputOptions, outputOptions] = useMemo(() => {
     const DEFAULT_OPTIONS = [[], []]
-    return isSupportedChainId && chainId // chainId is redundant, but its for ts linting
-      ? [MINT__INPUTS[chainId], MINT__OUTPUTS[chainId]]
-      : DEFAULT_OPTIONS
-  }, [chainId, isSupportedChainId])
+    return isSupportedChainId && chainId && account ? [MINT__INPUTS[chainId], MINT__OUTPUTS[chainId]] : DEFAULT_OPTIONS
+  }, [chainId, account, isSupportedChainId])
 
   // Flatten all options and their respective nested maps for easy IToken lookup
   const tokensFlat = useMemo(() => {

@@ -5,27 +5,23 @@ import { isMobile } from 'react-device-detect'
 
 import { injected } from '../connectors'
 
-/**
-  This function fakes a context with chainId = 1 if not connected. We can use it so we don't have to check !chainId on each useWeb3() instance + in regards to type-checking chainId is always defined as SupportedChain instead of | undefined.
+import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
+import { SupportedChainId } from 'constants/chains'
 
-  TODO: migrate dependencies to !account instead of !chainId so we can use this function.
+// TODO: I keep trying to find reasons to use the contextNetwork but fail to do everytime.
+// It introduces an incredible amount of bugs and unwanted behavior. Stick to using the
+// traditional way until there is more clarity.
 
-  import { Web3ReactContextInterface } from '@web3-react/core/dist/types'
-  import { NETWORK_CONTEXT_NAME } from 'constants/misc'
-  import { SupportedChainId } from 'constants/chains'
-
-  export default function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
-    chainId: SupportedChainId
-  } {
-    const context = useWeb3ReactCore<Web3Provider>()
-    const contextNetwork = useWeb3ReactCore<Web3Provider>(NETWORK_CONTEXT_NAME)
-    return context.active ? context : contextNetwork
-  }
-
- */
-
-// Strictly allows connected wallets
-export default function useWeb3React() {
+// export default function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
+//   chainId?: SupportedChainId
+// } {
+//   const context = useWeb3ReactCore<Web3Provider>()
+//   const contextNetwork = useWeb3ReactCore<Web3Provider>(NETWORK_CONTEXT_NAME)
+//   return context.active ? context : contextNetwork
+// }
+export default function useWeb3React(): Web3ReactContextInterface<Web3Provider> & {
+  chainId?: SupportedChainId
+} {
   return useWeb3ReactCore<Web3Provider>()
 }
 
@@ -73,9 +69,6 @@ export function useInactiveListener(suppress = false) {
           console.error('Failed to activate after chain changed', error)
         })
       }
-
-      // hot fix for being unable to switch to Avalanche
-      ethereum.removeAllListeners(['networkChanged'])
 
       const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {

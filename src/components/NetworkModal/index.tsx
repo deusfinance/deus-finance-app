@@ -69,6 +69,7 @@ export default function NetworkModal() {
       <Wrapper>
         {Object.values(SUPPORTED_CHAIN_IDS).map((id: SupportedChainId, index) => {
           const active = chainId == id
+          const Chain = ChainInfo[id]
           return (
             <Option
               key={index}
@@ -79,13 +80,8 @@ export default function NetworkModal() {
                 rpcChangerCallback(id)
               }}
             >
-              <div>{ChainInfo[id]['label']}</div>
-              <Image
-                src={require(`../../assets/images/network/${SupportedChainId[id]}.jpg`)}
-                alt={`${ChainInfo[id]['label']} Network`}
-                width={30}
-                height={30}
-              />
+              <div>{Chain.label}</div>
+              <Image src={Chain.logoUrl} alt={Chain.label} width={30} height={30} />
             </Option>
           )
         })}

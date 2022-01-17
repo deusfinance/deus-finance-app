@@ -13,7 +13,7 @@ export default function useERC20Allowance(
   const { account } = useWeb3React()
   const contract = useERC20Contract(token?.address, true)
 
-  const inputs = useMemo(() => [account ?? '', spender ?? ''], [account, spender])
+  const inputs = useMemo(() => [account ?? undefined, spender ?? undefined], [account, spender])
   const allowance = useSingleCallResult(contract, 'allowance', inputs).result
 
   return useMemo(() => {

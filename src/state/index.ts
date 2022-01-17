@@ -36,7 +36,7 @@ function makeStore(preloadedState = undefined) {
 
 export const getOrCreateStore = (preloadedState = undefined) => {
   let _store = store ?? makeStore(preloadedState)
-  let formattedPreloadedState = preloadedState ?? {}
+  const formattedPreloadedState = preloadedState ?? {}
 
   // After navigating to a page with an initial Redux state, merge that state
   // with the current state in the store, and create a new store

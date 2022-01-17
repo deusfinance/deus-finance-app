@@ -10,5 +10,5 @@ export const Providers = {
   [SupportedChainId.HECO]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.HECO]),
   [SupportedChainId.POLYGON]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.POLYGON]),
   [SupportedChainId.FANTOM]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.FANTOM]),
-  [SupportedChainId.AVALANCHE]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.AVALANCHE]),
+  // [SupportedChainId.AVALANCHE]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.AVALANCHE]),
 }

@@ -1,14 +1,15 @@
 import { Token, IToken } from 'utils/token'
 import { SUPPORTED_CHAIN_IDS } from './chains'
 
-import USDC_LOGO from 'assets/images/network/MAINNET.jpg'
-import USDT_LOGO from 'assets/images/network/MAINNET.jpg'
-import DAI_LOGO from 'assets/images/network/MAINNET.jpg'
-import DEI_LOGO from 'assets/images/network/MAINNET.jpg'
-import DEUS_LOGO from 'assets/images/network/MAINNET.jpg'
-import ETH_LOGO from 'assets/images/network/MAINNET.jpg'
-import WBTC_LOGO from 'assets/images/network/MAINNET.jpg'
-import MATIC_LOGO from 'assets/images/network/MAINNET.jpg'
+// TODO add proper logos
+import USDC_LOGO from 'assets/images/network/mainnet.jpg'
+import USDT_LOGO from 'assets/images/network/mainnet.jpg'
+import DAI_LOGO from 'assets/images/network/mainnet.jpg'
+import DEI_LOGO from 'assets/images/network/mainnet.jpg'
+import DEUS_LOGO from 'assets/images/network/mainnet.jpg'
+import ETH_LOGO from 'assets/images/network/mainnet.jpg'
+import WBTC_LOGO from 'assets/images/network/mainnet.jpg'
+import MATIC_LOGO from 'assets/images/network/mainnet.jpg'
 
 type TokenMap = {
   [key: number]: IToken

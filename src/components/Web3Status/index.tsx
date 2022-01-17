@@ -68,12 +68,16 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
+  const { account } = useWeb3React()
   const allTransactions = useAllTransactions()
 
   const sortedRecentTransactions = useMemo(() => {
     const txs = Object.values(allTransactions)
-    return txs.filter(isTransactionRecent).sort(newTransactionsFirst)
-  }, [allTransactions])
+    return txs
+      .filter(isTransactionRecent)
+      .sort(newTransactionsFirst)
+      .filter((tx) => tx.from == account)
+  }, [allTransactions, account])
 
   const pending = sortedRecentTransactions.filter((tx) => !tx.receipt).map((tx) => tx.hash)
   const confirmed = sortedRecentTransactions.filter((tx) => tx.receipt).map((tx) => tx.hash)

@@ -26,7 +26,7 @@ export const Multicall2: AddressMap = {
   [SupportedChainId.HECO]: '0xdDCbf776dF3dE60163066A5ddDF2277cB445E0F3',
   [SupportedChainId.POLYGON]: '0x02817C1e3543c2d908a590F5dB6bc97f933dB4BD',
   [SupportedChainId.FANTOM]: '0x22D4cF72C45F8198CfbF4B568dBdB5A85e8DC0B5',
-  [SupportedChainId.AVALANCHE]: '0xdDCbf776dF3dE60163066A5ddDF2277cB445E0F3',
+  // [SupportedChainId.AVALANCHE]: '0xdDCbf776dF3dE60163066A5ddDF2277cB445E0F3',
 }
 
 /* =====================================

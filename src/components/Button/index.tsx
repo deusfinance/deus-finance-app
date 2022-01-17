@@ -21,7 +21,6 @@ export const NavButton = styled.button`
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  min-width: 150px;
   height: 35px;
   font-size: 15px;
   align-items: center;

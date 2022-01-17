@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 
 import useWeb3React from 'hooks/useWeb3'
@@ -48,18 +48,21 @@ const Item = styled.div<{
 `
 
 export default function NetworkSelect({ chains = [] }: { chains?: number[] }) {
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const rpcChangerCallback = useRpcChangerCallback()
+
+  const isConnected = useMemo(() => chainId && account, [chainId, account])
 
   return (
     <Wrapper>
-      {(chains ?? SUPPORTED_CHAIN_IDS).map((id: SupportedChainId, index) => {
-        return (
-          <Item active={id == chainId} onClick={() => rpcChangerCallback(id)} key={index}>
-            {ChainInfo[id]['label']}
-          </Item>
-        )
-      })}
+      {isConnected &&
+        (chains ?? SUPPORTED_CHAIN_IDS).map((id: SupportedChainId, index) => {
+          return (
+            <Item active={id == chainId} onClick={() => rpcChangerCallback(id)} key={index}>
+              {ChainInfo[id]['label']}
+            </Item>
+          )
+        })}
     </Wrapper>
   )
 }
