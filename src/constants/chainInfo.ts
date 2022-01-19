@@ -1,12 +1,12 @@
 import { SupportedChainId } from './chains'
 
-import MainnetLogo from 'assets/images/network/mainnet.svg'
-import RinkebyLogo from 'assets/images/network/mainnet.svg'
-import BinanceLogo from 'assets/images/network/binance.svg'
-import xDaiLogo from 'assets/images/network/xdai.svg'
-import HecoLogo from 'assets/images/network/heco.svg'
-import PolygonLogo from 'assets/images/network/polygon.svg'
-import FantomLogo from 'assets/images/network/fantom.svg'
+import MainnetLogo from 'assets/img/networks/mainnet.svg'
+import RinkebyLogo from 'assets/img/networks/mainnet.svg'
+import BinanceLogo from 'assets/img/networks/binance.svg'
+import xDaiLogo from 'assets/img/networks/xdai.svg'
+import HecoLogo from 'assets/img/networks/heco.svg'
+import PolygonLogo from 'assets/img/networks/polygon.svg'
+import FantomLogo from 'assets/img/networks/fantom.svg'
 
 interface Info {
   chainId: string
