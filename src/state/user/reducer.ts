@@ -16,7 +16,7 @@ export interface UserState {
 }
 
 export const initialState: UserState = {
-  matchesDarkMode: true,
+  matchesDarkMode: false,
   userDarkMode: true,
   userSlippageTolerance: 'auto',
   timestamp: currentTimestamp(),
