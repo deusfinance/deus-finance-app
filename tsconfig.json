@@ -12,31 +12,6 @@
       "theme/*": ["./theme"],
       "utils/*": ["./utils/*"]
     },
-    // "target": "es2017",
-    // "lib": ["dom", "dom.iterable", "esnext"],
-    // "allowJs": true,
-    // "skipLibCheck": true,
-    // "forceConsistentCasingInFileNames": true,
-    // "noEmit": true,
-    // "esModuleInterop": true,
-    // "module": "esnext",
-    // "strict": true,
-    // "alwaysStrict": true,
-    // // "strictNullChecks": true,
-    // "noUnusedLocals": false,
-    // "noFallthroughCasesInSwitch": true,
-    // // "noImplicitAny": true,
-    // "noImplicitThis": true,
-    // "noImplicitReturns": true,
-    // "useUnknownInCatchVariables": false,
-    // "moduleResolution": "node",
-    // "resolveJsonModule": true,
-    // "isolatedModules": true,
-    // "downlevelIteration": true,
-    // "allowSyntheticDefaultImports": true,
-    // "incremental": true,
-    // "jsx": "preserve"
-    
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
@@ -53,7 +28,6 @@
     "jsx": "preserve",
     "downlevelIteration": true,
     "incremental": true
-//    "strictNullChecks": true
   },
   "include": [
     "next-env.d.ts",
