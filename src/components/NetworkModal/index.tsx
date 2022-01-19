@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
 
@@ -10,14 +10,19 @@ import useRpcChangerCallback from 'hooks/useRpcChangerCallback'
 import { SupportedChainId, SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { ChainInfo } from 'constants/chainInfo'
 import { Modal, ModalHeader } from 'components/Modal'
+import { IconWrapper, GreenCircle } from 'components/Icons'
 
 const Wrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
-  gap: 8px;
-  padding: 25px 20px;
+  gap: 0.8rem;
+  padding: 1.5rem;
   overflow-y: auto;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
 `
 
 const Option = styled.div<{
@@ -25,33 +30,39 @@ const Option = styled.div<{
 }>`
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
-  background: rgb(28, 28, 28);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #efefef;
-  font-size: 20px;
-  border-radius: 5px;
+  justify-content: flex-start;
+  font-size: 1.1rem;
+  border-radius: 10px;
   outline: none;
-  height: 50px;
   align-items: center;
-  padding: 12px 20px;
+  padding: 0.6rem;
+  border: 1px solid transparent;
 
-  ${(props) =>
-    props.active &&
-    `
-    background: #0D121D;
-    border: 1px solid #0064FA;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 0.9rem;
+  `};
+
+  ${({ theme, active }) =>
+    active
+      ? `
+    background: ${theme.bg2};
+    &:hover,
+    &:focus {
+      cursor: default;
+    }
+  `
+      : `
+    background: ${theme.bg1};
+    &:hover,
+    &:focus {
+      cursor: pointer;
+      border: 1px solid ${theme.secondary1};
+    }
   `}
 
-  &:focus,
-  &:hover {
-    background: #0d121d;
-    cursor: pointer;
-  }
-
   & > * {
-    &:first-child {
-      border-radius: 3px;
+    &:last-child {
+      margin-left: auto;
     }
   }
 `
@@ -61,13 +72,21 @@ export default function NetworkModal() {
   const modalOpen = useModalOpen(ApplicationModal.NETWORK)
   const toggleModal = useNetworkModalToggle()
   const rpcChangerCallback = useRpcChangerCallback()
-  if (!chainId) return null
+
+  const sortedChainIds = useMemo(() => {
+    return Object.values(SUPPORTED_CHAIN_IDS).reduce((acc: SupportedChainId[], id: SupportedChainId) => {
+      if (chainId == id) {
+        return [id, ...acc]
+      }
+      return [...acc, id]
+    }, [])
+  }, [chainId])
 
   return (
     <Modal isOpen={modalOpen} onBackgroundClick={toggleModal} onEscapeKeydown={toggleModal}>
       <ModalHeader onClose={toggleModal} title="Select a Network" />
       <Wrapper>
-        {Object.values(SUPPORTED_CHAIN_IDS).map((id: SupportedChainId, index) => {
+        {sortedChainIds.map((id, index) => {
           const active = chainId == id
           const Chain = ChainInfo[id]
           return (
@@ -80,7 +99,12 @@ export default function NetworkModal() {
                 rpcChangerCallback(id)
               }}
             >
-              <div>{Chain.label}</div>
+              {active && (
+                <IconWrapper>
+                  <GreenCircle />
+                </IconWrapper>
+              )}
+              <div style={{ marginRight: 'auto' }}>{Chain.label}</div>
               <Image src={Chain.logoUrl} alt={Chain.label} width={30} height={30} />
             </Option>
           )

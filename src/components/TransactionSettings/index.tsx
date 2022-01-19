@@ -6,6 +6,7 @@ import useOnOutsideClick from 'hooks/useOnOutsideClick'
 
 import { Settings as SettingsIcon } from 'components/Icons'
 import { Card } from 'components/Card'
+import { Z_INDEX } from 'theme'
 
 const Container = styled.div`
   overflow: hidden;
@@ -16,11 +17,12 @@ const InlineModal = styled(Card)<{
 }>`
   display: ${(props) => (props.isOpen ? 'flex' : 'none')};
   position: absolute;
-  gap: 16px;
+  gap: 1rem;
   width: 250px;
-  transform: translateX(calc(-200px + 18px)) translateY(10px);
-  z-index: 1;
-  padding: 10px;
+  transform: translateX(calc(-250px + 18px)) translateY(10px);
+  z-index: ${Z_INDEX.modal};
+  padding: 0.8rem;
+  border: 1px solid ${({ theme }) => theme.border2};
 `
 
 const Row = styled.div`
@@ -29,32 +31,31 @@ const Row = styled.div`
   justify-content: flex-start;
   align-items: center;
   gap: 5px;
-  height: 40px;
-  line-height: 40px;
+  height: 2.5rem;
+  line-height: 2.5rem;
 `
 
 const InputRow = styled(Row)<{
   active?: boolean
   warning?: boolean
 }>`
-  background: rgba(255, 255, 255, 0.2);
+  background: ${({ theme }) => theme.bg1};
   border-radius: 12px;
-  color: rgba(255, 255, 255, 0.7);
+  color: ${({ theme }) => theme.text2};
   padding: 8px;
-  border: ${({ active, warning }) =>
-    active ? `1px solid ${warning ? 'red' : 'rgba(255, 255, 255, 0.3)'}` : '1px solid transparent'};
+  border: ${({ theme, active, warning }) =>
+    active ? `1px solid ${warning ? theme.red3 : theme.border1}` : '1px solid transparent'};
 `
 
 const WarningRow = styled.div<{
   error: boolean
 }>`
   display: block;
-  color: ${(props) => (props.error ? 'red' : '#FFB463')};
+  color: ${({ theme, error }) => (error ? theme.red3 : theme.yellow1)};
   font-size: 0.8rem;
 `
 
 const SlippageEmojiContainer = styled.span`
-  color: #f3841e;
   margin-right: 5px;
   width: 30px;
   @media only screen and (max-width: 468px) {
@@ -62,7 +63,9 @@ const SlippageEmojiContainer = styled.span`
   }
 `
 
-const Input = styled.input`
+const Input = styled.input<{
+  error: boolean
+}>`
   background: transparent;
   text-align: right;
   font-size: 1rem;
@@ -72,14 +75,14 @@ const Input = styled.input`
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
   }
-  color: ${(props) => (props.color === 'red' ? 'red' : 'rgba(255, 255, 255, 0.8)')};
+  color: ${({ theme, error }) => (error ? theme.red3 : theme.text2)};
   border: none;
 `
 
 const Option = styled.button<{
   active: boolean
 }>`
-  background: ${(props) => (props.active ? '#0064FA' : 'rgba(255,255,255, 0.2)')};
+  background: ${({ theme, active }) => (active ? theme.secondary2 : theme.bg1)};
   border-radius: 12px;
   text-align: center;
   height: 100%;
@@ -87,7 +90,7 @@ const Option = styled.button<{
   padding: 0 10px;
 
   &:hover {
-    background: #0044fa;
+    background: ${({ theme }) => theme.secondary1};
   }
 `
 
@@ -139,7 +142,7 @@ export default function TransactionSettings({ ...rest }: { [x: string]: any }) {
           <Option onClick={() => parseSlippageInput('')} active={userSlippageTolerance === 'auto'}>
             Auto
           </Option>
-          <InputRow active={userSlippageTolerance !== 'auto'} warning={!!slippageError}>
+          <InputRow active={userSlippageTolerance !== 'auto' || !!slippageError} warning={!!slippageError}>
             {tooLow || tooHigh ? (
               <SlippageEmojiContainer>
                 <span role="img" aria-label="warning">
@@ -161,7 +164,7 @@ export default function TransactionSettings({ ...rest }: { [x: string]: any }) {
                 setSlippageInput('')
                 setSlippageError(false)
               }}
-              color={slippageError ? 'red' : ''}
+              error={!!slippageError}
             />
             %
           </InputRow>

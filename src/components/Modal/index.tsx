@@ -4,17 +4,20 @@ import StyledModal from 'styled-react-modal'
 
 import { Close as CloseIcon } from 'components/Icons'
 import { ChevronLeft as ChevronLeftIcon } from 'components/Icons'
+import { ThemedText } from 'theme'
+import { Z_INDEX } from 'theme'
 
 export const Modal = StyledModal.styled`
   display: flex;
   flex-flow: column nowrap;
-  background: rgb(13,13,13);
-  box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.7);
+  background: ${({ theme }: { theme: any }) => theme.bg0};
+  border: 1px solid ${({ theme }: { theme: any }) => theme.border2};
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  width: clamp(200px, 75%, 420px);
+  width: clamp(200px, 85%, 420px);
   border-radius: 10px;
+  z-index: ${Z_INDEX.modal};
 `
 
 export const ModalBackground = styled.div`
@@ -24,8 +27,8 @@ export const ModalBackground = styled.div`
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: 99;
-  background-color: rgba(0, 0, 0, 0.4);
+  z-index: ${Z_INDEX.modalBackdrop};
+  background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(1px);
   justify-content: center;
 `
@@ -38,35 +41,31 @@ const HeaderWrapper = styled.div<{
   justify-content: space-between;
   width: 100%;
   align-items: center;
-  padding: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid ${(props) => (props.border ? '#6D737D' : 'transparent')};
-`
+  padding: 1.3rem;
+  color: ${({ theme }) => theme.text1};
+  border-bottom: 1px solid ${({ theme, border }) => (border ? theme.border2 : 'transparent')};
 
-const Text = styled.div<{
-  size: string
-}>`
-  font-size: ${(props) => props.size};
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
 `
 
 export const ModalHeader = ({
   title,
-  headerSize = '15px',
-  border = false,
+  border = true,
   onClose,
   onBack,
 }: {
   title?: string
-  headerSize?: string
   border?: boolean
   onClose: () => void
   onBack?: () => void
 }) => {
   return (
     <HeaderWrapper border={border}>
-      {onBack && <ChevronLeftIcon onClick={onBack} width={parseFloat(headerSize)} height={parseFloat(headerSize)} />}
-      {title && <Text size={headerSize}>{title}</Text>}
-      <CloseIcon width={headerSize} height={headerSize} onClick={onClose} />
+      {onBack && <ChevronLeftIcon onClick={onBack} />}
+      {title && <ThemedText.MediumHeader>{title}</ThemedText.MediumHeader>}
+      <CloseIcon size={'1.4rem'} onClick={onClose} />
     </HeaderWrapper>
   )
 }

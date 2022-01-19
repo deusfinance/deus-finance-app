@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { AlertTriangle } from 'react-feather'
 
 import useWeb3React from 'hooks/useWeb3'
@@ -23,34 +23,34 @@ const PendingWrapper = styled(Wrapper)`
   align-items: center;
   text-align: center;
   & > * {
-    margin-bottom: 15px;
+    margin-bottom: 1rem;
     &:last-child {
       font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.7);
-      margin-top: 15px;
+      color: ${({ theme }) => theme.text2};
+      margin-top: 1rem;
     }
   }
 `
 
 const ErrorWrapper = styled(Wrapper)`
-  gap: 20px;
+  gap: 1.25rem;
   align-items: center;
   text-align: center;
-  margin: 20px;
+  margin: 1.25rem;
   font-size: 0.9rem;
 
   & > * {
     &:nth-child(2) {
-      color: red;
+      color: ${({ theme }) => theme.red1};
     }
   }
 `
 
 const SuccessWrapper = styled(Wrapper)`
-  gap: 20px;
+  gap: 1.25rem;
   align-items: center;
   text-align: center;
-  margin: 20px;
+  margin: 1.25rem;
   font-size: 1.2rem;
 
   & > * {
@@ -58,7 +58,7 @@ const SuccessWrapper = styled(Wrapper)`
       font-weight: bold;
     }
     &:nth-child(3) {
-      color: blue;
+      color: ${({ theme }) => theme.blue1};
       font-size: 1rem;
     }
   }
@@ -117,7 +117,7 @@ export function ConfirmationContent({
 }) {
   return (
     <Wrapper>
-      <ModalHeader title={title} headerSize="20px" onClose={onDismiss} />
+      <ModalHeader title={title} onClose={onDismiss} />
       {typeof mainContent === 'function' ? mainContent() : mainContent}
       {typeof bottomContent === 'function' ? bottomContent() : bottomContent}
     </Wrapper>
@@ -125,11 +125,12 @@ export function ConfirmationContent({
 }
 
 export function TransactionErrorContent({ message, onDismiss }: { message: string; onDismiss: () => void }) {
+  const theme = useTheme()
   return (
     <div>
-      <ModalHeader title="Error" headerSize="15px" onClose={onDismiss} />
+      <ModalHeader title="Error" onClose={onDismiss} border={false} />
       <ErrorWrapper>
-        <AlertTriangle size="80px" color="red" />
+        <AlertTriangle size="80px" color={theme.red1} />
         <div>{message}</div>
         <PrimaryButton onClick={onDismiss}>Dismiss</PrimaryButton>
       </ErrorWrapper>
@@ -141,7 +142,7 @@ export function TransactionErrorContent({ message, onDismiss }: { message: strin
 function ConfirmationPendingContent({ onDismiss, summary }: { onDismiss: () => void; summary: string }) {
   return (
     <div>
-      <ModalHeader title=" " headerSize="15px" onClose={onDismiss} border={false} />
+      <ModalHeader title=" " onClose={onDismiss} border={false} />
       <PendingWrapper>
         <ConfirmationAnimation size="80px" />
         <div style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>Waiting for Confirmation</div>
@@ -169,7 +170,7 @@ function TransactionSubmittedContent({
 
   return (
     <div>
-      <ModalHeader title=" " headerSize="15px" onClose={onDismiss} border={false} />
+      <ModalHeader title=" " onClose={onDismiss} border={false} />
       <SuccessWrapper>
         <CheckMark size={80} />
         <div>Transaction Submitted</div>

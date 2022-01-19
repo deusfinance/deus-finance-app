@@ -27,12 +27,16 @@ const Wrapper = styled.div`
   justify-content: flex-start;
   gap: 8px;
   width: 100%;
-  padding: 15px;
+  padding: 1.5rem;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    padding: 1rem;
+  `};
 `
 
 const OptionGrid = styled.div`
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 0.8rem;
 `
 
 enum WALLET_VIEWS {
@@ -206,7 +210,6 @@ export default function WalletModal({
         <>
           <ModalHeader
             title={error instanceof UnsupportedChainIdError ? 'Wrong Network' : 'Error connecting'}
-            border={true}
             onClose={toggleWalletModal}
           />
           <Wrapper>
@@ -222,7 +225,7 @@ export default function WalletModal({
     if (account && walletView === WALLET_VIEWS.ACCOUNT) {
       return (
         <>
-          <ModalHeader title={'Account'} border={true} onClose={toggleWalletModal} />
+          <ModalHeader title={'Account'} onClose={toggleWalletModal} />
           <AccountDetails
             pendingTransactions={pendingTransactions}
             confirmedTransactions={confirmedTransactions}
@@ -244,7 +247,7 @@ export default function WalletModal({
             onClose={toggleWalletModal}
           />
         ) : (
-          <ModalHeader title={'Connect a wallet'} border={true} onClose={toggleWalletModal} />
+          <ModalHeader title={'Connect a wallet'} onClose={toggleWalletModal} />
         )}
         <Wrapper>
           {walletView === WALLET_VIEWS.PENDING ? (

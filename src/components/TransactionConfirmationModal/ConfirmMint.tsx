@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import BN from 'bignumber.js'
 import Image from 'next/image'
 
@@ -7,7 +7,7 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useMintingFee } from 'state/dei/hooks'
 
 import { PrimaryButton } from 'components/Button'
-import { ChevronDown } from 'components/Icons'
+import { IconWrapper, ChevronDown } from 'components/Icons'
 import TransactionConfirmationModal, { ConfirmationContent, TransactionErrorContent } from './index'
 
 import { IToken } from 'utils/token'
@@ -17,30 +17,30 @@ const MainWrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
-  gap: 8px;
-  padding: 25px 20px;
+  gap: 0.5rem;
+  padding: 1.5rem 1.25rem;
 `
 
 const BottomWrapper = styled(MainWrapper)`
-  gap: 8px;
+  gap: 0.5rem;
 `
 
 const InputsOutputs = styled.div`
   display: flex;
   flex-flow: column nowrap;
   justify-content: flex-start;
-  gap: 5px;
+  gap: 0.25rem;
 `
 
-const HeaderItem = styled.div`
+const TokenRow = styled.div`
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  gap: 20px;
+  gap: 1.25rem;
   font-size: 1.1rem;
-  background: rgb(28, 28, 28);
-  padding: 5px;
-  border-radius: 5px;
+  background: ${({ theme }) => theme.bg1};
+  padding: 0.5rem;
+  border-radius: 10px;
 
   & > * {
     &:nth-child(2) {
@@ -53,13 +53,6 @@ const HeaderItem = styled.div`
   }
 `
 
-const ArrowWrapper = styled.div`
-  display: flex;
-  flex-flow: row nowrap;
-  width: 100%;
-  justify-content: center;
-`
-
 const InfoRow = styled.div`
   display: flex;
   flex-flow: row nowrap;
@@ -69,7 +62,7 @@ const InfoRow = styled.div`
 
   & > * {
     &:last-child {
-      color: rgba(255, 255, 255, 0.4);
+      color: ${({ theme }) => theme.text3};
     }
   }
 `
@@ -77,10 +70,10 @@ const InfoRow = styled.div`
 const Disclaimer = styled.div`
   display: block;
   align-text: center;
-  font-size: 0.8rem;
+  text-align: center;
+  font-size: 0.7rem;
   border-radius: 5px;
-  background: rgb(28, 28, 28);
-  padding: 10px;
+  padding: 0.7rem;
 `
 
 export default function ConfirmMint({
@@ -112,6 +105,7 @@ export default function ConfirmMint({
   amount2: string
   amountOut: string
 }) {
+  const theme = useTheme()
   const slippagePercentage = useUserSlippageToleranceWithDefault(0.5) // TODO upgrade to gas-dependent calculation
   const mintingFeePercentage = useMintingFee()
 
@@ -137,28 +131,28 @@ export default function ConfirmMint({
     return (
       <InputsOutputs>
         {Token1 && (
-          <HeaderItem>
+          <TokenRow>
             <Image src={Token1.logo} alt={`${Token1.name} Logo`} width={40} height={40} />
             <div>{dynamicPrecision(amount1)}</div>
             <div>{Token1.symbol}</div>
-          </HeaderItem>
+          </TokenRow>
         )}
         {Token2 && (
-          <HeaderItem>
+          <TokenRow>
             <Image src={Token2.logo} alt={`${Token2.name} Logo`} width={40} height={40} />
             <div>{dynamicPrecision(amount2)}</div>
             <div>{Token2.symbol}</div>
-          </HeaderItem>
+          </TokenRow>
         )}
-        <ArrowWrapper>
+        <IconWrapper style={{ alignSelf: 'center' }} stroke={theme.text1}>
           <ChevronDown />
-        </ArrowWrapper>
+        </IconWrapper>
         {DEIToken && (
-          <HeaderItem>
+          <TokenRow>
             <Image src={DEIToken.logo} alt={`${DEIToken.name} Logo`} width={40} height={40} />
             <div>{dynamicPrecision(amountOut)}</div>
             <div>{DEIToken.symbol}</div>
-          </HeaderItem>
+          </TokenRow>
         )}
       </InputsOutputs>
     )
@@ -177,12 +171,15 @@ export default function ConfirmMint({
               <div>{minimumAmountOut} DEI</div>
             </InfoRow>
             <InfoRow>
+              {/* TODO calculate price impact (using Contract.callStatic) */}
               <div>Price Impact</div>
-              <div>(todo: use contract.callStatic to calc)</div>
+              <div>Unknown</div>
             </InfoRow>
             <InfoRow>
               <div>Protocol Fee: </div>
-              <div>{feeAmount} DEI</div>
+              <div>
+                {mintingFeePercentage}% / {feeAmount} DEI
+              </div>
             </InfoRow>
             <InfoRow>
               <div>Slippage Tolerance:</div>

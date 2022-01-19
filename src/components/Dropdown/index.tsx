@@ -7,9 +7,8 @@ import { ChevronDown } from 'components/Icons'
 
 const Wrapper = styled.div`
   display: block;
-  overflow: hidden;
-  color: #888c92;
-  z-index: 1000;
+  overflow: visible;
+  color: ${({ theme }) => theme.text3};
 `
 
 const Header = styled.div<{
@@ -20,28 +19,23 @@ const Header = styled.div<{
   justify-content: space-between;
   background: transparent;
   border: 1px solid transparent; /* this prevents border jumping */
-  font-size: 17px;
-  border-radius: 10px;
+  font-size: 1rem;
+  border-radius: 15px;
   text-align: left;
-  padding: 0 10px;
+  padding: 0 0.8rem;
   align-items: center;
-  height: 40px;
+  height: 50px;
 
-  ${(props) =>
-    !props.noHover &&
-    `
-    &:hover {
-      cursor: pointer;
-    }
-  `}
+  &:hover {
+    cursor: ${({ noHover }) => (noHover ? 'default' : 'pointer')};
+  }
 
-  ${(props) =>
-    props.isOpen &&
+  ${({ theme, isOpen }) =>
+    isOpen &&
     `
-    background: rgba(0, 0, 0, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-bottom: none;
-    border-radius: 10px 10px 0px 0px;
+    background: ${theme.bg1};
+    border: 1px solid ${theme.border2};
+    border-radius: 15px 15px 0px 0px;
   `}
 `
 
@@ -49,7 +43,7 @@ const StyledChevron = styled(({ isOpen, ...props }) => <ChevronDown {...props} /
   isOpen?: boolean
 }>`
   transition: transform 0.5s ease-out;
-  width: 15px;
+  size: 2rem;
   ${(props) =>
     props.isOpen &&
     css`
@@ -61,17 +55,18 @@ const List = styled.ul<{
   isOpen?: boolean
 }>`
   display: ${(props) => (props.isOpen ? 'block' : 'none')};
-  background: rgba(0, 0, 0, 1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: ${({ theme }) => theme.bg0};
   border-radius: 0px 0px 10px 10px;
+  border: 1px solid ${({ theme }) => theme.border2};
   border-top: none;
   overflow: hidden;
   position: absolute;
-  width: calc(100% - 10px);
+  width: 100%;
+  z-index: 999;
 
   & > * {
     &:not(:last-child) {
-      border-bottom: 1.5px solid #000000;
+      border-bottom: 1px solid ${({ theme }) => theme.border2};
     }
   }
 `
@@ -84,10 +79,11 @@ const ListItem = styled.li`
   line-height: 40px;
   padding: 0 10px;
   font-size: 13px;
+  z-index: 999;
 
   &:hover {
     cursor: pointer;
-    background: #ffb463;
+    background: ${({ theme }) => theme.bg1};
   }
 `
 

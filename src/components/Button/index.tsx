@@ -1,20 +1,48 @@
-import styled, { css, keyframes } from 'styled-components'
+import styled from 'styled-components'
+import { Button as RebassButton, ButtonProps as ButtonPropsOriginal } from 'rebass/styled-components'
+import { darken } from 'polished'
 
-type ButtonProps = {
-  active?: boolean
-  disabled?: boolean
-}
+type ButtonProps = Omit<ButtonPropsOriginal, 'css'>
 
-const gradient = keyframes`
-	0% {
-		background-position: 0% 50%;
-	}
-	50% {
-		background-position: 100% 50%;
-	}
-	100% {
-		background-position: 0% 50%;
-	}
+export const BaseButton = styled(RebassButton)<
+  {
+    padding?: string
+    width?: string
+    $borderRadius?: string
+    active?: boolean
+    disabled?: boolean
+  } & ButtonProps
+>`
+  padding: ${({ padding }) => padding ?? '1rem'};
+  width: ${({ width }) => width ?? '100%'};
+  font-weight: 500;
+  text-align: center;
+  border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
+  outline: none;
+  border: 1px solid transparent;
+  color: ${({ theme }) => theme.text1};
+  text-decoration: none;
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  &:disabled {
+    opacity: 50%;
+    cursor: auto;
+    pointer-events: none;
+  }
+  will-change: transform;
+  transition: transform 450ms ease;
+  transform: perspective(1px) translateZ(0);
+  > * {
+    user-select: none;
+  }
+  > a {
+    text-decoration: none;
+  }
 `
 
 export const NavButton = styled.button`
@@ -27,51 +55,37 @@ export const NavButton = styled.button`
   text-align: center;
   padding: 0 10px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid transparent;
+  background: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.border2};
 
   &:hover,
   &:focus {
     cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid ${({ theme }) => theme.border1};
   }
 `
 
-export const PrimaryButton = styled.div<ButtonProps>`
-  display: flex;
-  flex-flow: row nowrap;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  width: 100%;
-  font-size: 1rem;
-  background: #ffa76a;
-  border: 1px solid #ff9c6f;
-  border-radius: 10px;
-  padding: 0 10px;
-  color: #ffffff;
-
-  ${(props) =>
-    props.disabled &&
-    `
-    background: transparent;
-    border: 1px solid gray;
-    pointer-events: none;
-  `}
-
-  ${(props) =>
-    props.active &&
-    css`
-      background: linear-gradient(88deg, #ffb463, #7b450a);
-      background-size: 400% 400%;
-      -webkit-animation: ${gradient} 8s ease infinite;
-      -moz-animation: ${gradient} 8s ease infinite;
-      animation: ${gradient} 8s ease infinite;
-      border: 1px solid transparent;
-      color: #ffffff;
-    `}
-
+export const PrimaryButton = styled(BaseButton)`
+  background-color: ${({ theme }) => theme.primary1};
+  color: white;
+  z-index: 0;
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
+    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+  }
   &:hover {
-    cursor: pointer;
+    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
+    background-color: ${({ theme }) => darken(0.1, theme.primary1)};
+  }
+  &:disabled {
+    background-color: ${({ theme, disabled }) => (disabled ? theme.primary1 : theme.bg2)};
+    color: ${({ theme, disabled }) => (disabled ? theme.white : theme.text2)};
+    cursor: auto;
+    box-shadow: none;
+    border: 1px solid transparent;
+    outline: none;
   }
 `

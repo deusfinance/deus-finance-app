@@ -4,6 +4,7 @@ import { useActivePopups } from 'state/application/hooks'
 import useWindowSize from 'hooks/useWindowSize'
 
 import PopupItem from './PopupItem'
+import { Z_INDEX } from 'theme'
 
 const Container = styled.div`
   display: flex;
@@ -12,12 +13,12 @@ const Container = styled.div`
   position: fixed;
   height: auto;
   top: 75px;
-  z-index: 99999;
+  z-index: ${Z_INDEX.popover};
 `
 
 const ContainerLarge = styled(Container)`
   right: 30px;
-  width: 400px;
+  width: 300px;
 `
 
 const ContainerSmall = styled(Container)`

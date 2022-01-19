@@ -19,7 +19,7 @@ import { CollateralPool, MintProxy } from 'constants/addresses'
 import { MINT__INPUTS, MINT__OUTPUTS } from 'constants/inputs'
 
 import { Card } from 'components/Card'
-import { ArrowBubble, DotFlashing } from 'components/Icons'
+import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
 import { PrimaryButton } from 'components/Button'
 import TransactionSettings from 'components/TransactionSettings'
 import ConfirmMintModal from 'components/TransactionConfirmationModal/ConfirmMint'
@@ -28,10 +28,9 @@ import InputBox from '../InputBox'
 import NetworkSelect from '../NetworkSelect'
 
 const Wrapper = styled(Card)`
-  min-width: 540px;
-  min-height: 340px;
-  gap: 30px;
+  justify-content: flex-start;
   overflow: visible;
+  box-shadow: ${({ theme }) => theme.boxShadow2};
 `
 
 const ToggleRow = styled.div`
@@ -47,10 +46,28 @@ const ToggleRow = styled.div`
 const Row = styled.div`
   display: flex;
   flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: flex-start;
+  align-items: center;
   gap: 10px;
   overflow: visible;
+  margin-top: 30px;
+  z-index: 0;
+`
+
+const BoxesRow = styled(Row)`
+  z-index: 1;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    flex-flow: column wrap;
+    & > * {
+      width: 100%;
+    }
+  `};
+`
+
+const ArrowWrapper = styled(IconWrapper)`
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    transform: rotate(90deg);
+  `};
 `
 
 const TextBlock = styled.div`
@@ -60,11 +77,23 @@ const TextBlock = styled.div`
   text-align: center;
   justify-content: center;
   font-size: 0.8rem;
+  color: ${({ theme }) => theme.text2};
 `
 
-const Fee = styled.div`
-  font-size: 0.6rem;
-  margin-left: 10px;
+const FeeWrapper = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding: 0px 10px;
+  & > * {
+    font-size: 0.8rem;
+    color: ${({ theme }) => theme.text2};
+    &:first-child {
+      color: ${({ theme }) => theme.text3};
+    }
+  }
 `
 
 export default function Mint() {
@@ -83,7 +112,8 @@ export default function Mint() {
   const [TokenOut, setTokenOut] = useState<IToken | null>(null)
 
   const [awaitingApproveConfirmation, setAwaitingApproveConfirmation] = useState<boolean>(false)
-  const [insufficientBalance, setInsufficientBalance] = useState<boolean>(false)
+  const [insufficientBalance1, setInsufficientBalance1] = useState<boolean>(false)
+  const [insufficientBalance2, setInsufficientBalance2] = useState<boolean>(false)
   const [txHash, setTxHash] = useState<string>('')
 
   // Allow user to connect any chain globally, but restrict unsupported ones on this page
@@ -230,12 +260,14 @@ export default function Mint() {
       return null
     }
     if (showApprove1 || showApprove2) {
-      return <PrimaryButton disabled>Mint DEI</PrimaryButton>
+      return null
+      // TODO implement Tom's approve <> mint horizontal line thing so we can enable this button
+      // return <PrimaryButton disabled>Mint DEI</PrimaryButton>
     }
     if (error) {
       return <PrimaryButton disabled>Critical Error</PrimaryButton>
     }
-    // TODO: do we really need this?
+    // TODO: do we really want this? E.g. with it users are unable to mint if tx is pending
     // if (mintCallbackState == MintCallbackState.PENDING) {
     //   return (
     //     <PrimaryButton active>
@@ -243,13 +275,17 @@ export default function Mint() {
     //     </PrimaryButton>
     //   )
     // }
-    if (insufficientBalance) {
-      return <PrimaryButton disabled>Insufficient Balance</PrimaryButton>
+    if (insufficientBalance1) {
+      return <PrimaryButton disabled>Insufficient {Token1?.symbol} Balance</PrimaryButton>
+    }
+    if (Token2 && insufficientBalance2) {
+      return <PrimaryButton disabled>Insufficient {Token2?.symbol} Balance</PrimaryButton>
     }
     // TODO: turn the next line into: (loading || proxyLoading).
     // With it, it will only show/blink for a split second which is undesired.
     // Instead, implement a debouncer/suspense of some kind in the event
-    // of extended loading of the proxy values.
+    // of extended loading of the proxy values. Regardless, the callback
+    // function reverts if internally proxyLoading so no harm there.
     if (loading) {
       // global DEI data
       return (
@@ -258,7 +294,17 @@ export default function Mint() {
         </PrimaryButton>
       )
     }
-    return <PrimaryButton onClick={() => amountOut && dispatch(setShowReview(true))}>Mint DEI</PrimaryButton>
+    return (
+      <PrimaryButton
+        onClick={() => {
+          if (amountOut && amountOut != '0') {
+            dispatch(setShowReview(true))
+          }
+        }}
+      >
+        Mint DEI
+      </PrimaryButton>
+    )
   }
 
   function getMainContent(): JSX.Element {
@@ -270,7 +316,7 @@ export default function Mint() {
     }
     return (
       <>
-        <Row style={{ gap: '6px' }}>
+        <BoxesRow style={{ gap: '6px' }}>
           <InputBox
             options={inputOptions}
             selected={selected}
@@ -279,10 +325,13 @@ export default function Mint() {
             amount2={amount2}
             setAmount1={onUserInput1}
             setAmount2={onUserInput2}
-            setInsufficientBalance={setInsufficientBalance}
+            setInsufficientBalance1={setInsufficientBalance1}
+            setInsufficientBalance2={setInsufficientBalance2}
             disabled={loading}
           />
-          <ArrowBubble size={50} style={{ alignSelf: 'center' }} />
+          <ArrowWrapper size={'30px'}>
+            <ArrowBubble size={30} />
+          </ArrowWrapper>
           <InputBox
             options={outputOptions}
             selected={[TokenOut?.address ?? '']}
@@ -290,8 +339,7 @@ export default function Mint() {
             setAmount1={onUserOutput}
             disabled={loading || isProxyMinter}
           />
-        </Row>
-        <Fee>Minting Fee: {mintingFee}%</Fee>
+        </BoxesRow>
       </>
     )
   }
@@ -303,10 +351,17 @@ export default function Mint() {
         <TransactionSettings style={{ marginLeft: '20px' }} />
       </ToggleRow>
       {getMainContent()}
-      <Row style={{ marginTop: 'auto' }}>
+      <Row>
         {getApproveButton()}
         {getActionButton()}
       </Row>
+      {/* TODO get a proper design for this (also its available in the Confirm Review modal) */}
+      {/* {(isSupportedChainId && chainId && account) && (
+        <FeeWrapper>
+          <div>Minting Fee</div>
+          <div>{mintingFee}%</div>
+        </FeeWrapper>
+      )} */}
       <ConfirmMintModal
         isOpen={showReview}
         onDismiss={handleOnDismiss}

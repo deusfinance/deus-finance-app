@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 
 import useWeb3React from 'hooks/useWeb3'
 import { ExplorerLink } from 'components/Link'
@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   flex-flow: column nowrap;
   justify-content: flex-start;
   width: 100%;
-  padding: 14px 20px;
+  padding: 1rem 1.25rem;
 `
 
 const Header = styled.div`
@@ -19,7 +19,7 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   font-size: 12.5px;
-  color: #919191;
+  color: ${({ theme }) => theme.text2};
 `
 
 const SuccessBox = styled.div`
@@ -28,19 +28,19 @@ const SuccessBox = styled.div`
   justify-content: flex-start;
   gap: 10px;
   align-items: center;
-  margin-top: 15px;
-  background: #293241;
-  border: 1px solid #00e376;
+  margin-top: 1rem;
+  background: ${({ theme }) => theme.bg1};
+  border: 1px solid ${({ theme }) => theme.border2};
   border-radius: 10px;
-  height: 35px;
-  padding: 10px;
-  text-decoration: none;
+  height: 2rem;
+  padding: 0.8rem;
+  font-size: 0.8rem;
+  line-height: 2rem;
+  color: ${({ theme }) => theme.primary2};
 
   & > * {
-    font-size: 12.5px;
-    line-height: 35px;
     &:first-child {
-      margin-right: 8px;
+      margin-right: 0.5rem;
     }
     &:last-child {
       margin-left: auto;
@@ -60,6 +60,7 @@ export default function TransactionPopup({
   removeThisPopup: () => void
 }) {
   const { chainId } = useWeb3React()
+  const theme = useTheme()
 
   const getHeader = () => {
     return (
@@ -73,10 +74,10 @@ export default function TransactionPopup({
   const getBox = () => {
     return (
       <ExplorerLink chainId={chainId ?? 1} type={ExplorerDataType.TRANSACTION} value={hash}>
-        <SuccessBox color={success ? '#00E376' : 'red'}>
-          <CheckMark color={success ? '#00E376' : 'red'} />
-          <div>Transaction {success ? 'successful' : 'failed'}</div>
-          <CopyIcon />
+        <SuccessBox color={success ? theme.success : theme.error}>
+          <CheckMark color={success ? theme.success : theme.error} />
+          Transaction {success ? 'successful' : 'failed'}
+          <CopyIcon size={12} color={theme.text1} />
         </SuccessBox>
       </ExplorerLink>
     )

@@ -7,12 +7,11 @@ const InputWrapper = styled.div`
   gap: 3px;
   white-space: nowrap;
   overflow: hidden;
-  background: rgb(28, 28, 28);
+  background: transparent;
   border-radius: 5px;
   padding: 5px;
   align-items: center;
   font-size: 0.8rem;
-  color: gray;
   height: 100%;
 `
 
@@ -26,24 +25,11 @@ export const InputField = styled.input<{
   border: none;
   font-size: 1rem;
   width: 100%;
-  color: rgba(255, 255, 255, 0.8);
+  color: ${({ theme }) => theme.text3};
   text-overflow: ellipsis;
   margin-right: 5px;
   &:focus {
     outline: none;
-  }
-  &::placeholder {
-    /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: rgba(255, 255, 255, 0.4);
-    opacity: 1; /* Firefox */
-  }
-  &:-ms-input-placeholder {
-    /* Internet Explorer 10-11 */
-    color: rgba(255, 255, 255, 0.4);
-  }
-  &::-ms-input-placeholder {
-    /* Microsoft Edge */
-    color: rgba(255, 255, 255, 0.4);
   }
 
   ${(props) =>

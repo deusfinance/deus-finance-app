@@ -24,7 +24,7 @@ const ConnectedButton = styled(NavButton)`
 `
 
 const ErrorButton = styled(NavButton)`
-  background: red;
+  background: ${({ theme }) => theme.red1};
   color: white;
 `
 

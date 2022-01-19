@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import Image from 'next/image'
 
-import { GreenCircle } from 'components/Icons'
+import { IconWrapper, GreenCircle } from 'components/Icons'
 import { ExternalLink } from 'components/Link'
 
 const Wrapper = styled.button<{
@@ -15,29 +15,28 @@ const Wrapper = styled.button<{
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 15px;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 5px;
+  padding: 0.8rem;
+  background: ${({ theme }) => theme.bg1};
+  border-radius: 10px;
   opacity: ${({ disabled }) => (disabled ? '0.5' : '1')};
   outline: none;
-  color: #efefef;
-  border: ${({ active }) => (active ? '1px solid transparent' : '1px solid rgba(255, 255, 255, 0.1)')};
+  border: 1px solid ${({ active, theme }) => (active ? theme.secondary2 : 'transparent')};
   width: 100%;
   box-sizing: border-box;
 
   &:hover,
   &:focus {
     cursor: pointer;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid ${({ theme, clickable }) => (clickable ? theme.secondary1 : 'transparent')};
   }
 
-  ${(props) =>
-    !props.clickable &&
+  ${({ theme, clickable }) =>
+    !clickable &&
     `
-    border: 1px solid #0064FA;
+    background: ${theme.bg2};
+    border: 1px solid transparent;
     &:hover,
     &:focus {
-      border: 1px solid #0064FA;
       cursor: default;
     }
   `}
@@ -50,22 +49,20 @@ const WrapperLeft = styled.div`
   height: 100%;
 `
 
-const CircleWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
 const HeaderText = styled.div`
   display: flex;
   flex-flow: row nowrap;
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    font-size: 0.9rem;
+  `};
 `
 
 const SubHeader = styled.div`
   margin-top: 10px;
-  font-size: 12px;
+  font-size: 0.8rem;
+  color: ${({ theme }) => theme.text2};
 `
 
 export default function Option({
@@ -94,9 +91,9 @@ export default function Option({
       <WrapperLeft>
         <HeaderText color={color}>
           {active && (
-            <CircleWrapper>
+            <IconWrapper>
               <GreenCircle />
-            </CircleWrapper>
+            </IconWrapper>
           )}
           {header}
         </HeaderText>
