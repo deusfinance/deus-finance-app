@@ -329,7 +329,7 @@ export default function Mint() {
             setInsufficientBalance2={setInsufficientBalance2}
             disabled={loading}
           />
-          <ArrowWrapper size={'30px'} style={{alignSelf: 'center'}}>
+          <ArrowWrapper size={'30px'} style={{ alignSelf: 'center' }}>
             <ArrowBubble size={30} />
           </ArrowWrapper>
           <InputBox
