@@ -1,13 +1,12 @@
 import { SupportedChainId } from './chains'
 
-// TODO add proper logos
-import MainnetLogo from 'assets/images/network/mainnet.jpg'
-import RinkebyLogo from 'assets/images/network/rinkeby.jpg'
-import BinanceLogo from 'assets/images/network/binance.jpg'
-import xDaiLogo from 'assets/images/network/xdai.jpg'
-import HecoLogo from 'assets/images/network/heco.jpg'
-import PolygonLogo from 'assets/images/network/polygon.jpg'
-import FantomLogo from 'assets/images/network/fantom.jpg'
+import MainnetLogo from 'assets/images/network/mainnet.svg'
+import RinkebyLogo from 'assets/images/network/mainnet.svg'
+import BinanceLogo from 'assets/images/network/binance.svg'
+import xDaiLogo from 'assets/images/network/xdai.svg'
+import HecoLogo from 'assets/images/network/heco.svg'
+import PolygonLogo from 'assets/images/network/polygon.svg'
+import FantomLogo from 'assets/images/network/fantom.svg'
 
 interface Info {
   chainId: string

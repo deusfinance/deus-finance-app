@@ -4,8 +4,8 @@ import { ModalProvider } from 'styled-react-modal'
 import dynamic from 'next/dynamic'
 import type { AppProps } from 'next/app'
 
-import GlobalStyle from '../globalStyles'
 import Web3ReactManager from '../components/Web3ReactManager'
+import ThemeProvider, { ThemedGlobalStyle } from '../theme'
 import Popups from '../components/Popups'
 import Layout from '../components/Layout'
 import { ModalBackground } from '../components/Modal'
@@ -25,17 +25,19 @@ if (typeof window !== 'undefined' && !!window.ethereum) {
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ReduxProvider store={store}>
-      <GlobalStyle />
       <Web3ReactProvider getLibrary={getLibrary}>
         <Web3ProviderNetwork getLibrary={getLibrary}>
           <Web3ReactManager>
-            <ModalProvider backgroundComponent={ModalBackground}>
-              <Popups />
-              <Updaters />
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </ModalProvider>
+            <ThemeProvider>
+              <ThemedGlobalStyle />
+              <ModalProvider backgroundComponent={ModalBackground}>
+                <Popups />
+                <Updaters />
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </ModalProvider>
+            </ThemeProvider>
           </Web3ReactManager>
         </Web3ProviderNetwork>
       </Web3ReactProvider>

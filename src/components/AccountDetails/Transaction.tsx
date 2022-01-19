@@ -13,7 +13,15 @@ const Row = styled.div`
   justify-content: flex-start;
   gap: 10px;
   align-items: center;
-  font-size: 15px;
+  font-size: 1rem;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 0.7rem;
+  `};
+
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 export default function Transaction({ hash }: { hash: string }) {

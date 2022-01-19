@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Copy as CopyIcon, CheckMark } from 'components/Icons'
@@ -27,6 +27,8 @@ export default function Copy({
   placement?: 'left' | 'right'
 }): JSX.Element {
   const [isCopied, setCopied] = useCopyClipboard()
+  const theme = useTheme()
+
   return isCopied ? (
     <Wrapper>
       {placement == 'right' && 'Copied'}
@@ -36,7 +38,7 @@ export default function Copy({
   ) : (
     <Wrapper onClick={() => setCopied(toCopy)}>
       {placement == 'right' && text}
-      <CopyIcon size={12} style={{ transform: 'translateY(-1px)' }} />
+      <CopyIcon size={12} color={theme.text1} style={{ transform: 'translateY(-1px)' }} />
       {placement == 'left' && text}
     </Wrapper>
   )

@@ -12,7 +12,6 @@ import { toWei } from 'utils/web3'
 
 import Dropdown from 'components/Dropdown'
 import { HorPartition } from 'components/Partition'
-import { Balance } from 'components/Label'
 import Input from 'components/Input'
 
 const Wrapper = styled.div<{
@@ -22,21 +21,23 @@ const Wrapper = styled.div<{
   flex-flow: column nowrap;
   position: relative;
   justify-content: flex-start;
-  width: 100%;
-  min-height: ${(props) => (props.autoHeight ? 'auto' : '100px')};
-  background: rgba(255, 255, 255, 0.2);
+  min-width: 230px;
+  min-height: ${({ autoHeight }) => (autoHeight ? 'auto' : '100px')};
+  background: ${({ theme }) => theme.bg1};
   border-radius: 15px;
-  padding: 5px;
   overflow: visible;
 
   & > * {
+    &:not(:first-child) {
+      padding: 0.7rem;
+    }
     &:first-child {
       margin-bottom: auto;
     }
   }
 `
 
-const Option = styled.div`
+const StyledDropdownOption = styled.div`
   display: flex;
   flex-flow: row nowrap;
   width: 100%;
@@ -52,9 +53,11 @@ const Option = styled.div`
   }
 `
 
-const BalanceLabel = styled(Balance)`
+const BalanceLabel = styled.div`
+  font-size: 0.75rem;
   text-align: right;
-  margin-right: 5px;
+  margin: 5px;
+  color: ${({ theme }) => theme.text3};
   &:hover {
     cursor: pointer;
   }
@@ -66,48 +69,52 @@ const InputWrapper = styled.div`
   justify-content: flex-start;
   align-items: center;
   width: 100%;
-  background: rgb(28, 28, 28);
+  background: ${({ theme }) => theme.bg0};
   border-radius: 10px;
   height: 50px;
   padding: 12px;
   white-space: nowrap;
   overflow: hidden;
+  border: 2px solid transparent;
 
   & > * {
     &:last-child {
       margin-left: auto;
     }
   }
+
+  &:hover {
+    border: 2px solid ${({ theme }) => theme.secondary2};
+  }
 `
 
 const MaxButton = styled.div<{
   disabled?: boolean
 }>`
-  width: 40px;
   text-align: center;
-  background: rgb(39, 39, 39);
-  height: 22px;
-  line-height: 22px;
-  font-size: 12px;
+  background: ${({ theme }) => theme.secondary2};
+  font-size: 0.9rem;
+  padding: 3px 6px;
   border-radius: 6px;
   transition: transform 0.4s ease;
   &:hover {
     cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-    font-size: 13px;
+    background: ${({ theme }) => theme.secondary1};
+    font-size: 0.9rem;
   }
 `
 
 function DropdownOption(tokens: IToken[]): JSX.Element {
   return (
-    <Option>
+    <StyledDropdownOption>
       {tokens.map((token, index) => (
         <div key={index}>
           {index > 0 && <div>+</div>}
-          <Image src={token.logo} alt={`${token.name} Logo`} width={20} height={20} />
+          <Image src={token.logo} alt={`${token.name} Logo`} width={25} height={25} />
           {token.symbol}
         </div>
       ))}
-    </Option>
+    </StyledDropdownOption>
   )
 }
 
@@ -159,7 +166,8 @@ export default function InputBox({
   amount2 = '',
   setAmount1 = () => null,
   setAmount2 = () => null,
-  setInsufficientBalance = () => null,
+  setInsufficientBalance1 = () => null,
+  setInsufficientBalance2 = () => null,
   disabled = false,
 }: {
   options: Array<IToken[]>
@@ -169,7 +177,8 @@ export default function InputBox({
   amount2?: string
   setAmount1: (amount: string) => void
   setAmount2?: (amount: string) => void
-  setInsufficientBalance?: (val: boolean) => void
+  setInsufficientBalance1?: (val: boolean) => void
+  setInsufficientBalance2?: (val: boolean) => void
   disabled: boolean
 }) {
   const { chainId, account } = useWeb3React()
@@ -232,20 +241,23 @@ export default function InputBox({
         <Dropdown options={dropdownOptions} placeholder={'Select token'} onSelect={onSelect} disabled={disabled} />
         <HorPartition />
       </div>
-      {inputFields.map((token: IToken, index) => {
-        const amount = index == 0 ? amount1 : amount2
-        const setAmount = index == 0 ? setAmount1 : setAmount2
-        return selected.includes(token.address) ? (
-          <InputOption
-            token={token}
-            amount={amount}
-            setAmount={setAmount}
-            setInsufficientBalance={setInsufficientBalance}
-            disabled={disabled}
-            key={index}
-          />
-        ) : null
-      })}
+      <div>
+        {inputFields.map((token: IToken, index) => {
+          const amount = index == 0 ? amount1 : amount2
+          const setAmount = index == 0 ? setAmount1 : setAmount2
+          const setInsufficientBalance = index == 0 ? setInsufficientBalance1 : setInsufficientBalance2
+          return selected.includes(token.address) ? (
+            <InputOption
+              token={token}
+              amount={amount}
+              setAmount={setAmount}
+              setInsufficientBalance={setInsufficientBalance}
+              disabled={disabled}
+              key={index}
+            />
+          ) : null
+        })}
+      </div>
     </Wrapper>
   )
 }

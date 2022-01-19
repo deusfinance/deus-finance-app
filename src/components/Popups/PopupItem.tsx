@@ -13,11 +13,9 @@ const Wrapper = styled.div`
   flex-flow: column nowrap;
   width: 100%;
   margin-bottom: 10px;
-  background: #212936;
+  background: ${({ theme }) => theme.bg0};
   border-radius: 10px;
-  box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.7);
-  -moz-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.7);
-  -webkit-box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.7);
+  border: 1px solid ${({ theme }) => theme.border2};
 `
 
 const Fader = styled.div<{
@@ -28,7 +26,7 @@ const Fader = styled.div<{
   left: 0px;
   width: 100%;
   height: 1px;
-  background-color: black;
+  background-color: ${({ theme }) => theme.primary1};
 `
 
 const AnimatedFader = animated(Fader)

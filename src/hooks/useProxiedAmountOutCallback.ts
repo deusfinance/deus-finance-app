@@ -48,7 +48,7 @@ export default function useProxiedAmountOutCallback(
       }
       return params
     },
-    [chainId, address, decimals, symbol, collateralPrice, deusPrice]
+    [chainId, address, decimals, symbol, method, collateralPrice, deusPrice]
   )
 
   return useCallback(

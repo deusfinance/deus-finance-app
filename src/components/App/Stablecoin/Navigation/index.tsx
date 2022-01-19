@@ -14,19 +14,12 @@ const Item = styled.div<{
 }>`
   font-size: 15px;
   transition: all 0.3s ease;
-  border-bottom: 1px solid transparent;
+  border-bottom: 1px solid ${({ selected, theme }) => (selected ? theme.text1 : 'transparent')};
+  color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text3)};
 
   &:hover {
     cursor: pointer;
   }
-  ${(props) =>
-    props.selected
-      ? `
-    border-bottom: 1px solid white;
-  `
-      : `
-    color: rgba(255, 255, 255, 0.5);
-  `}
 `
 
 export enum NavigationTypes {

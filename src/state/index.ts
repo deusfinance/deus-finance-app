@@ -1,11 +1,9 @@
 import { Action, AnyAction, configureStore, Store, ThunkAction, ThunkDispatch } from '@reduxjs/toolkit'
-import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
+import { persistReducer, persistStore } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 
 import reducer from './reducer'
-
-let store: Store<any, AnyAction>
 
 const PERSISTED_KEYS: string[] = ['user', 'transactions']
 
@@ -25,14 +23,14 @@ function makeStore(preloadedState = undefined) {
       getDefaultMiddleware({
         thunk: true,
         immutableCheck: true,
-        serializableCheck: {
-          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-        },
+        serializableCheck: false,
       }),
     devTools: process.env.NODE_ENV === 'development',
     preloadedState,
   })
 }
+
+let store: Store<any, AnyAction>
 
 export const getOrCreateStore = (preloadedState = undefined) => {
   let _store = store ?? makeStore(preloadedState)

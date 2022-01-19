@@ -11,17 +11,19 @@ import useWeb3React from 'hooks/useWeb3'
 const Wrapper = styled(Card)`
   display: flex;
   flex-flow: column nowrap;
-  justify-content: flex-start;
+  justify-content: center;
   text-align: left;
   gap: 20px;
+  background: ${({ theme }) => theme.bg3};
+  height: 270px;
 `
 
 const Stat = styled.div`
-  color: rgba(255, 255, 255, 0.7);
+  color: ${({ theme }) => theme.text2};
   & > * {
     &:nth-child(2) {
       margin-top: 3px;
-      color: #ffb463;
+      color: ${({ theme }) => theme.primary1};
     }
   }
 `
@@ -42,7 +44,7 @@ export default function Statistics() {
   }, [deiStatus, chainId])
 
   const deiPriceLabel = useMemo(() => {
-    return loading || !isSupported ? 'Loading' : error ? 'Error' : deiPrice.toFixed(5)
+    return loading || !isSupported ? 'Loading' : error ? 'Error' : `$${deiPrice.toFixed(5)}`
   }, [deiPrice, isSupported, loading, error])
 
   const collateralRatioLabel = useMemo(() => {

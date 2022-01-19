@@ -21,21 +21,16 @@ const Item = styled.div<{
   line-height: 30px;
   text-align: center;
   align-items: center;
-  background: rgba(13, 18, 29, 0.5);
-  border: 1px solid #212936;
-  color: #7e7e7e;
+  background: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.border2};
+  color: ${({ theme }) => theme.text2};
 
-  &:hover {
-    cursor: pointer;
-  }
-
-  ${(props) =>
-    props.active &&
+  ${({ theme, active }) =>
+    active &&
     `
-    filter: drop-shadow(0px 0px 45px rgba(0, 0, 0, 0.05));
-    background: #0D121D;
-    border: 1px solid #FFA76A;
-    color: #EFEFEF;
+    background: ${theme.bg1};
+    border: 1px solid ${theme.primary2};
+    color: ${theme.text2};
   `}
 
   &:first-child {
@@ -44,6 +39,10 @@ const Item = styled.div<{
 
   &:last-child {
     border-radius: 0 10px 10px 0;
+  }
+
+  &:hover {
+    cursor: pointer;
   }
 `
 

@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import { ExternalLink as LinkIcon } from 'react-feather'
 import styled from 'styled-components'
+import { darken } from 'polished'
 
 import useWeb3React from 'hooks/useWeb3'
 import { useAppDispatch } from 'state'
@@ -20,12 +21,16 @@ const AccountWrapper = styled.div`
   flex-flow: column nowrap;
   justify-content: space-between;
   position: relative;
-  background: rgba(255, 255, 255, 0.02);
-  box-shadow: inset 0px 0px 1px rgba(255, 255, 255, 0.7);
-  border-radius: 5px;
-  padding: 10px;
-  margin: 27px 15px;
+  border: 1px solid ${({ theme }) => theme.border2};
+  border-radius: 10px;
+  padding: 0.8rem;
+  margin: 1.6rem 1rem;
   height: 125px;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin: 1rem;
+    height: 100px;
+  `};
 `
 
 const Row = styled.div`
@@ -36,31 +41,32 @@ const Row = styled.div`
   width: 100%;
 `
 
-const Title = styled.div`
-  color: #6f7077;
-  font-size: 15px;
+const Connected = styled.div`
+  color: ${({ theme }) => theme.text2};
+  font-size: 1rem;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 0.7rem;
+  `};
 `
 
-const WalletAction = styled.button<{
+const ActionButton = styled.button<{
   hide?: boolean
   disable?: boolean
 }>`
-  background: #0064fa;
+  background: ${({ theme }) => theme.blue1};
   border-radius: 10px;
   outline: none;
-  flex: 1;
-  height: 25px;
-  display: ${(props) => (props.hide ? 'none' : 'flex')};
+  display: ${({ hide }) => (hide ? 'none' : 'flex')};
   justify-content: center;
   align-items: center;
-  font-size: 12.5px;
-  line-height: 30px;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
   text-align: center;
-  color: #ffffff;
-  width: 100px;
+  color: white;
 
   &:hover {
-    background: #0050c8;
+    background: ${({ theme }) => darken(0.1, theme.blue2)};
     cursor: pointer;
   }
 
@@ -72,40 +78,43 @@ const WalletAction = styled.button<{
   `}
 `
 
+const ClearButton = styled(ActionButton)`
+  font-size: 0.6rem;
+  padding: 0.2rem 0.5rem;
+`
+
 const MiddleRow = styled(Row)`
   justify-content: flex-start;
   align-items: center;
-  color: #efefef;
+  color: ${({ theme }) => theme.text1};
   gap: 5px;
-  font-size: 20px;
+  font-size: 1rem;
 `
 
 const BottomRow = styled(Row)`
   justify-content: flex-start;
   align-items: center;
-  color: #efefef;
+  color: ${({ theme }) => theme.text2};
   gap: 5px;
-  font-size: 12.5px;
+  font-size: 0.8rem;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 0.7rem;
+  `}
 `
 
 const AddressLink = styled.div`
   display: flex;
-  color: #0064fa;
-  align-self: center;
+  align-items: center;
   gap: 4px;
-  font-size: 12.5px;
   margin-left: 10px;
-
-  &:hover {
-    color: #0050c8;
-  }
 `
 
 const TransactionsWrapper = styled.div`
   display: flex;
   flex-flow: column nowrap;
+  background: ${({ theme }) => theme.bg2};
   padding: 1.5rem;
-  padding-top: 0;
   flex-grow: 1;
   overflow: auto;
   gap: 2px;
@@ -114,20 +123,8 @@ const TransactionsWrapper = styled.div`
       display: flex;
       flex-flow: row nowrap;
       justify-content: space-between;
-      font-size: 15px;
-      margin-bottom: 2px;
-
-      & > * {
-        &:nth-child(2) {
-          background: rgba(0, 0, 0, 0.3);
-          border-radius: 10px;
-          padding: 5px 6px;
-          font-size: 12px;
-          &:hover {
-            cursor: pointer;
-          }
-        }
-      }
+      font-size: 0.8rem;
+      margin-bottom: 5px;
     }
   }
 `
@@ -164,7 +161,7 @@ export default function AccountDetails({
           SUPPORTED_WALLETS[k].connector === connector && (connector !== injected || isMetaMask === (k === 'METAMASK'))
       )
       .map((k) => SUPPORTED_WALLETS[k].name)[0]
-    return <Title>Connected with {name}</Title>
+    return <Connected>Connected with {name}</Connected>
   }
 
   const clearAllTransactionsCallback = useCallback(() => {
@@ -178,23 +175,21 @@ export default function AccountDetails({
           {getConnectorName()}
           <div>
             {connector !== injected && connector !== walletlink && (
-              <WalletAction
-                style={{ fontSize: '.825rem', fontWeight: 400, marginRight: '8px' }}
+              <ActionButton
                 onClick={() => {
                   ;(connector as any).close()
                 }}
               >
                 Disconnect
-              </WalletAction>
+              </ActionButton>
             )}
-            <WalletAction
-              style={{ fontSize: '.825rem', fontWeight: 400 }}
+            <ActionButton
               onClick={() => {
                 openOptions()
               }}
             >
               Change
-            </WalletAction>
+            </ActionButton>
           </div>
         </Row>
         <MiddleRow>
@@ -216,15 +211,15 @@ export default function AccountDetails({
       {!!pendingTransactions.length || !!confirmedTransactions.length ? (
         <TransactionsWrapper>
           <div>
-            <div>Recent Transactions</div>
-            <div onClick={clearAllTransactionsCallback}>(clear all)</div>
+            Recent Transactions
+            <ClearButton onClick={clearAllTransactionsCallback}>clear all</ClearButton>
           </div>
           {renderTransactions(pendingTransactions)}
           {renderTransactions(confirmedTransactions)}
         </TransactionsWrapper>
       ) : (
         <TransactionsWrapper>
-          <div style={{ fontSize: '13px' }}>Your transactions will appear here...</div>
+          <div>Your transactions will appear here...</div>
         </TransactionsWrapper>
       )}
     </>

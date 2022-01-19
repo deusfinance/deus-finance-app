@@ -4,7 +4,9 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 import NAV_LOGO from 'assets/images/Nav_Logo.svg'
-import NAV_TEXT from 'assets/images/Nav_Text.svg'
+import NAV_TEXT_BLACK from 'assets/images/Nav_Text_Black.svg'
+import NAV_TEXT_WHITE from 'assets/images/Nav_Text_White.svg'
+import { useIsDarkMode } from 'state/user/hooks'
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,23 +24,19 @@ const Wrapper = styled.div`
     &:first-child {
       margin-right: 13px;
     }
-    &:nth-child(2) {
-      @media only screen and (max-width: 480px) {
-        display: none;
-      }
-    }
   }
 `
 
 export default function NavLogo() {
+  const darkMode = useIsDarkMode()
   return (
-    <Link href="/">
+    <Link href="/" passHref>
       <Wrapper>
         <div>
           <Image src={NAV_LOGO} alt="App Logo" width={30} height={30} />
         </div>
         <div>
-          <Image src={NAV_TEXT} alt="App Logo" height={22} />
+          <Image src={darkMode ? NAV_TEXT_WHITE : NAV_TEXT_BLACK} alt="App Logo" height={22} />
         </div>
       </Wrapper>
     </Link>

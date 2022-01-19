@@ -5,8 +5,8 @@ export const Card = styled.div`
   flex-flow: column nowrap;
   justify-content: flex-start;
   overflow: hidden;
-  background: rgb(13, 13, 13);
-  border: 1px solid rgb(0, 0, 0);
+  background: ${({ theme }) => theme.bg0};
+  box-shadow: ${({ theme }) => theme.boxShadow1};
   border-radius: 15px;
-  padding: 20px;
+  padding: 1.25rem;
 `

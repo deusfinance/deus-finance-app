@@ -9,4 +9,13 @@ module.exports = {
          },
       }
    },
+   async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/stablecoin',
+        permanent: true,
+      },
+    ]
+  },   
 }

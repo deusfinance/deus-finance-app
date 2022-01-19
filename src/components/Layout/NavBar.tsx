@@ -1,46 +1,64 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import Link from 'next/link'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'
 
 import Web3Network from 'components/Web3Network'
 import Web3Status from 'components/Web3Status'
+import { ThemeToggle, NavToggle as NavToggleIcon } from 'components/Icons'
+import { NavButton } from 'components/Button'
+import { useDarkModeManager } from 'state/user/hooks'
+
+import { Sidebar } from './Sidebar'
 import NavLogo from './NavLogo'
+import { Z_INDEX } from 'theme'
 
 const Wrapper = styled.div`
   display: flex;
+  flex-flow: row nowrap;
   justify-content: space-between;
-  padding: 0px 30px;
+  padding: 0px 2rem;
   height: 55px;
   align-items: center;
-  background: #000000;
-  border-bottom: 1px solid rgb(28, 28, 28);
+  background: ${({ theme }) => theme.bg2};
+  border-bottom: ${({ theme }) => theme.border2};
   gap: 5px;
-  z-index: 1;
+  z-index: ${Z_INDEX.fixed};
 
-  @media only screen and (max-width: 480px) {
-    padding: 0px 20px;
-  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    padding: 0px 1.25rem;
+  `};
 `
 
-const AppButton = styled.div`
-  width: 150px;
-  height: 35px;
-  background: #0064fa;
-  border-radius: 10px;
-  box-shadow: inset 0px 4px 4px rgba(0, 71, 255, 0.45);
-  text-align: center;
-  align-text: center;
-  font-size: 15px;
-  line-height: 37px;
+const NavItems = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  gap: 5px;
 
-  &:hover {
-    cursor: pointer;
-  }
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    & > * {
+      display: none;
+    }
+`};
+`
+
+const NavToggle = styled(NavToggleIcon)`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: block;
+  `};
 `
 
 export default function NavBar() {
   const { pathname } = useRouter()
+  const [, toggleDarkMode] = useDarkModeManager()
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false)
+
+  const toggleSidebar = (isOpen: boolean) => {
+    setSidebarOpen((prev) => isOpen ?? !prev)
+  }
+
   const isHomePage = useMemo(() => {
     return pathname === '/'
   }, [pathname])
@@ -48,16 +66,23 @@ export default function NavBar() {
   return (
     <Wrapper>
       <NavLogo />
-      {isHomePage ? (
-        <Link href="/stablecoin">
-          <AppButton>OPEN APP</AppButton>
-        </Link>
-      ) : (
-        <>
-          <Web3Status />
-          <Web3Network />
-        </>
-      )}
+      <NavItems>
+        {isHomePage ? (
+          <Link href="/stablecoin" passHref>
+            <NavButton>OPEN APP</NavButton>
+          </Link>
+        ) : (
+          <>
+            <NavButton onClick={() => toggleDarkMode()}>
+              <ThemeToggle size={20} />
+            </NavButton>
+            <Web3Status />
+            <Web3Network />
+          </>
+        )}
+      </NavItems>
+      <NavToggle onClick={() => toggleSidebar(true)} />
+      <Sidebar toggled={sidebarOpen} onToggle={toggleSidebar} />
     </Wrapper>
   )
 }

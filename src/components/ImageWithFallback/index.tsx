@@ -20,23 +20,18 @@ export default function ImageWithFallback({
   [x: string]: any
 }) {
   const [imgSrc, setImgSrc] = useState<StaticImageData>(src)
-  const getProps = () => {
-    return {
-      alt,
-      width,
-      height,
-      onError: () => setImgSrc(NotFound),
-      ...rest,
-    }
-  }
 
   return loading ? (
-    <Image src={LoaderGif} {...getProps()} />
+    <Image src={LoaderGif} alt={alt} width={width} height={height} onError={() => setImgSrc(NotFound)} {...rest} />
   ) : (
     <Image
       src={imgSrc || NotFound}
       unoptimized={false} // set to true if you're using blobs
-      {...getProps()}
+      alt={alt}
+      width={width}
+      height={height}
+      onError={() => setImgSrc(NotFound)}
+      {...rest}
     />
   )
 }
