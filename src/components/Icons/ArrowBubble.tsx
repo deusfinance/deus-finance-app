@@ -5,9 +5,10 @@ import { useTheme } from 'styled-components'
 export default function ArrowBubble({ size = 12, ...rest }: { size?: number; [x: string]: any }) {
   const isDarkMode = useIsDarkMode()
   const theme = useTheme()
+
   const circleFill = isDarkMode ? 'black' : 'none'
   const circleStroke = isDarkMode ? 'none' : theme.text2
-  const arrow = isDarkMode ? 'white' : theme.text2
+  const arrow = isDarkMode ? 'white' : theme.text1
 
   return (
     <svg width={size} height={size} viewBox="0 0 30 30" fill="none" {...rest}>
