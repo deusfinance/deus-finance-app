@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import NAV_LOGO from 'assets/img/DeusLogo.svg'
 import NAV_TEXT_WHITE from 'assets/img/DeusWhiteText.svg'
@@ -32,10 +33,10 @@ export default function NavLogo() {
     <Link href="/" passHref>
       <Wrapper>
         <div>
-          <img src={NAV_LOGO.src} alt="App Logo" width={30} height={30} />
+          <Image src={NAV_LOGO} alt="App Logo" width={30} height={30} />
         </div>
         <div>
-          <img src={darkMode ? NAV_TEXT_WHITE.src : NAV_TEXT_BLACK.src} alt="App Logo" height={22} />
+          <Image src={darkMode ? NAV_TEXT_WHITE : NAV_TEXT_BLACK} alt="App Logo" height={22} />
         </div>
       </Wrapper>
     </Link>
