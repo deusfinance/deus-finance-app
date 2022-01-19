@@ -32,7 +32,7 @@ export default function NavLogo() {
     <Link href="/" passHref>
       <Wrapper>
         <div>
-          <img src={NAV_LOGO.src} color='green' alt="App Logo" width={30} height={30} />
+          <img src={NAV_LOGO.src} alt="App Logo" width={30} height={30} />
         </div>
         <div>
           <img src={darkMode ? NAV_TEXT_WHITE.src : NAV_TEXT_BLACK.src} alt="App Logo" height={22} />

@@ -68,7 +68,7 @@ const SubHeader = styled.div`
 export default function Option({
   link = null,
   clickable = true,
-  size = 24,
+  size = 30,
   onClick = () => null,
   color,
   header,

@@ -1,11 +1,11 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
 
 import INJECTED_ICON_URL from 'assets/img/wallets/injected.svg'
-import COINBASE_ICON_URL from 'assets/img/wallets/coinbaseWalletIcon.svg'
+import COINBASE_ICON_URL from 'assets/img/wallets/coinbaseWalletIcon.png'
 import FORTMATIC_ICON_URL from 'assets/img/wallets/fortmaticIcon.png'
 import METAMASK_ICON_URL from 'assets/img/wallets/metamask.png'
 import PORTIS_ICON_URL from 'assets/img/wallets/portisIcon.png'
-import WALLETCONNECT_ICON_URL from 'assets/img/wallets/walletConnectIcon.svg'
+import WALLETCONNECT_ICON_URL from 'assets/img/wallets/walletConnect.png'
 
 import { fortmatic, injected, portis, walletconnect, walletlink } from '../connectors'
 
