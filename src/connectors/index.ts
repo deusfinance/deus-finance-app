@@ -8,7 +8,7 @@ import { FortmaticConnector } from './Fortmatic'
 import { NetworkConnector } from './NetworkConnector'
 
 import { getLibrary } from 'utils/library'
-import APP_LOGO_URL from '../assets/images/App_Logo.png'
+import APP_LOGO_URL from 'assets/img/AppLogo.png'
 
 import { INFURA_KEY, FORMATIC_KEY, PORTIS_ID } from 'constants/keys'
 import { NETWORK_URLS, SupportedChainId, SUPPORTED_CHAIN_IDS } from 'constants/chains'

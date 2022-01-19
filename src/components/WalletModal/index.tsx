@@ -19,7 +19,7 @@ import Option from './Option'
 import PendingView from './PendingView'
 import { Modal, ModalHeader } from 'components/Modal'
 import AccountDetails from 'components/AccountDetails'
-import MetamaskIcon from 'assets/images/wallet/metamask.png'
+import MetamaskIcon from 'assets/img/wallets/metamask.png'
 
 const Wrapper = styled.div`
   display: flex;
