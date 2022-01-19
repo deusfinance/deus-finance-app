@@ -47,7 +47,7 @@ const Row = styled.div`
   display: flex;
   flex-flow: row nowrap;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   overflow: visible;
   margin-top: 30px;
@@ -329,7 +329,7 @@ export default function Mint() {
             setInsufficientBalance2={setInsufficientBalance2}
             disabled={loading}
           />
-          <ArrowWrapper size={'30px'}>
+          <ArrowWrapper size={'30px'} style={{alignSelf: 'center'}}>
             <ArrowBubble size={30} />
           </ArrowWrapper>
           <InputBox
