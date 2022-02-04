@@ -113,7 +113,7 @@ export default function useMintCallback(
       console.error(err)
       return null
     }
-  }, [collateralRatio, amount1BN, amount2BN])
+  }, [oracleRequest, collateralRatio, amount1BN, amount2BN])
 
   const getParamsProxy = useCallback(
     async (method) => {
@@ -156,7 +156,7 @@ export default function useMintCallback(
         return null
       }
     },
-    [proxyValues, chainId, Token1, amount1BN, amountOutBN, minimumAmountOutBN]
+    [oracleRequest, proxyValues, chainId, Token1, amount1BN, amountOutBN, minimumAmountOutBN]
   )
 
   const constructCall = useCallback(async () => {
@@ -179,7 +179,7 @@ export default function useMintCallback(
       const value = methodName === CallMethods.NATIVE ? amount1BN : 0
 
       return {
-        address: account,
+        address: Contract.address,
         calldata: Contract.interface.encodeFunctionData(methodName, args) ?? '',
         value,
         staticResult: await Contract.callStatic[methodName](...args, { value }),
@@ -264,6 +264,7 @@ export default function useMintCallback(
         if ('error' in estimatedGas) {
           throw new Error('Unexpected error. Could not estimate gas for minting DEI.')
         }
+        // console.log(account, address)
 
         return library
           .getSigner()
@@ -307,13 +308,12 @@ export default function useMintCallback(
     account,
     chainId,
     library,
-    pendingMint,
+    // pendingMint,
     ProxyMinterContract,
     CollateralPoolContract,
     amount1,
     amount2,
     constructCall,
-    library,
     Token1,
     Token2,
     TokenOut,
