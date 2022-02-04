@@ -76,3 +76,6 @@ out/
 
 # FuseBox cache
 .fusebox/
+
+# vscode setting
+.vscode/
