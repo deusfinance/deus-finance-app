@@ -7,7 +7,7 @@ import useWeb3React from 'hooks/useWeb3'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { isTransactionRecent, useAllTransactions } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/reducer'
-import { truncateAddress } from 'utils/account'
+import { truncateAddress } from 'utils/address'
 
 import WalletModal from 'components/WalletModal'
 import { NavButton } from 'components/Button'

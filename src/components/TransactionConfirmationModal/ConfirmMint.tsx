@@ -69,7 +69,6 @@ const InfoRow = styled.div`
 
 const Disclaimer = styled.div`
   display: block;
-  align-text: center;
   text-align: center;
   font-size: 0.7rem;
   border-radius: 5px;

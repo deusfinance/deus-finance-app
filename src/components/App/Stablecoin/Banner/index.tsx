@@ -7,7 +7,7 @@ import styled from 'styled-components'
 import { Card } from 'components/Card'
 import Copy from 'components/Copy'
 
-import { truncateAddress } from 'utils/account'
+import { truncateAddress } from 'utils/address'
 import { Tokens } from 'constants/tokens'
 import useWeb3React from 'hooks/useWeb3'
 

@@ -24,7 +24,7 @@ export function getNetworkLibrary(): Web3Provider {
 
 export const network = new NetworkConnector({
   urls: NETWORK_URLS,
-  defaultChainId: 1,
+  defaultChainId: 1, //TODO : change it to Fantom
 })
 
 export const injected = new InjectedConnector({
@@ -37,6 +37,13 @@ export const walletconnect = new WalletConnectConnector({
   qrcode: true,
 })
 
+export const walletlink = new WalletLinkConnector({
+  url: NETWORK_URLS[SupportedChainId.MAINNET],
+  appName: 'DEUS Finance',
+  appLogoUrl: APP_LOGO_URL.src,
+  supportedChainIds: SUPPORTED_CHAIN_IDS,
+})
+
 // mainnet only
 export const fortmatic = new FortmaticConnector({
   apiKey: FORMATIC_KEY ?? '',
@@ -47,12 +54,4 @@ export const fortmatic = new FortmaticConnector({
 export const portis = new PortisConnector({
   dAppId: PORTIS_ID ?? '',
   networks: [1],
-})
-
-// mainnet only
-export const walletlink = new WalletLinkConnector({
-  url: NETWORK_URLS[SupportedChainId.MAINNET],
-  appName: 'DEUS Finance',
-  appLogoUrl: APP_LOGO_URL.src,
-  supportedChainIds: SUPPORTED_CHAIN_IDS,
 })

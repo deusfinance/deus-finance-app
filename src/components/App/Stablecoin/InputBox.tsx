@@ -246,6 +246,7 @@ export default function InputBox({
           const amount = index == 0 ? amount1 : amount2
           const setAmount = index == 0 ? setAmount1 : setAmount2
           const setInsufficientBalance = index == 0 ? setInsufficientBalance1 : setInsufficientBalance2
+
           return selected.includes(token.address) ? (
             <InputOption
               token={token}

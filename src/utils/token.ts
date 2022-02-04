@@ -1,4 +1,6 @@
-import { isAddress } from './account'
+import { isAddress } from './address'
+import { SupportedChainId, SUPPORTED_CHAIN_IDS } from 'constants/chains'
+import { AddressMap, DecimalMap } from 'utils/address'
 
 export interface IToken {
   chainId: number
@@ -9,6 +11,41 @@ export interface IToken {
   logo: StaticImageData
   isNative: boolean
   isToken: boolean
+}
+
+export type TokenMap = {
+  [key: number]: IToken
+}
+
+export function duplicateTokenByChainId(
+  address: string,
+  decimals: number,
+  name: string,
+  symbol: string,
+  logo: StaticImageData,
+  chains: SupportedChainId[] = SUPPORTED_CHAIN_IDS
+): TokenMap {
+  return chains.reduce((acc: TokenMap, chainId: number) => {
+    acc[chainId] = new Token(chainId, address, decimals, name, symbol, logo)
+    return acc
+  }, {})
+}
+
+//generate same tokens by given AddressMap
+export function duplicateTokenByAddressMap(
+  addressMap: AddressMap,
+  decimals: number,
+  name: string,
+  symbol: string,
+  logo: StaticImageData,
+  decimalMap: DecimalMap = {}
+): TokenMap {
+  return Object.keys(addressMap)
+    .map((chainId) => Number(chainId)) //convert string to number because of the object.keys() always returns string
+    .reduce((acc: TokenMap, chainId: number) => {
+      acc[chainId] = new Token(chainId, addressMap[chainId], decimalMap[chainId] ?? decimals, name, symbol, logo)
+      return acc
+    }, {})
 }
 
 export class Token implements IToken {

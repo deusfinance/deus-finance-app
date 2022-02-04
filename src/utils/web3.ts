@@ -6,6 +6,7 @@ export function toWei<B extends boolean>(
   decimals: number,
   asBigNumber: B
 ): B extends true ? BigNumber : string
+
 export function toWei(amount: string | number, decimals = 18, asBigNumber: boolean): BigNumber | string {
   const getOutput = (val: string) => {
     return asBigNumber ? BigNumber.from(val) : val

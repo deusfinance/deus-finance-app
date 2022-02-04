@@ -213,7 +213,7 @@ export default function Mint() {
         error = e.message
       } else {
         console.error(e)
-        error = 'An unknown error occured.'
+        error = 'An unknown error occurred.'
       }
     }
 
@@ -356,7 +356,7 @@ export default function Mint() {
         {getActionButton()}
       </Row>
       {/* TODO get a proper design for this (also its available in the Confirm Review modal) */}
-      {/* {(isSupportedChainId && chainId && account) && (
+      {/* {chainId && account && (
         <FeeWrapper>
           <div>Minting Fee</div>
           <div>{mintingFee}%</div>

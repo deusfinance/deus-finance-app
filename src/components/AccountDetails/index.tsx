@@ -8,7 +8,7 @@ import { useAppDispatch } from 'state'
 import { injected, walletlink } from '../../connectors'
 import { SUPPORTED_WALLETS } from 'constants/wallet'
 import { ExplorerDataType } from 'utils/explorers'
-import { truncateAddress } from 'utils/account'
+import { truncateAddress } from 'utils/address'
 import { clearAllTransactions } from 'state/transactions/actions'
 
 import { Connected as ConnectedIcon } from 'components/Icons'
@@ -202,7 +202,7 @@ export default function AccountDetails({
             <ExplorerLink type={ExplorerDataType.ADDRESS} chainId={chainId} value={account}>
               <AddressLink>
                 View on Explorer
-                <LinkIcon size={12} style={{ transform: 'translateY(1px)' }} />
+                <LinkIcon size={12} />
               </AddressLink>
             </ExplorerLink>
           )}

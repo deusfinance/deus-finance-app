@@ -13,14 +13,14 @@ export const MINT__INPUTS: TokenMap = {
   [SupportedChainId.MAINNET]: [
     [Tokens.USDC[SupportedChainId.MAINNET]],
     [Tokens.USDC[SupportedChainId.MAINNET], Tokens.DEUS[SupportedChainId.MAINNET]],
-    [Tokens.ETH[SupportedChainId.MAINNET]],
+    [Tokens.NATIVE[SupportedChainId.MAINNET]],
     [Tokens.DAI[SupportedChainId.MAINNET]],
     [Tokens.WBTC[SupportedChainId.MAINNET]],
   ],
   [SupportedChainId.POLYGON]: [
     [Tokens.USDC[SupportedChainId.POLYGON]],
     [Tokens.USDC[SupportedChainId.POLYGON], Tokens.DEUS[SupportedChainId.POLYGON]],
-    [Tokens.MATIC[SupportedChainId.POLYGON]],
+    [Tokens.NATIVE[SupportedChainId.POLYGON]],
     [Tokens.WETH[SupportedChainId.POLYGON]],
   ],
 }
