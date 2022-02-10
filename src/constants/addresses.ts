@@ -17,6 +17,7 @@ export const DeiPool: AddressMap = {
   ...constructSameAddressMap('0xc63eAf6BC162531b153Dfc61F225E62d2edB4488', [
     SupportedChainId.MAINNET,
     SupportedChainId.POLYGON,
+    SupportedChainId.FANTOM,
   ]),
 }
 
@@ -71,5 +72,13 @@ export const MINT__PATHS: ProxyPath = {
     WETH: [Tokens.WETH[SupportedChainId.POLYGON]['address'], Collateral[SupportedChainId.POLYGON]],
     USDC: [Collateral[SupportedChainId.POLYGON]],
     MATIC: [Tokens.WNATIVE[SupportedChainId.POLYGON]['address'], Collateral[SupportedChainId.POLYGON]],
+  },
+
+  [SupportedChainId.FANTOM]: {
+    DEUS: [Tokens.DEUS[SupportedChainId.FANTOM]['address'], Collateral[SupportedChainId.FANTOM]],
+    DEI: [Tokens.DEI[SupportedChainId.FANTOM]['address'], Collateral[SupportedChainId.FANTOM]],
+    WETH: [Tokens.WETH[SupportedChainId.FANTOM]['address'], Collateral[SupportedChainId.FANTOM]],
+    USDC: [Collateral[SupportedChainId.FANTOM]],
+    FTM: [Tokens.WNATIVE[SupportedChainId.FANTOM]['address'], Collateral[SupportedChainId.FANTOM]],
   },
 }

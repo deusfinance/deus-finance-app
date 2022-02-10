@@ -24,8 +24,8 @@ export default function useApproveCallback(
   const { chainId, account } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
-  const [tokenAddress, tokenSymbol] = useMemo(() => {
-    return [token?.address ?? '', token?.symbol ?? '']
+  const [tokenAddress, tokenSymbol, tokenIsNative] = useMemo(() => {
+    return [token?.address ?? '', token?.symbol ?? '', token?.isNative]
   }, [token])
 
   const currentAllowance = useERC20Allowance(token, spender)
@@ -35,14 +35,14 @@ export default function useApproveCallback(
   const approvalState = useMemo(() => {
     if (!tokenAddress) return ApprovalState.UNKNOWN
     if (!spender) return ApprovalState.UNKNOWN
-    if (tokenAddress == '0x') return ApprovalState.APPROVED
+    if (tokenIsNative) return ApprovalState.APPROVED
 
     return currentAllowance.gt(0)
       ? ApprovalState.APPROVED
       : pendingApproval
       ? ApprovalState.PENDING
       : ApprovalState.NOT_APPROVED
-  }, [tokenAddress, spender, currentAllowance, pendingApproval])
+  }, [tokenAddress, tokenIsNative, spender, currentAllowance, pendingApproval])
 
   const approve = useCallback(async () => {
     if (approvalState === ApprovalState.APPROVED || approvalState === ApprovalState.PENDING) {

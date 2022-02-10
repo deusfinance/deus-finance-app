@@ -4,7 +4,7 @@ import { SupportedChainId } from 'constants/chains'
 import { ORACLE_BASE_URL } from 'constants/muon'
 import { makeHttpRequest } from 'utils/http'
 
-export const DeiSupportedChains = [SupportedChainId.MAINNET, SupportedChainId.POLYGON]
+export const DeiSupportedChains = [SupportedChainId.FANTOM, SupportedChainId.MAINNET, SupportedChainId.POLYGON]
 
 export enum DeiStatus {
   OK = 'OK',
@@ -41,6 +41,7 @@ const DEFAULT_SCALE = {
 export const Scales: { [chainId in SupportedChainId]?: Scale } = {
   [SupportedChainId.MAINNET]: DEFAULT_SCALE,
   [SupportedChainId.POLYGON]: DEFAULT_SCALE,
+  [SupportedChainId.FANTOM]: DEFAULT_SCALE,
   [SupportedChainId.BSC]: {
     ...DEFAULT_SCALE,
     poolCeiling: 1e12, // TODO CHECK IF THIS IS CORRECT
@@ -51,6 +52,7 @@ export const Scales: { [chainId in SupportedChainId]?: Scale } = {
 export const NUMBER_OF_POOLS: { [chainId in SupportedChainId]?: number } = {
   [SupportedChainId.MAINNET]: 3,
   [SupportedChainId.POLYGON]: 4,
+  [SupportedChainId.FANTOM]: 5,
 }
 
 const initialState = {

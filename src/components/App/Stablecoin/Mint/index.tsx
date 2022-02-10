@@ -356,12 +356,12 @@ export default function Mint() {
         {getActionButton()}
       </Row>
       {/* TODO get a proper design for this (also its available in the Confirm Review modal) */}
-      {/* {chainId && account && (
+      {chainId && account && (
         <FeeWrapper>
           <div>Minting Fee</div>
           <div>{mintingFee}%</div>
         </FeeWrapper>
-      )} */}
+      )}
       <ConfirmMintModal
         isOpen={showReview}
         onDismiss={handleOnDismiss}

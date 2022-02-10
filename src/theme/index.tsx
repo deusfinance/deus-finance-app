@@ -229,7 +229,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
   * {
     -ms-overflow-style: none; /* for Internet Explorer, Edge */
     scrollbar-width: none; /* for Firefox */
-    overflow-y: scroll;
+    /* overflow-y: scroll; //TODO: Why? */
   }
   *::-webkit-scrollbar {
     display: none; /* for Chrome, Safari, and Opera */

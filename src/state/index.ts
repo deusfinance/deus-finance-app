@@ -62,7 +62,7 @@ export type AppState = ReturnType<typeof store.getState>
 
 export type AppDispatch = typeof store.dispatch
 export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppState, unknown, Action<string>>
-export type AppThunkDispatch = ThunkDispatch<{}, void, AnyAction>
+export type AppThunkDispatch = ThunkDispatch<any, void, AnyAction>
 
 export const useAppDispatch = () => useDispatch<AppDispatch>()
 export const useAppSelector: TypedUseSelectorHook<AppState> = useSelector

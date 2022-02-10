@@ -69,7 +69,7 @@ const Input = styled.input<{
   background: transparent;
   text-align: right;
   font-size: 1rem;
-  width: auto;
+  width: 100%;
   outline: none;
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {

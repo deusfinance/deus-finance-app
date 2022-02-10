@@ -9,6 +9,7 @@ import DEUS_LOGO from 'assets/img/tokens/deus.svg'
 import ETH_LOGO from 'assets/img/tokens/ethereum.svg'
 import WBTC_LOGO from 'assets/img/tokens/wbtc.svg'
 import MATIC_LOGO from 'assets/img/tokens/matic.svg'
+import FTM_LOGO from 'assets/img/tokens/ftm.svg'
 
 /* =====================================
                 WETH ADDRESS
@@ -69,14 +70,14 @@ export const Tokens: { [key: string]: TokenMap } = {
     [SupportedChainId.MAINNET]: new Token(1, WRAPPED_NATIVE[1], 18, 'WETH', 'Wrapped Ether', ETH_LOGO),
     [SupportedChainId.RINKEBY]: new Token(4, WRAPPED_NATIVE[4], 18, 'WETH', 'Wrapped Ether', ETH_LOGO),
     [SupportedChainId.POLYGON]: new Token(137, WRAPPED_NATIVE[137], 18, 'WMATIC', 'Wrapped Matic', MATIC_LOGO),
-    [SupportedChainId.FANTOM]: new Token(250, WRAPPED_NATIVE[250], 18, 'WFTM', 'Wrapped Fantom', MATIC_LOGO), //TODO: change logo
+    [SupportedChainId.FANTOM]: new Token(250, WRAPPED_NATIVE[250], 18, 'WFTM', 'Wrapped Fantom', FTM_LOGO), //TODO: change logo
     [SupportedChainId.BSC]: new Token(56, WRAPPED_NATIVE[56], 18, 'WBNB', 'Wrapped BNB', MATIC_LOGO), //TODO: change logo
   },
   NATIVE: {
     [SupportedChainId.MAINNET]: new Token(1, '0x', 18, 'ETH', 'Ether', ETH_LOGO),
     [SupportedChainId.RINKEBY]: new Token(4, '0x', 18, 'ETH', 'Ether', ETH_LOGO),
     [SupportedChainId.POLYGON]: new Token(137, '0x', 18, 'MATIC', 'MATIC', MATIC_LOGO),
-    [SupportedChainId.FANTOM]: new Token(250, '0x', 18, 'FTM', 'Fantom', MATIC_LOGO), //TODO: change logo
+    [SupportedChainId.FANTOM]: new Token(250, '0x', 18, 'FTM', 'Fantom', FTM_LOGO), //TODO: change logo
     [SupportedChainId.BSC]: new Token(56, '0x', 18, 'BNB', 'BNB', MATIC_LOGO), //TODO: change logo
   },
 }
