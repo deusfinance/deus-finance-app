@@ -52,7 +52,7 @@ export const Scales: { [chainId in SupportedChainId]?: Scale } = {
 export const NUMBER_OF_POOLS: { [chainId in SupportedChainId]?: number } = {
   [SupportedChainId.MAINNET]: 3,
   [SupportedChainId.POLYGON]: 4,
-  [SupportedChainId.FANTOM]: 5,
+  [SupportedChainId.FANTOM]: 6,
 }
 
 const initialState = {

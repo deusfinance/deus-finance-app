@@ -5,6 +5,8 @@ import useWeb3React from './useWeb3'
 import { useProxyMinterContract } from './useContract'
 import { MINT__PATHS, Collateral } from 'constants/addresses'
 import { ProxyValues } from 'state/mint/reducer'
+import { ParseProxyMinterGetAmountOutError } from 'utils/parseErrors'
+import toast from 'react-hot-toast'
 
 type Params = Array<string | string[]>
 
@@ -59,7 +61,7 @@ export default function useProxiedAmountOutCallback(
         const result: ProxyValues = await ProxyMinterContract[method](...params)
         return result
       } catch (err) {
-        console.error(err)
+        toast.error(ParseProxyMinterGetAmountOutError(err))
         return null
       }
     },

@@ -19,6 +19,7 @@ import { dynamicPrecision } from 'utils/numbers'
 import { IToken } from 'utils/token'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useMintState } from 'state/mint/reducer'
+import { MintErrorToUserReadableMessage } from 'utils/parseErrors'
 
 export enum MintCallbackState {
   INVALID = 'INVALID',
@@ -170,7 +171,7 @@ export default function useMintCallback(
       const methodName =
         Token1.address == Collateral[chainId]
           ? CallMethods.USDC
-          : Token1?.address == '0x'
+          : Token1.isNative
           ? CallMethods.NATIVE
           : CallMethods.ERC20
 
@@ -256,7 +257,7 @@ export default function useMintCallback(
             .catch((callError) => {
               console.debug('Call threw an error', call, callError)
               return {
-                error: new Error(callError.message), // TODO make this human readable
+                error: new Error(MintErrorToUserReadableMessage(callError)), // TODO make this human readable
               }
             })
         })

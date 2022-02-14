@@ -1,5 +1,6 @@
 export { default as Banner } from './Banner'
 export { default as Navigation, NavigationTypes } from './Navigation'
 export { default as Mint } from './Mint'
+export { default as Redeem } from './Redeem'
 export { default as Statistics } from './Statistics'
 export { default as ComingSoon } from './ComingSoon'

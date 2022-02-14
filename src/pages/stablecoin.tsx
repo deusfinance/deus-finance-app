@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Statistics } from 'components/App/Stablecoin'
+import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Statistics, Redeem } from 'components/App/Stablecoin'
 
 const Container = styled.div`
   display: flex;
@@ -45,7 +45,7 @@ export default function Stablecoin() {
       return <Mint />
     }
     if (selected == NavigationTypes.REDEEM) {
-      return <ComingSoon /> // TODO
+      return <Redeem /> // TODO
     }
     if (selected == NavigationTypes.ZAP) {
       return <ComingSoon /> // TODO
