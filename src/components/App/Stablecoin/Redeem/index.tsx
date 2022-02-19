@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import find from 'lodash/find'
 import flattenDeep from 'lodash/flattenDeep'
 import useWeb3React from 'hooks/useWeb3'
+import { useAppDispatch } from 'state'
 
 import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { IToken } from 'utils/token'
@@ -12,13 +13,16 @@ import useRedeemAmounts from 'hooks/useRedeemAmounts'
 import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
 import { Card } from 'components/Card'
 import InputBox from '../InputBox'
-import useRedeemCallback from 'hooks/useRedeemCallback'
+import useRedeemCallback, { useCollectRedemptionCallback } from 'hooks/useRedeemCallback'
 import { PrimaryButton } from 'components/Button'
 import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
 import { CollateralPool } from 'constants/addresses'
 import { useWalletModalToggle } from 'state/application/hooks'
 import NetworkSelect from '../NetworkSelect'
 import TransactionSettings from 'components/TransactionSettings'
+import { useRedeemState, useRedeemBalances, useShowClaim } from 'state/redeem/hooks'
+import DefaultConfirmation from 'components/TransactionConfirmationModal/DefaultConfirmation'
+import { setAttemptingTxn, setRedeemState, setShowReview } from 'state/redeem/reducer'
 
 const Wrapper = styled(Card)`
   justify-content: flex-start;
@@ -90,6 +94,7 @@ const FeeWrapper = styled.div`
 `
 
 export default function Redeem() {
+  const dispatch = useAppDispatch()
   const { chainId, account } = useWeb3React()
   const [TokenIn, setTokenIn] = useState<IToken | null>(null)
   const [TokenOut1, setTokenOut1] = useState<IToken | null>(null)
@@ -99,6 +104,10 @@ export default function Redeem() {
   const toggleWalletModal = useWalletModalToggle()
 
   const deiStatus = useDeiStatus()
+  const redeemState = useRedeemState()
+  const { attemptingTxn, showReview, error: redeemStateError } = redeemState
+  const redeemBalances = useRedeemBalances()
+  const showClaim = useShowClaim()
 
   const [selected, setSelected] = useState<string[]>([]) // [address1, optionalAddress2]
   const [insufficientBalance1, setInsufficientBalance1] = useState<boolean>(false)
@@ -125,6 +134,12 @@ export default function Redeem() {
     error: redeemCallbackError,
   } = useRedeemCallback(TokenIn, TokenOut1, TokenOut2, amountIn)
 
+  const {
+    state: collectRedemptionCallbackState,
+    callback: collectRedemptionCallback,
+    error: collectRedemptionCallbackError,
+  } = useCollectRedemptionCallback(TokenOut1, TokenOut2, redeemBalances.collateral, redeemBalances.deus)
+
   const spender = useMemo(() => {
     return chainId ? CollateralPool[chainId] : null
   }, [chainId])
@@ -147,7 +162,7 @@ export default function Redeem() {
     console.log(redeemCallbackState, redeemCallback, redeemCallbackError)
 
     if (!redeemCallback) return
-    // dispatch(setAttemptingTxn(true))
+    dispatch(setAttemptingTxn(true))
 
     let error = ''
     try {
@@ -163,7 +178,34 @@ export default function Redeem() {
     }
 
     //  dispatch(setMintState({ ...mintState, error, attemptingTxn: false }))
-  }, [redeemCallbackState, redeemCallback, redeemCallbackError])
+  }, [dispatch, redeemCallbackState, redeemCallback, redeemCallbackError])
+
+  const handleCollectRedemption = useCallback(async () => {
+    console.log('called handleRedeem')
+    console.log(collectRedemptionCallbackState, collectRedemptionCallback, collectRedemptionCallbackError)
+
+    if (!collectRedemptionCallback) return
+
+    let error = ''
+    try {
+      const txHash = await collectRedemptionCallback()
+      setTxHash(txHash)
+    } catch (e) {
+      if (e instanceof Error) {
+        error = e.message
+      } else {
+        console.error(e)
+        error = 'An unknown error occurred.'
+      }
+    }
+
+    //  dispatch(setMintState({ ...mintState, error, attemptingTxn: false }))
+  }, [collectRedemptionCallbackState, collectRedemptionCallback, collectRedemptionCallbackError])
+
+  const handleOnDismiss = useCallback(() => {
+    setTxHash('')
+    dispatch(setRedeemState({ ...redeemState, showReview: false, attemptingTxn: false, error: undefined }))
+  }, [dispatch, redeemState])
 
   // On user select
   useEffect(() => {
@@ -235,8 +277,8 @@ export default function Redeem() {
       <PrimaryButton
         onClick={() => {
           if (amountOut1 && amountOut1 != '0' && amountOut2 && amountOut2 != '0') {
-            handleRedeem()
-            // dispatch(setShowReview(true))
+            // handleRedeem()
+            dispatch(setShowReview(true))
           }
         }}
       >
@@ -244,6 +286,10 @@ export default function Redeem() {
       </PrimaryButton>
     )
   }
+  const TokensIn = []
+  if (TokenIn) TokensIn.push(TokenIn)
+  const TokensOut = []
+  if (TokenOut1 && TokenOut2) TokensOut.push(...[TokenOut1, TokenOut2])
 
   function getMainContent(): JSX.Element {
     if (!account || !chainId) {
@@ -289,8 +335,29 @@ export default function Redeem() {
       <Row>
         {getApproveButton()}
         {getActionButton()}
-        {/* <PrimaryButton onClick={handleRedeem}>Redeem {TokenIn?.symbol}</PrimaryButton> */}
       </Row>
+
+      <DefaultConfirmation
+        title="Redeem DEI"
+        isOpen={showReview}
+        onDismiss={handleOnDismiss}
+        onConfirm={handleRedeem}
+        onConfirmTitle="Redeem DEI"
+        attemptingTxn={attemptingTxn}
+        errorMessage={redeemStateError}
+        txHash={txHash}
+        TokensIn={TokensIn}
+        TokensOut={TokensOut}
+        amountsIn={[amountIn]}
+        amountsOut={[amountOut1, amountOut2]}
+        summary={`Redeem `}
+      />
+
+      {showClaim && (
+        <PrimaryButton onClick={handleCollectRedemption}>
+          Claim {redeemBalances.collateral} {TokenOut1?.symbol} & {redeemBalances.deus} {TokenOut2?.symbol}
+        </PrimaryButton>
+      )}
     </Wrapper>
   )
 }

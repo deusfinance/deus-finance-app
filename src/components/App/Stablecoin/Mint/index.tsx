@@ -351,10 +351,6 @@ export default function Mint() {
         <TransactionSettings style={{ marginLeft: '20px' }} />
       </ToggleRow>
       {getMainContent()}
-      <Row>
-        {getApproveButton()}
-        {getActionButton()}
-      </Row>
       {/* TODO get a proper design for this (also its available in the Confirm Review modal) */}
       {chainId && account && (
         <FeeWrapper>
@@ -362,6 +358,11 @@ export default function Mint() {
           <div>{mintingFee}%</div>
         </FeeWrapper>
       )}
+      <Row>
+        {getApproveButton()}
+        {getActionButton()}
+      </Row>
+
       <ConfirmMintModal
         isOpen={showReview}
         onDismiss={handleOnDismiss}

@@ -16,9 +16,10 @@ import {
   updateMintingFee,
   updateRedemptionFee,
 } from './reducer'
+import { setRedeemBalances, setShowClaim } from 'state/redeem/reducer'
 
 export default function Updater(): null {
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const dispatch = useAppDispatch()
   const thunkDispatch: AppThunkDispatch = useAppDispatch()
   const DeiContract = useDeiContract()
@@ -71,10 +72,19 @@ export default function Updater(): null {
     [isSupported, collateralPrice]
   )
 
+  const userCalls = useMemo(() => {
+    if (!account) return []
+    return [
+      { methodName: 'redeemCollateralBalances', callInputs: [account] },
+      { methodName: 'redeemDEUSBalances', callInputs: [account] },
+    ]
+  }, [account])
+
   // using singleContractMultipleMethods just so we can default if !isSupported
   // const infoResponse = useSingleCallResult(DeiContract, 'dei_info', [priceMapping])
   const infoResponse = useSingleContractMultipleMethods(DeiContract, infoCalls)
   const poolResponse = useSingleContractMultipleMethods(CollateralPoolContract, poolCalls)
+  const userResponse = useSingleContractMultipleMethods(CollateralPoolContract, userCalls)
 
   useEffect(() => {
     if (!collateralRatioScale || !feeScale || !poolCeilingScale || !poolBalanceScale) return
@@ -110,6 +120,25 @@ export default function Updater(): null {
     poolCeilingScale,
     poolBalanceScale,
   ])
+
+  //update user's balance in CollateralPoolContract
+  useEffect(() => {
+    if (!isSupported || !account || !chainId || collateralRatioScale == undefined) return
+
+    const [collateralBalances, deusBalances] = userResponse
+
+    if (collateralBalances?.result && deusBalances?.result) {
+      const collateralBalance = new BN(collateralBalances.result[0].toString()).div(collateralRatioScale)
+      const deusBalance = new BN(deusBalances.result[0].toString()).div(1e18)
+      dispatch(setRedeemBalances({ deus: deusBalance.toNumber(), collateral: collateralBalance.toNumber() }))
+
+      if (!collateralBalance.isZero() || !deusBalance.isZero()) {
+        dispatch(setShowClaim(true))
+      } else {
+        dispatch(setShowClaim(false))
+      }
+    }
+  }, [dispatch, isSupported, account, collateralRatioScale, userResponse, chainId])
 
   useEffect(() => {
     if (chainId && isSupported) {

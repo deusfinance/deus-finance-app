@@ -122,7 +122,7 @@ export default function useMintPage(
         setAmountOut(outputAmount1)
         updateProxyValues(result)
       }
-    }, 300),
+    }, 500),
     [
       updateProxyValues,
       isProxyMinter,
@@ -153,7 +153,7 @@ export default function useMintPage(
 
       setAmount1(inputAmount1.toString())
       setAmountOut(outputAmount.toString())
-    }, 300),
+    }, 500),
     [collateralRatio, inputUnit1, inputUnit2, feeFactorBN]
   )
 
@@ -176,7 +176,7 @@ export default function useMintPage(
 
       setAmount1(inputAmount1.toString())
       setAmount2(inputAmount2.toString())
-    }, 300),
+    }, 500),
     [isProxyMinter, collateralRatio, inputUnit1, inputUnit2, feeFactorBN]
   )
 

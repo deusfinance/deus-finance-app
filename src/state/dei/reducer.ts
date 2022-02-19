@@ -12,6 +12,14 @@ export enum DeiStatus {
   ERROR = 'ERROR',
 }
 
+//TODO: add this info to state
+//buyBackPaused
+//buyback_fee
+//mintPaused
+//recollateralizePaused
+//recollat_fee
+//redeemPaused
+
 interface Scale {
   collateralRatio: number
   fee: number
@@ -44,6 +52,7 @@ export const Scales: { [chainId in SupportedChainId]?: Scale } = {
   [SupportedChainId.FANTOM]: DEFAULT_SCALE,
   [SupportedChainId.BSC]: {
     ...DEFAULT_SCALE,
+    collateralRatio: 1e18,
     poolCeiling: 1e12, // TODO CHECK IF THIS IS CORRECT
     poolBalance: 1e18, // TODO CHECK IF THIS IS CORRECT
   },

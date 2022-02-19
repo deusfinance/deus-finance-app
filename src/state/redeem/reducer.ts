@@ -1,9 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { AppState, useAppSelector } from 'state'
+
+export type RedeemBalances = {
+  collateral: number
+  deus: number
+}
 
 export interface RedeemState {
   attemptingTxn: boolean
   showReview: boolean
+  showClaim: boolean
+  redeemBalances: RedeemBalances
   error?: string
 }
 
@@ -11,6 +17,11 @@ const initialState: RedeemState = {
   attemptingTxn: false,
   showReview: false,
   error: undefined,
+  showClaim: false,
+  redeemBalances: {
+    collateral: 0,
+    deus: 0,
+  },
 }
 
 export const redeemSlice = createSlice({
@@ -21,6 +32,12 @@ export const redeemSlice = createSlice({
       state.attemptingTxn = action.payload.attemptingTxn
       state.showReview = action.payload.showReview
       state.error = action.payload.error
+    },
+    setRedeemBalances: (state, action: PayloadAction<RedeemBalances>) => {
+      state.redeemBalances = action.payload
+    },
+    setShowClaim: (state, action: PayloadAction<boolean>) => {
+      state.showClaim = action.payload
     },
     setAttemptingTxn: (state, action: PayloadAction<boolean>) => {
       state.attemptingTxn = action.payload
@@ -34,10 +51,7 @@ export const redeemSlice = createSlice({
   },
 })
 
-export const { setRedeemState, setAttemptingTxn, setShowReview, setError } = redeemSlice.actions
-
-export function useRedeemState(): RedeemState {
-  return useAppSelector((state: AppState) => state.redeem)
-}
+export const { setRedeemState, setRedeemBalances, setShowClaim, setAttemptingTxn, setShowReview, setError } =
+  redeemSlice.actions
 
 export default redeemSlice.reducer

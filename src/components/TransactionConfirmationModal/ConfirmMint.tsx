@@ -169,11 +169,11 @@ export default function ConfirmMint({
               <div>Minimum DEI Received: </div>
               <div>{minimumAmountOut} DEI</div>
             </InfoRow>
-            <InfoRow>
-              {/* TODO calculate price impact (using Contract.callStatic) */}
+            {/* <InfoRow>
+              // TODO calculate price impact (using Contract.callStatic)
               <div>Price Impact</div>
               <div>Unknown</div>
-            </InfoRow>
+            </InfoRow> */}
             <InfoRow>
               <div>Protocol Fee: </div>
               <div>
