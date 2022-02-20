@@ -18,20 +18,18 @@ import { IToken } from 'utils/token'
 import { CollateralPool, MintProxy } from 'constants/addresses'
 import { MINT__INPUTS, MINT__OUTPUTS } from 'constants/inputs'
 
-import { Card } from 'components/Card'
+import { DeiInfo } from 'components/Icons/DeiInfo'
+import { Statistics } from 'components/App/Stablecoin'
 import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
 import { PrimaryButton } from 'components/Button'
 import TransactionSettings from 'components/TransactionSettings'
 import ConfirmMintModal from 'components/TransactionConfirmationModal/ConfirmMint'
+import { TooltipContainer, MouseoverTooltipContent } from 'components/Tooltip'
 
+import { RowBetween } from 'components/Row'
 import InputBox from '../InputBox'
 import NetworkSelect from '../NetworkSelect'
-
-const Wrapper = styled(Card)`
-  justify-content: flex-start;
-  overflow: visible;
-  box-shadow: ${({ theme }) => theme.boxShadow2};
-`
+import { DefaultWrapper as MintWrapper } from 'components/App/Stablecoin'
 
 const ToggleRow = styled.div`
   position: relative;
@@ -70,6 +68,18 @@ const ArrowWrapper = styled(IconWrapper)`
   `};
 `
 
+export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
+  background-color: ${({ theme }) => theme.bg0};
+  border: 1px solid ${({ theme }) => theme.bg2};
+  padding: 0;
+  box-shadow: 0px 0px 12px ${({ theme }) => theme.bg2};
+  width: ${({ width }) => width ?? 'auto'};
+  ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
+    transform: scale(0.8);
+    transform-origin: ${origin ?? 'top left'};
+  `}
+`
+
 const TextBlock = styled.div`
   display: flex;
   flex-flow: column nowrap;
@@ -84,6 +94,7 @@ const FeeWrapper = styled.div`
   display: flex;
   flex-flow: row nowrap;
   width: 100%;
+  max-width: 260px;
   justify-content: space-between;
   margin-top: 10px;
   padding: 0px 10px;
@@ -345,18 +356,31 @@ export default function Mint() {
   }
 
   return (
-    <Wrapper>
+    <MintWrapper>
       <ToggleRow>
         <NetworkSelect chains={DeiSupportedChains} />
         <TransactionSettings style={{ marginLeft: '20px' }} />
       </ToggleRow>
       {getMainContent()}
       {/* TODO get a proper design for this (also its available in the Confirm Review modal) */}
-      {chainId && account && (
-        <FeeWrapper>
-          <div>Minting Fee</div>
-          <div>{mintingFee}%</div>
-        </FeeWrapper>
+      {chainId && (
+        <RowBetween>
+          <FeeWrapper>
+            <div>Minting Fee</div>
+            <div>{mintingFee}%</div>
+          </FeeWrapper>
+          <MouseoverTooltipContent
+            wrap={false}
+            content={
+              <ResponsiveTooltipContainer>
+                <Statistics />
+              </ResponsiveTooltipContainer>
+            }
+            placement="right"
+          >
+            <DeiInfo size={'20'} />
+          </MouseoverTooltipContent>
+        </RowBetween>
       )}
       <Row>
         {getApproveButton()}
@@ -377,6 +401,6 @@ export default function Mint() {
         amount2={amount2}
         amountOut={amountOut}
       />
-    </Wrapper>
+    </MintWrapper>
   )
 }

@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Statistics, Redeem } from 'components/App/Stablecoin'
+import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Redeem } from 'components/App/Stablecoin'
+import { RowCenter } from 'components/Row'
 
 const Container = styled.div`
   display: flex;
@@ -16,26 +17,7 @@ const Container = styled.div`
     margin-top: 30px;
   `};
 `
-
-const Row = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  width: 100%;
-  gap: 13px;
-  transition: width 5s ease;
-  margin-top: 15px;
-  overflow: visible;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-flow: column wrap;
-  `};
-
-  & > * {
-    &:nth-child(1) {
-      flex: 1;
-    }
-  }
-`
+const Row = styled(RowCenter)``
 
 export default function Stablecoin() {
   const [selected, setSelected] = useState<NavigationTypes>(NavigationTypes.MINT)
@@ -57,11 +39,9 @@ export default function Stablecoin() {
   return (
     <Container>
       <Banner />
+      {/* <SubHeader /> */}
       <Navigation selected={selected} setSelected={setSelected} />
-      <Row>
-        {getAppComponent()}
-        <Statistics />
-      </Row>
+      <Row>{getAppComponent()}</Row>
     </Container>
   )
 }

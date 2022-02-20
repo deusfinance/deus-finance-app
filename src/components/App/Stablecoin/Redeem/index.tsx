@@ -5,30 +5,27 @@ import flattenDeep from 'lodash/flattenDeep'
 import useWeb3React from 'hooks/useWeb3'
 import { useAppDispatch } from 'state'
 
-import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { IToken } from 'utils/token'
 import { REDEEM__INPUTS, REDEEM__OUTPUTS } from 'constants/inputs'
-import { useDeiStatus } from 'state/dei/hooks'
-import useRedeemAmounts from 'hooks/useRedeemAmounts'
-import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
-import { Card } from 'components/Card'
-import InputBox from '../InputBox'
-import useRedeemCallback, { useCollectRedemptionCallback } from 'hooks/useRedeemCallback'
-import { PrimaryButton } from 'components/Button'
-import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
+
 import { CollateralPool } from 'constants/addresses'
 import { useWalletModalToggle } from 'state/application/hooks'
-import NetworkSelect from '../NetworkSelect'
-import TransactionSettings from 'components/TransactionSettings'
+import { useDeiStatus } from 'state/dei/hooks'
+import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { useRedeemState, useRedeemBalances, useShowClaim } from 'state/redeem/hooks'
-import DefaultConfirmation from 'components/TransactionConfirmationModal/DefaultConfirmation'
 import { setAttemptingTxn, setRedeemState, setShowReview } from 'state/redeem/reducer'
 
-const Wrapper = styled(Card)`
-  justify-content: flex-start;
-  overflow: visible;
-  box-shadow: ${({ theme }) => theme.boxShadow2};
-`
+import useRedeemAmounts from 'hooks/useRedeemAmounts'
+import useRedeemCallback, { useCollectRedemptionCallback } from 'hooks/useRedeemCallback'
+import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
+
+import { PrimaryButton } from 'components/Button'
+import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
+import DefaultConfirmation from 'components/TransactionConfirmationModal/DefaultConfirmation'
+import { DefaultWrapper as Wrapper } from 'components/App/Stablecoin'
+import NetworkSelect from 'components/App/Stablecoin/NetworkSelect'
+import InputBox from 'components/App/Stablecoin/InputBox'
+import TransactionSettings from 'components/TransactionSettings'
 
 const ToggleRow = styled.div`
   position: relative;

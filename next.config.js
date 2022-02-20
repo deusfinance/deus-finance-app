@@ -1,11 +1,14 @@
 module.exports = {
-  exportPathMap: async function() {
+  exportPathMap: async function () {
     return {
       '/': {
-        page: '/stablecoin'
+        page: '/stablecoin',
       },
       '/stablecoin': {
-        page: '/stablecoin'
+        page: '/stablecoin',
+      },
+      '/stablecoin/mint': {
+        page: '/mint',
       },
     }
   },

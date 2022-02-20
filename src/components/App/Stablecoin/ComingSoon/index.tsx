@@ -2,15 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { DeiSupportedChains } from 'state/dei/reducer'
-import { Card } from 'components/Card'
 import TransactionSettings from 'components/TransactionSettings'
 import NetworkSelect from '../NetworkSelect'
-
-const Wrapper = styled(Card)`
-  justify-content: flex-start;
-  overflow: visible;
-  box-shadow: ${({ theme }) => theme.boxShadow2};
-`
+import { DefaultWrapper as Wrapper } from 'components/App/Stablecoin'
 
 const ToggleRow = styled.div`
   position: relative;

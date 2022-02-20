@@ -11,11 +11,12 @@ import { DotFlashing } from 'components/Icons'
 
 const Wrapper = styled(Card)`
   display: flex;
+  border-radius: 0;
   flex-flow: column nowrap;
   justify-content: center;
   text-align: left;
   gap: 20px;
-  background: ${({ theme }) => theme.bg3};
+  /* background: ${({ theme }) => theme.bg3}; */
   height: 270px;
 `
 
