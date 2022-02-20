@@ -69,14 +69,13 @@ const ArrowWrapper = styled(IconWrapper)`
 `
 
 export const ResponsiveTooltipContainer = styled(TooltipContainer)<{ origin?: string; width?: string }>`
-  background-color: ${({ theme }) => theme.bg0};
-  border: 1px solid ${({ theme }) => theme.bg2};
   padding: 0;
-  box-shadow: 0px 0px 12px ${({ theme }) => theme.bg2};
+  overflow: hidden;
+  box-shadow: 0px 0px 12px ${({ theme }) => theme.bg3};
   width: ${({ width }) => width ?? 'auto'};
   ${({ theme, origin }) => theme.mediaWidth.upToExtraSmall`
-    transform: scale(0.8);
-    transform-origin: ${origin ?? 'top left'};
+    transform: scale(0.7);
+    transform-origin: ${origin ?? 'top right'};
   `}
 `
 
@@ -90,14 +89,20 @@ const TextBlock = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
+const RowDetails = styled(RowBetween)`
+  margin-top: 0;
+`
+
 const FeeWrapper = styled.div`
   display: flex;
   flex-flow: row nowrap;
-  width: 100%;
-  max-width: 260px;
+  width: 260px;
   justify-content: space-between;
-  margin-top: 10px;
   padding: 0px 10px;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    width: 130px;
+  `}
+
   & > * {
     font-size: 0.8rem;
     color: ${({ theme }) => theme.text2};
@@ -364,7 +369,7 @@ export default function Mint() {
       {getMainContent()}
       {/* TODO get a proper design for this (also its available in the Confirm Review modal) */}
       {chainId && (
-        <RowBetween>
+        <RowDetails>
           <FeeWrapper>
             <div>Minting Fee</div>
             <div>{mintingFee}%</div>
@@ -380,7 +385,7 @@ export default function Mint() {
           >
             <DeiInfo size={'20'} />
           </MouseoverTooltipContent>
-        </RowBetween>
+        </RowDetails>
       )}
       <Row>
         {getApproveButton()}

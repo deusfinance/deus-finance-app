@@ -45,10 +45,6 @@ const Title = styled.div`
   flex-flow: row nowrap;
   font-size: 1.25rem;
 
-  ${({ theme }) => theme.mediaWidth.upToSmall`
-    font-size: 1.2rem;
-  `};
-
   & > * {
     &:first-child {
       font-weight: 700;
@@ -60,6 +56,18 @@ const Title = styled.div`
       color: ${({ theme }) => theme.text2};
     }
   }
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 1.1rem;
+    flex-flow: column nowrap;
+    & > * {
+      &:nth-child(2) {
+        margin-left: 0;
+        margin-top: 1rem;
+        color: ${({ theme }) => theme.text2};
+      }
+  }
+  `};
 `
 
 const Stat = styled.div`
