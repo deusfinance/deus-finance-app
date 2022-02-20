@@ -6,6 +6,9 @@ export enum SupportedChainId {
   BSC = 56,
   POLYGON = 137,
   FANTOM = 250,
+  BSC_TESTNET = 250, //TODO
+  ARBITRUM = 250, //TODO
+  METIS = 250, //TODO
 }
 
 export const SUPPORTED_CHAIN_IDS: SupportedChainId[] = Object.values(SupportedChainId).filter(
@@ -18,4 +21,15 @@ export const NETWORK_URLS = {
   [SupportedChainId.BSC]: 'https://bsc-dataseed1.binance.org',
   [SupportedChainId.POLYGON]: 'https://polygon-rpc.com',
   [SupportedChainId.FANTOM]: 'https://rpc.ftm.tools',
+}
+
+export const BridgeMinimumBlockNeed = {
+  [SupportedChainId.MAINNET]: 24,
+  [SupportedChainId.POLYGON]: 256,
+  [SupportedChainId.RINKEBY]: 24,
+  [SupportedChainId.BSC]: 30,
+  [SupportedChainId.BSC_TESTNET]: 30,
+  [SupportedChainId.FANTOM]: 6,
+  [SupportedChainId.METIS]: 35,
+  [SupportedChainId.ARBITRUM]: 12,
 }

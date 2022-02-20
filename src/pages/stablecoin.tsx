@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Redeem } from 'components/App/Stablecoin'
 import { RowCenter } from 'components/Row'
+import Bridge from 'components/App/Bridge'
 
 const Container = styled.div`
   display: flex;
@@ -30,7 +31,7 @@ export default function Stablecoin() {
       return <Redeem /> // TODO
     }
     if (selected == NavigationTypes.ZAP) {
-      return <ComingSoon /> // TODO
+      return <Bridge /> // TODO
     }
     // NavigationTypes.FARMS
     return <ComingSoon /> // TODO
