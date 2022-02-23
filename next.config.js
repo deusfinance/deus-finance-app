@@ -7,8 +7,8 @@ module.exports = {
       '/stablecoin': {
         page: '/stablecoin',
       },
-      '/stablecoin/mint': {
-        page: '/mint',
+      '/bridge': {
+        page: '/bridge',
       },
     }
   },

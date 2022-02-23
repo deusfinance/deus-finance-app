@@ -1,18 +1,13 @@
 import styled from 'styled-components'
 import Image from 'next/image'
 
+import { ChainInfo } from 'constants/chainInfo'
+import { SupportedChainId } from 'constants/chains'
 import { RowBetween, RowStart } from 'components/Row'
-import { Tokens } from 'constants/tokens'
+
 import ClaimButton from './ClaimButton'
 
-const Wrapper = styled.div`
-  width: 100%;
-  padding: 7px 18px 7px 18px;
-  border-radius: 16px;
-`
-
 const TokenInfo = styled.div`
-  /* margin-right: 8px; */
   color: ${({ theme }) => theme.bg0};
   &:hover {
     color: ${({ theme }) => theme.bg1};
@@ -20,56 +15,59 @@ const TokenInfo = styled.div`
 `
 
 const TokenName = styled.div`
-  font-size: 16px;
+  font-size: 14px;
+  margin-left: 5px;
+  color: ${({ theme }) => theme.text1};
+`
+const Amount = styled.div`
+  font-size: 12px;
   margin-left: 10px;
+  font-weight: 600;
   color: ${({ theme }) => theme.text1};
 `
 
-const NetworkName = styled.div`
-  font-size: 12px;
-  margin-left: 10px;
+const Chain = styled.div`
+  font-size: 10px;
+  margin-left: 7px;
   border-radius: 4px;
   padding: 2px 4px 3px 4px;
   color: ${({ theme }) => theme.blue1};
   background: ${({ theme }) => theme.bg0};
 `
 
-export const TokenBox = () => {
+export const TokenBox = ({
+  symbol,
+  logo,
+  toChainId,
+  claimableBlock,
+  currentBlock,
+  amount,
+}: {
+  symbol: string | null
+  logo: StaticImageData | string
+  toChainId?: SupportedChainId
+  claimableBlock?: number
+  currentBlock?: number
+  amount?: number
+}): JSX.Element => {
+  if (!symbol || !toChainId || !claimableBlock || !currentBlock) {
+    return <></>
+  }
   return (
-    <Wrapper>
+    <>
       <TokenInfo>
         <RowBetween>
           <RowStart alignItems="center">
-            <Image width="25px" height="25px" src={Tokens.DEUS[1].logo} alt={'DEUS'} />
-            <TokenName>DEUS</TokenName>
-            <NetworkName>Matic</NetworkName>
+            <Image width="20px" height="20px" src={logo} alt={'DEUS'} />
+            <TokenName>{symbol}</TokenName>
+            <Chain>{ChainInfo[toChainId].label}</Chain>
           </RowStart>
-          <TokenName>{'1000000000'}</TokenName>
+          <Amount>{amount}</Amount>
         </RowBetween>
-        <RowBetween mt={'10px'}>
-          <ClaimButton toChainId={137} claimableBlock={180} currentBlock={150} />
+        <RowBetween mt={'15px'}>
+          <ClaimButton toChainId={toChainId} claimableBlock={claimableBlock} currentBlock={currentBlock} />
         </RowBetween>
       </TokenInfo>
-    </Wrapper>
-  )
-}
-
-export const RedeemTokenBox = () => {
-  return (
-    <Wrapper>
-      <TokenInfo>
-        <RowBetween>
-          <RowStart alignItems="center">
-            <Image width="25px" height="25px" src={Tokens.DEUS[1].logo} alt={'DEUS'} />
-            <TokenName>DEUS</TokenName>
-            <NetworkName>Matic</NetworkName>
-          </RowStart>
-          <TokenName>{'1000000000'}</TokenName>
-        </RowBetween>
-        <RowBetween mt={'10px'}>
-          <ClaimButton toChainId={137} claimableBlock={180} currentBlock={150} />
-        </RowBetween>
-      </TokenInfo>
-    </Wrapper>
+    </>
   )
 }

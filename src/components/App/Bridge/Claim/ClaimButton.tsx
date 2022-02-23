@@ -5,25 +5,35 @@ import { PrimaryButton } from 'components/Button'
 import useWeb3React from 'hooks/useWeb3'
 import { ChainInfo } from 'constants/chainInfo'
 import { BridgeMinimumBlockNeed, SupportedChainId } from 'constants/chains'
+import { RowCenter } from 'components/Row'
+
+const RemainingWrap = styled(RowCenter)`
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  opacity: 0.4;
+  background-color: ${({ theme }) => theme.primary1};
+  color: ${({ theme }) => theme.white};
+  height: 25px;
+  font-size: 12px;
+`
 
 const RemainingBlock = styled.div<{ width?: string }>`
-  background-color: ${({ theme }) => theme.blue2};
-  height: 100%;
+  background-color: ${({ theme }) => theme.primary1};
+  height: 2px;
   left: 0;
-  opacity: 0.5;
-  position: absolute;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
-  width: ${({ width }) => width ?? 'unset'};
-`
-const RemainingText = styled.div<{ width?: string }>`
-  position: absolute;
+  bottom: 0;
   z-index: 10;
+  position: absolute;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  width: ${({ width }) => width ?? 'unset'};
 `
 
 const Button = styled(PrimaryButton)`
-  overflow: hidden;
-  height: 30px;
+  height: 25px;
+  padding: 0;
+  font-size: 12px;
 `
 
 export default function ClaimButton({
@@ -31,26 +41,29 @@ export default function ClaimButton({
   claimableBlock,
   currentBlock,
 }: {
-  toChainId: SupportedChainId
-  claimableBlock: number
-  currentBlock: number
+  toChainId?: SupportedChainId
+  claimableBlock?: number
+  currentBlock?: number
 }): JSX.Element {
   const { chainId } = useWeb3React()
-  if (chainId !== toChainId) {
+  if (toChainId && chainId !== toChainId) {
     return <Button>Switch to {ChainInfo[toChainId].label}</Button>
   }
-  console.log({ toChainId, claimableBlock, currentBlock })
+
+  if (!toChainId || !claimableBlock || !currentBlock) {
+    return <Button disabled>Claim</Button>
+  }
 
   const diff = claimableBlock - currentBlock
   if (diff > 0) {
     const elapsed = (100 * (BridgeMinimumBlockNeed[toChainId] - diff)) / BridgeMinimumBlockNeed[toChainId]
     return (
-      <Button disabled>
-        <RemainingText>
-          Remaining Block {Math.abs(diff)} / {BridgeMinimumBlockNeed[toChainId]}
-        </RemainingText>
+      <RemainingWrap>
+        <p>
+          Remaining Block {Math.abs(diff)} / {BridgeMinimumBlockNeed[toChainId]}{' '}
+        </p>
         <RemainingBlock width={elapsed.toFixed(2) + '%'}></RemainingBlock>
-      </Button>
+      </RemainingWrap>
     )
   }
   return <Button>Claim</Button>
