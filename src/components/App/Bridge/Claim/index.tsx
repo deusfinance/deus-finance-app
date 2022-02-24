@@ -9,7 +9,7 @@ import { TokenBox } from './TokenBox'
 
 const ActionWrap = styled(Card)`
   padding: 0;
-  height: 100%;
+  max-height: 100%;
   box-shadow: ${({ theme }) => theme.boxShadow2};
   background-color: ${({ theme }) => theme.bg3};
   border: 1px solid ${({ theme }) => theme.border2};
@@ -37,6 +37,7 @@ export const ClaimBox = styled.div`
 export const BottomRow = styled(Row)`
   flex-wrap: wrap;
   padding: 10px 10px;
+  /* align-items: flex-end; */
   position: relative;
   background: ${({ theme }) => theme.bg2};
   margin-bottom: auto;
@@ -44,6 +45,7 @@ export const BottomRow = styled(Row)`
 
 const BottomWrap = styled.div`
   text-align: center;
+  vertical-align: bottom;
 `
 
 export const InfoHeader = styled.div`
@@ -96,47 +98,6 @@ export default function BridgeClaim() {
           claimableBlock={100}
           currentBlock={800}
           amount={15.268}
-        />
-
-        <TokenBox
-          symbol="DEI"
-          logo={Tokens.DEUS[56].logo}
-          toChainId={56}
-          claimableBlock={100}
-          currentBlock={110}
-          amount={105.8}
-        />
-        <TokenBox
-          symbol="DEI"
-          logo={Tokens.DEUS[56].logo}
-          toChainId={56}
-          claimableBlock={100}
-          currentBlock={110}
-          amount={105.8}
-        />
-        <TokenBox
-          symbol="DEI"
-          logo={Tokens.DEUS[56].logo}
-          toChainId={56}
-          claimableBlock={100}
-          currentBlock={110}
-          amount={105.8}
-        />
-        <TokenBox
-          symbol="DEI"
-          logo={Tokens.DEUS[56].logo}
-          toChainId={56}
-          claimableBlock={100}
-          currentBlock={110}
-          amount={105.8}
-        />
-        <TokenBox
-          symbol="DEI"
-          logo={Tokens.DEUS[56].logo}
-          toChainId={56}
-          claimableBlock={100}
-          currentBlock={110}
-          amount={105.8}
         />
       </ClaimBox>
 

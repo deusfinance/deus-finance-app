@@ -21,6 +21,7 @@ const Container = styled.div`
 `
 const Row = styled(RowBetween)`
   /* flex-wrap: wrap; */
+  align-items: flex-start;
   gap: 20px;
 `
 
