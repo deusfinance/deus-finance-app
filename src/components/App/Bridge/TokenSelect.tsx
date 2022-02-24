@@ -65,7 +65,7 @@ export default function TokenSelect({
   disabled = false,
 }: {
   options: Array<MinTokenInfo>
-  setSelected?: (addresses: string) => void
+  setSelected?: (symbol: string) => void
   disabled: boolean
 }) {
   // Map option values as addresses for the dropdown
@@ -88,8 +88,8 @@ export default function TokenSelect({
     }
   }, [dropdownOptions])
 
-  const onSelect = (addresses: string) => {
-    setSelected(addresses)
+  const onSelect = (addresses: string[]) => {
+    setSelected(addresses[0])
   }
 
   return (

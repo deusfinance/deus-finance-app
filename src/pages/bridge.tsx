@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Banner } from 'components/App/Stablecoin'
+import Banner from 'components/App/Bridge/Banner'
 import { RowBetween } from 'components/Row'
 import BridgeComponent from 'components/App/Bridge'
 import BridgeClaim from 'components/App/Bridge/Claim'

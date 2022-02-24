@@ -70,12 +70,7 @@ export const BRIDGE__TOKENS: { [symbol: string]: BridgeToken } = {
   [Tokens.DEUS[SupportedChainId.MAINNET].symbol]: {
     symbol: Tokens.DEUS[SupportedChainId.MAINNET].symbol,
     tokenId: 1,
-    sourceChains: [SupportedChainId.MAINNET, SupportedChainId.POLYGON, SupportedChainId.FANTOM],
-    destinationChains: [SupportedChainId.MAINNET, SupportedChainId.POLYGON, SupportedChainId.FANTOM],
+    sourceChains: [SupportedChainId.POLYGON, SupportedChainId.MAINNET, SupportedChainId.FANTOM],
+    destinationChains: [SupportedChainId.FANTOM, SupportedChainId.MAINNET, SupportedChainId.POLYGON],
   },
-}
-export const BRIDGE__INPUTS: TokenMap = {
-  [SupportedChainId.MAINNET]: [[Tokens.DEI[SupportedChainId.MAINNET]], [Tokens.DEUS[SupportedChainId.MAINNET]]],
-  [SupportedChainId.POLYGON]: [[Tokens.DEI[SupportedChainId.POLYGON]], [Tokens.DEUS[SupportedChainId.POLYGON]]],
-  [SupportedChainId.FANTOM]: [[Tokens.DEI[SupportedChainId.FANTOM]], [Tokens.DEUS[SupportedChainId.FANTOM]]],
 }

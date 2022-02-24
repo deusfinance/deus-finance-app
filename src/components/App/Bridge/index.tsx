@@ -1,24 +1,24 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { useAppDispatch } from 'state'
 import styled from 'styled-components'
-
-import { Card } from 'components/Card'
-
-import useWeb3React from 'hooks/useWeb3'
+import Image from 'next/image'
 
 import { useWalletModalToggle } from 'state/application/hooks'
 import { DeiSupportedChains } from 'state/dei/reducer'
 
 import { IToken } from 'utils/token'
+import { Tokens } from 'constants/tokens'
+import { SupportedChainId } from 'constants/chains'
+import MUON_LOGO from 'assets/img/tokens/muon.svg'
+import { BRIDGE__TOKENS } from 'constants/inputs'
+import useWeb3React from 'hooks/useWeb3'
 
-import { BRIDGE__INPUTS, BRIDGE__TOKENS } from 'constants/inputs'
-
+import { Card } from 'components/Card'
 import { ArrowBubble, IconWrapper } from 'components/Icons'
 import { PrimaryButton } from 'components/Button'
 import TransactionSettings from 'components/TransactionSettings'
 import InputBox from 'components/App/Bridge/InputBox'
 import TokenSelect from 'components/App/Bridge/TokenSelect'
-import { Tokens } from 'constants/tokens'
 
 const ToggleRow = styled.div`
   position: relative;
@@ -68,6 +68,17 @@ const TextBlock = styled.div`
   color: ${({ theme }) => theme.text2};
 `
 
+const MuonText = styled.div`
+  font-size: 0.8rem;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: auto;
+  text-align: center;
+  color: ${({ theme }) => theme.text2};
+`
+
 export const DefaultWrapper = styled(Card)`
   justify-content: flex-start;
   overflow: visible;
@@ -83,9 +94,13 @@ export default function Bridge() {
   const { chainId, account } = useWeb3React()
   const toggleWalletModal = useWalletModalToggle()
 
-  const [selected, setSelected] = useState<string>('')
-  const [Token1, setToken1] = useState<IToken | null>(null)
+  const [tokenSymbol, setTokenSymbol] = useState<string>('DEI')
+  const [sourceChainId, setSourceChainId] = useState<SupportedChainId | null>(null)
+  const [destinationChainId, setDestinationChainId] = useState<SupportedChainId | null>(null)
+  const [TokenIn, setTokenIn] = useState<IToken | null>(null)
   const [TokenOut, setTokenOut] = useState<IToken | null>(null)
+
+  const [TokenAmountIn, setTokenAmountIn] = useState<string>('')
 
   const [awaitingApproveConfirmation, setAwaitingApproveConfirmation] = useState<boolean>(false)
   const [insufficientBalance1, setInsufficientBalance1] = useState<boolean>(false)
@@ -111,7 +126,25 @@ export default function Bridge() {
     const inputChains = BRIDGE__TOKENS[tokens[0].symbol].sourceChains
     const outputChains = BRIDGE__TOKENS[tokens[0].symbol].destinationChains
     return [tokens, inputChains, outputChains]
-  }, [chainId, account, isSupportedChainId])
+  }, [])
+
+  useEffect(() => {
+    if (tokenSymbol != '' && chainId) {
+      const pickSourceChainId = inputChainOptions.includes(chainId) ? chainId : inputChainOptions[0]
+      const pickDestinationChainId = outputChainOptions.filter((chainId) => chainId != pickSourceChainId)[0]
+
+      setTokenIn(Tokens[tokenSymbol][sourceChainId ?? pickSourceChainId])
+      setTokenOut(Tokens[tokenSymbol][destinationChainId ?? pickDestinationChainId])
+    }
+  }, [tokenSymbol, inputChainOptions, outputChainOptions, sourceChainId, destinationChainId, chainId])
+
+  useEffect(() => {
+    console.log({ TokenIn })
+  }, [TokenIn])
+
+  useEffect(() => {
+    console.log({ sourceChainId })
+  }, [sourceChainId])
 
   function getActionButton(): JSX.Element | null {
     if (!chainId || !account) {
@@ -120,7 +153,6 @@ export default function Bridge() {
     if (!isSupportedChainId) {
       return null
     }
-
     // TODO: do we really want this? E.g. with it users are unable to mint if tx is pending
     // if (mintCallbackState == MintCallbackState.PENDING) {
     //   return (
@@ -130,7 +162,7 @@ export default function Bridge() {
     //   )
     // }
     if (insufficientBalance1) {
-      return <PrimaryButton disabled>Insufficient {Token1?.symbol} Balance</PrimaryButton>
+      return <PrimaryButton disabled>Insufficient {TokenIn?.symbol} Balance</PrimaryButton>
     }
     // TODO: turn the next line into: (loading || proxyLoading).
     // With it, it will only show/blink for a split second which is undesired.
@@ -171,21 +203,30 @@ export default function Bridge() {
         <TokenSelect
           options={inputTokenOption}
           // selected={selected}
-          setSelected={(symbol: string) => setSelected(symbol)}
+          setSelected={(symbol: string) => setTokenSymbol(symbol)}
           disabled={false}
         />
         <BoxesRow style={{ gap: '6px' }}>
           <InputBox
-            options={BRIDGE__TOKENS[selected].sourceChains}
-            // selected={selected}
-            setSelected={(chainId: number) => setSelected(chainId)}
-            setInsufficientBalance1={setInsufficientBalance1}
+            options={inputChainOptions}
+            token={TokenIn}
+            amount={TokenAmountIn}
+            setAmount={setTokenAmountIn}
+            setSelected={(chainId: SupportedChainId) => setSourceChainId(chainId)}
+            setInsufficientBalance={setInsufficientBalance1}
             disabled={false}
           />
           <ArrowWrapper size={'30px'} style={{ alignSelf: 'center' }}>
             <ArrowBubble size={30} />
           </ArrowWrapper>
-          {/* <InputBox options={outputOptions} selected={[TokenOut?.address ?? '']} /> */}
+          <InputBox
+            options={outputChainOptions}
+            token={TokenOut}
+            amount={TokenAmountIn}
+            setAmount={setTokenAmountIn}
+            setSelected={(chainId: SupportedChainId) => setDestinationChainId(chainId)}
+            disabled={false}
+          />
         </BoxesRow>
       </>
     )
@@ -199,6 +240,10 @@ export default function Bridge() {
       </ToggleRow>
       {getMainContent()}
       <Row>{getActionButton()}</Row>
+      <MuonText>
+        <Image src={MUON_LOGO} width="20px" height="20px" alt="muon" />
+        <p style={{ marginLeft: '0.5rem' }}>Powered by Muon Network</p>
+      </MuonText>
     </DefaultWrapper>
   )
 }
