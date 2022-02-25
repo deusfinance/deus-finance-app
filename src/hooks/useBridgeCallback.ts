@@ -1,8 +1,12 @@
 import { useCallback, useMemo } from 'react'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
+import find from 'lodash/find'
 
+import { MuonClient } from 'constants/muon'
+import { Bridge } from 'constants/addresses'
 import { ChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
+import { IBridgeToken, BRIDGE__TOKENS } from 'constants/inputs'
 
 import { dynamicPrecision } from 'utils/numbers'
 import { IToken } from 'utils/token'
@@ -11,7 +15,6 @@ import { calculateGasMargin, toWei } from 'utils/web3'
 import { useBridgeContract } from './useContract'
 import useWeb3React from './useWeb3'
 import { useTransactionAdder } from 'state/transactions/hooks'
-import { Bridge } from 'constants/addresses'
 
 export enum BridgeCallbackState {
   INVALID = 'INVALID',
@@ -23,7 +26,6 @@ export default function useDepositCallback(
   TokenIn: IToken | null,
   TokenOut: IToken | null,
   amountIn: string,
-  amountOut: string,
   tokenId: string
 ): {
   state: BridgeCallbackState
@@ -150,12 +152,12 @@ export default function useDepositCallback(
   }, [Contract, TokenIn, TokenOut, amountIn, tokenId, chainId, account, library, constructCall, addTransaction])
 }
 
-export default function useClaimCallback(
-  TokenIn: IToken | null,
-  TokenOut: IToken | null,
-  amountIn: string,
-  amountOut: string,
-  tokenId: string
+export function useClaimCallback(
+  amount: string,
+  tokenId: number,
+  txId: string,
+  fromChain: SupportedChainId,
+  toChain: SupportedChainId
 ): {
   state: BridgeCallbackState
   callback: null | (() => Promise<string>)
@@ -164,27 +166,30 @@ export default function useClaimCallback(
   const { account, chainId, library } = useWeb3React()
   const Contract = useBridgeContract()
   const addTransaction = useTransactionAdder()
+  const Token: IBridgeToken | undefined = find(BRIDGE__TOKENS, { tokenId })
 
-  const getMuonSignitures = async () => {
-    const muonResponse = await muon
-      .app('deus_bridge')
+  //handle errors and other checks
+  const getMuonSignatures = useCallback(async () => {
+    const muonResponse = await MuonClient.app('deus_bridge')
       .method('claim', {
-        depositAddress: Bridge[Number(claim.fromChain)],
-        depositTxId: claim.txId,
-        depositNetwork: Number(claim.fromChain),
+        depositAddress: Bridge[fromChain],
+        depositTxId: txId,
+        depositNetwork: fromChain,
       })
       .call()
-  }
+    return muonResponse
+  }, [txId, fromChain])
 
   const constructCall = useCallback(async () => {
     try {
-      if (!chainId || !account || !TokenIn || !TokenOut || !Contract || !tokenId) {
+      if (!chainId || !account || !fromChain || !toChain || !txId || !Contract || !tokenId) {
         throw new Error('Missing dependencies.')
       }
-
-      const amountInBN = toWei(amountIn, TokenIn?.decimals ?? 18, true)
+      const muonSignitures = await getMuonSignatures()
+      const { sigs, reqId } = muonSignitures
+      const amountBN = toWei(amount, 18, true) //TODO : check if amount is in correct decimals base on tokenId
       const methodName = 'deposit'
-      const args: any = [amountInBN, TokenOut.chainId, tokenId]
+      const args: any = [account, amountBN, fromChain, toChain, tokenId, txId, reqId, sigs]
       const value = 0
 
       return {
@@ -197,10 +202,10 @@ export default function useClaimCallback(
         error,
       }
     }
-  }, [Contract, TokenIn, TokenOut, amountIn, tokenId, chainId, account])
+  }, [Contract, getMuonSignatures, amount, tokenId, fromChain, toChain, txId, chainId, account])
 
   return useMemo(() => {
-    if (!account || !chainId || !library || !TokenIn || !TokenOut || !Contract || !tokenId) {
+    if (!account || !chainId || !library || !Token || !Contract || !toChain) {
       return {
         state: BridgeCallbackState.INVALID,
         callback: null,
@@ -208,19 +213,11 @@ export default function useClaimCallback(
       }
     }
 
-    if (!amountIn || amountIn == '0') {
-      return {
-        state: BridgeCallbackState.INVALID,
-        callback: null,
-        error: 'No amount provided',
-      }
-    }
-
     return {
       state: BridgeCallbackState.VALID,
       error: null,
-      callback: async function onDeposit(): Promise<string> {
-        console.log('onDeposit callback')
+      callback: async function onClaim(): Promise<string> {
+        console.log('onClaim callback')
         const call = await constructCall()
         const { address, calldata, value } = call
 
@@ -232,7 +229,7 @@ export default function useClaimCallback(
           ? { from: account, to: address, data: calldata }
           : { from: account, to: address, data: calldata, value }
 
-        console.log(`DEPOSIT TRANSACTION ${TokenIn.chainId} > ${TokenOut.chainId}`, { tx, value })
+        console.log(`ClAIM TRANSACTION ${Token?.symbol} > ${ChainInfo[toChain]}`, { tx, value })
 
         const estimatedGas = await library.estimateGas(tx).catch((gasError) => {
           console.debug('Gas estimate failed, trying eth_call to extract error', call)
@@ -269,9 +266,7 @@ export default function useClaimCallback(
           })
           .then((response: TransactionResponse) => {
             console.log(response)
-            const summary = `Bridge ${dynamicPrecision(amountIn, 0.99)} ${TokenIn.symbol} ${
-              ChainInfo[TokenIn.chainId as SupportedChainId].label
-            } > ${ChainInfo[TokenOut.chainId as SupportedChainId].label}`
+            const summary = `Claim ${Token.symbol} > ${ChainInfo[toChain].label}`
 
             addTransaction(response, { summary })
 
@@ -283,11 +278,11 @@ export default function useClaimCallback(
               throw new Error('Transaction rejected.')
             } else {
               // otherwise, the error was unexpected and we need to convey that
-              console.error(`Deposit failed`, error, address, calldata, value)
-              throw new Error(`Deposit failed: ${error.message}`) // TODO make this human readable
+              console.error(`Claim failed`, error, address, calldata, value)
+              throw new Error(`Claim failed: ${error.message}`) // TODO make this human readable
             }
           })
       },
     }
-  }, [Contract, TokenIn, TokenOut, amountIn, tokenId, chainId, account, library, constructCall, addTransaction])
+  }, [Contract, Token, chainId, toChain, account, library, constructCall, addTransaction])
 }

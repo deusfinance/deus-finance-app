@@ -5,7 +5,7 @@ import { Tokens } from './tokens'
 interface TokenMap {
   [chainId: number]: Array<IToken[]>
 }
-interface BridgeToken {
+export interface IBridgeToken {
   symbol: string
   tokenId: number
   sourceChains: SupportedChainId[]
@@ -60,7 +60,7 @@ export const REDEEM__OUTPUTS: TokenMap = {
 /* =====================================
                   BRIDGE
 ===================================== */
-export const BRIDGE__TOKENS: { [symbol: string]: BridgeToken } = {
+export const BRIDGE__TOKENS: { [symbol: string]: IBridgeToken } = {
   [Tokens.DEI[SupportedChainId.MAINNET].symbol]: {
     symbol: Tokens.DEI[SupportedChainId.MAINNET].symbol,
     tokenId: 0,

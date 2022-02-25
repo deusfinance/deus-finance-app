@@ -19,7 +19,13 @@ import { PrimaryButton } from 'components/Button'
 import TransactionSettings from 'components/TransactionSettings'
 import InputBox from 'components/App/Bridge/InputBox'
 import TokenSelect from 'components/App/Bridge/TokenSelect'
+import { ExternalLink } from 'components/Link'
 
+const BridgeWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`
 const ToggleRow = styled.div`
   position: relative;
   display: flex;
@@ -44,6 +50,7 @@ const Row = styled.div`
 const BoxesRow = styled(Row)`
   z-index: 1;
   margin-top: 1rem;
+  align-items: center;
   ${({ theme }) => theme.mediaWidth.upToSmall`
     flex-flow: column wrap;
     & > * {
@@ -69,14 +76,17 @@ const TextBlock = styled.div`
 `
 
 const MuonText = styled.div`
+  margin-top: 1rem;
   font-size: 0.8rem;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  margin-bottom: auto;
   text-align: center;
   color: ${({ theme }) => theme.text2};
+  &:hover {
+    opacity: 0.7;
+  }
 `
 
 export const DefaultWrapper = styled(Card)`
@@ -85,7 +95,6 @@ export const DefaultWrapper = styled(Card)`
   width: 100%;
   /* max-width: 600px; */
   background-color: ${({ theme }) => theme.bg3};
-  height: 450px;
   box-shadow: ${({ theme }) => theme.boxShadow2};
 `
 
@@ -225,6 +234,7 @@ export default function Bridge() {
             amount={TokenAmountIn}
             setAmount={setTokenAmountIn}
             setSelected={(chainId: SupportedChainId) => setDestinationChainId(chainId)}
+            disableBalance={true}
             disabled={false}
           />
         </BoxesRow>
@@ -233,17 +243,21 @@ export default function Bridge() {
   }
 
   return (
-    <DefaultWrapper>
-      <ToggleRow>
-        <p>Bridge</p>
-        <TransactionSettings style={{ marginLeft: '20px' }} />
-      </ToggleRow>
-      {getMainContent()}
-      <Row>{getActionButton()}</Row>
-      <MuonText>
-        <Image src={MUON_LOGO} width="20px" height="20px" alt="muon" />
-        <p style={{ marginLeft: '0.5rem' }}>Powered by Muon Network</p>
-      </MuonText>
-    </DefaultWrapper>
+    <BridgeWrap>
+      <DefaultWrapper>
+        <ToggleRow>
+          <p>Bridge</p>
+          <TransactionSettings style={{ marginLeft: '20px' }} />
+        </ToggleRow>
+        {getMainContent()}
+        <Row>{getActionButton()}</Row>
+      </DefaultWrapper>
+      <ExternalLink href="https://muon.network/">
+        <MuonText>
+          <Image src={MUON_LOGO} width="20px" height="20px" alt="muon" />
+          <p style={{ marginLeft: '0.5rem' }}>Powered by Muon Network</p>
+        </MuonText>
+      </ExternalLink>
+    </BridgeWrap>
   )
 }

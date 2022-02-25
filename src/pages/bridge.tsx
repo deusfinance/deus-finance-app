@@ -29,7 +29,7 @@ export default function Bridge() {
   return (
     <Container>
       <Banner />
-      <Row height={'450px'}>
+      <Row height={'380px'}>
         <BridgeComponent />
         <BridgeClaim />
       </Row>

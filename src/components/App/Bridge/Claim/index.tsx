@@ -15,6 +15,7 @@ const ActionWrap = styled(Card)`
   border: 1px solid ${({ theme }) => theme.border2};
   max-width: 320px;
   width: 320px;
+  min-height: 370px;
   min-width: 200px;
 `
 const Title = styled.div`
@@ -25,7 +26,7 @@ const Title = styled.div`
 export const ClaimBox = styled.div`
   display: flex;
   flex-flow: column nowrap;
-  /* height: 295px; */
+  flex: 1;
   overflow: hidden;
   overflow-y: auto;
   & > * {
@@ -45,7 +46,7 @@ export const BottomRow = styled(Row)`
 
 const BottomWrap = styled.div`
   text-align: center;
-  vertical-align: bottom;
+  /* vertical-align: bottom; */
 `
 
 export const InfoHeader = styled.div`
@@ -70,7 +71,7 @@ const getInfoComponent = (): JSX.Element => {
 export default function BridgeClaim() {
   return (
     <ActionWrap>
-      <RowBetween mb="12px" margin="10px" marginBottom={0}>
+      <RowBetween mb="12px" margin="10px" marginBottom={0} width={'unset'}>
         <Title>Claim tokens</Title>
       </RowBetween>
 

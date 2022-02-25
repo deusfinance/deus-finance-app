@@ -8,6 +8,7 @@ import useBalanceFormatter from 'hooks/useBalanceFormatter'
 
 import { IToken } from 'utils/token'
 import { toWei } from 'utils/web3'
+
 import { SupportedChainId } from 'constants/chains'
 import { ChainInfo } from 'constants/chainInfo'
 
@@ -122,12 +123,14 @@ const InputOption = ({
   amount,
   setAmount,
   setInsufficientBalance,
+  disableBalance,
   disabled,
 }: {
   token: IToken
   amount: string
   setAmount: (amount: string) => void
   setInsufficientBalance: (val: boolean) => void
+  disableBalance?: boolean
   disabled?: boolean
 }): JSX.Element => {
   const { address, symbol, decimals, isToken, chainId } = token
@@ -145,7 +148,8 @@ const InputOption = ({
   return (
     <>
       <BalanceLabel onClick={() => !disabled && setAmount(balanceUser)}>
-        {balanceLabel} {symbol}
+        {!disableBalance && `${balanceLabel} `}
+        {symbol}
       </BalanceLabel>
       <InputWrapper>
         <Input placeholder="0.00" value={amount} onChange={setAmount} disabled={disabled} />
@@ -164,6 +168,7 @@ export default function TokenSelect({
   amount = '',
   setAmount = () => null,
   setInsufficientBalance = () => null,
+  disableBalance = false,
   disabled = false,
 }: {
   options: SupportedChainId[]
@@ -172,6 +177,7 @@ export default function TokenSelect({
   amount: string
   setAmount: (amount: string) => void
   setInsufficientBalance?: (val: boolean) => void
+  disableBalance?: boolean
   disabled: boolean
 }) {
   const { chainId, account } = useWeb3React()
@@ -214,6 +220,7 @@ export default function TokenSelect({
             amount={amount}
             setAmount={setAmount}
             setInsufficientBalance={setInsufficientBalance}
+            disableBalance={disableBalance}
             disabled={disabled}
           />
         ) : null}
