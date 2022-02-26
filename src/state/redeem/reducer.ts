@@ -12,27 +12,7 @@ export interface RedeemState {
   redeemBalances: RedeemBalances
   error?: string
 }
-export interface IClaimToken {
-  symbol: string
-  tokenId: number
-  fromChainId: number
-  toChainId: number
-  amount: number
-  txId: string
-  depositedBlock: number
-  claimableBlock: number
-  isClaimed?: boolean
-  logo: StaticImageData | string
-}
-/*         <TokenBox
-          symbol="DEUS"
-          logo={Tokens.DEUS[137].logo}
-          toChainId={137}
-          claimableBlock={100}
-          currentBlock={80}
-          amount={15.268}
-        />
- */
+
 const initialState: RedeemState = {
   attemptingTxn: false,
   showReview: false,

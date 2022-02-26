@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
-import { BRIDGE_URL } from 'constants/keys'
+import { SupportedChainId } from 'constants/chains'
+import { INFO_URL } from 'constants/keys'
 import { makeHttpRequest } from 'utils/http'
 
 export enum UnClaimBridgeState {
@@ -25,17 +26,34 @@ const initialState: BridgeState = {
   error: undefined,
 }
 
+export interface IClaimToken {
+  symbol: string
+  tokenId: number
+  fromChainId: number | SupportedChainId
+  toChainId: number | SupportedChainId
+  amount: number
+  decimals: number
+  txId: string
+  depositedBlock: number
+  claimableBlock: number
+  isClaimed?: boolean
+  logo: StaticImageData | string
+}
+
 export const fetchUnClaimed = createAsyncThunk('bridge/fetchUnClaimed', async ({ address }: { address: string }) => {
   if (!address) throw new Error('No address present')
-  const { href: url } = new URL(`/deposit?address=${address}&isClaimed=true`, BRIDGE_URL)
+  console.log({ INFO_URL })
+  const { href: url } = new URL(`/bridge/deposits?address=${address}`, INFO_URL)
 
   // Destruct the response directly so if these params don't exist it will throw an error.
   const unClaimed = await makeHttpRequest(url)
+  console.log('unClaimed', unClaimed)
+
   return unClaimed
 })
 
 export const fetchCurrentBlocks = createAsyncThunk('bridge/fetchCurrentBlocks', async () => {
-  const { href: url } = new URL(`/blocks`, BRIDGE_URL)
+  const { href: url } = new URL(`bridge/currentBlocks`, INFO_URL)
   const currentBlocks = await makeHttpRequest(url)
   return currentBlocks
 })

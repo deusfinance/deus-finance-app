@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { lighten } from 'polished'
 import Image from 'next/image'
@@ -7,7 +7,12 @@ import CLAIM_LOGO from 'assets/img/claim.svg'
 import { Card } from 'components/Card'
 import { Row, RowBetween } from 'components/Row'
 import { TokenBox } from './TokenBox'
-import { IClaimToken } from 'state/redeem/reducer'
+import { IClaimToken, setAttemptingTxn } from 'state/bridge/reducer'
+import { useClaimableTokens, useCurrentBlocks } from 'state/bridge/hooks'
+import { fromWei } from 'utils/numbers'
+import { useClaimCallback } from 'hooks/useBridgeCallback'
+import useRpcChangerCallback from 'hooks/useRpcChangerCallback'
+import { useAppDispatch } from 'state'
 
 const ActionWrap = styled(Card)`
   padding: 0;
@@ -77,7 +82,39 @@ const getInfoComponent = (): JSX.Element => {
   )
 }
 
-export default function BridgeClaim({ unClaimed = [] }: { unClaimed?: Array<IClaimToken> }) {
+export default function BridgeClaim() {
+  const unClaimed = useClaimableTokens()
+  const currentBlocks = useCurrentBlocks()
+  const dispatch = useAppDispatch()
+  const onSwitchNetwork = useRpcChangerCallback()
+  const [token, setToken] = useState<IClaimToken | null>(null)
+  const { state: claimCallbackState, callback: claimCallback, error: claimCallbackError } = useClaimCallback(token)
+
+  const handleClaim = useCallback(async () => {
+    console.log('called handleClaim')
+    console.log(claimCallbackState, claimCallback, claimCallbackError)
+
+    if (!claimCallback) return
+    dispatch(setAttemptingTxn(true))
+
+    let error = ''
+    try {
+      const txHash = await claimCallback()
+      // setTxHash(txHash)
+    } catch (e) {
+      if (e instanceof Error) {
+        error = e.message
+      } else {
+        console.error(e)
+        error = 'An unknown error occurred.'
+      }
+    }
+  }, [dispatch, claimCallbackState, claimCallback, claimCallbackError])
+
+  useEffect(() => {
+    handleClaim()
+  }, [handleClaim])
+
   return (
     <ActionWrap>
       <RowBetween mb="12px" margin="10px" marginBottom={0} width={'unset'}>
@@ -93,45 +130,25 @@ export default function BridgeClaim({ unClaimed = [] }: { unClaimed?: Array<ICla
         <ClaimBox>
           {unClaimed.map((token: IClaimToken, index: number) => {
             const { symbol, toChainId, amount, claimableBlock, logo } = token
+            const formattedAmount = fromWei(amount, 18)
             return (
               <TokenBox
                 key={index}
                 symbol={symbol}
                 toChainId={toChainId}
                 claimableBlock={claimableBlock}
-                currentBlock={80}
+                currentBlock={currentBlocks[toChainId]}
                 logo={logo}
-                amount={amount}
+                amount={formattedAmount}
+                onSwitchNetwork={() => onSwitchNetwork(toChainId)}
+                onClaim={() => {
+                  setToken(token)
+                }}
               />
             )
           })}
         </ClaimBox>
       )}
-
-      {/* <TokenBox
-            symbol="DEUS"
-            logo={Tokens.DEUS[137].logo}
-            toChainId={137}
-            claimableBlock={100}
-            currentBlock={80}
-            amount={15.268}
-          />
-          <TokenBox
-            symbol="DEI"
-            logo={Tokens.DEUS[56].logo}
-            toChainId={56}
-            claimableBlock={100}
-            currentBlock={110}
-            amount={105.8}
-          />
-          <TokenBox
-            symbol="DEUS"
-            logo={Tokens.DEUS[137].logo}
-            toChainId={137}
-            claimableBlock={100}
-            currentBlock={800}
-            amount={15.268}
-          /> */}
 
       {unClaimed.length > 0 && <BottomRow>{getInfoComponent()}</BottomRow>}
     </ActionWrap>

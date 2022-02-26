@@ -15,6 +15,8 @@ import { calculateGasMargin, toWei } from 'utils/web3'
 import { useBridgeContract } from './useContract'
 import useWeb3React from './useWeb3'
 import { useTransactionAdder } from 'state/transactions/hooks'
+import { IClaimToken } from 'state/bridge/reducer'
+import BigNumber from 'bignumber.js'
 
 export enum BridgeCallbackState {
   INVALID = 'INVALID',
@@ -155,13 +157,7 @@ export default function useDepositCallback(
   }, [Contract, TokenIn, TokenOut, amountIn, tokenId, chainId, account, library, constructCall, addTransaction])
 }
 
-export function useClaimCallback(
-  amount: string,
-  tokenId: number,
-  txId: string,
-  fromChain: SupportedChainId,
-  toChain: SupportedChainId
-): {
+export function useClaimCallback(token: IClaimToken | null): {
   state: BridgeCallbackState
   callback: null | (() => Promise<string>)
   error: string | null
@@ -169,30 +165,51 @@ export function useClaimCallback(
   const { account, chainId, library } = useWeb3React()
   const Contract = useBridgeContract()
   const addTransaction = useTransactionAdder()
-  const Token: IBridgeToken | undefined = find(BRIDGE__TOKENS, { tokenId })
-
   //handle errors and other checks
   const getMuonSignatures = useCallback(async () => {
+    if (!token) {
+      console.error('No token provided')
+      return
+    }
     const muonResponse = await MuonClient.app('deus_bridge')
       .method('claim', {
-        depositAddress: Bridge[fromChain],
-        depositTxId: txId,
-        depositNetwork: fromChain,
+        depositAddress: Bridge[token.fromChainId],
+        depositTxId: token.txId,
+        depositNetwork: token.fromChainId,
       })
       .call()
     return muonResponse
-  }, [txId, fromChain])
+  }, [token])
 
   const constructCall = useCallback(async () => {
     try {
-      if (!chainId || !account || !fromChain || !toChain || !txId || !Contract || !tokenId) {
+      if (!chainId || !account || !token || !Contract) {
         throw new Error('Missing dependencies.')
       }
+      console.log('====================================')
+      console.log(token)
+      console.log('====================================')
       const muonSignitures = await getMuonSignatures()
+      console.log({ muonSignitures })
+
       const { sigs, reqId } = muonSignitures
-      const amountBN = toWei(amount, 18, true) //TODO : check if amount is in correct decimals base on tokenId
-      const methodName = 'deposit'
-      const args: any = [account, amountBN, fromChain, toChain, tokenId, txId, reqId, sigs]
+      const amountBN = new BigNumber(token.amount).toFixed(0) //TODO : check if amount is in correct decimals base on tokenId
+      const methodName = 'claim'
+      const args: any = [
+        account,
+        amountBN,
+        token.fromChainId.toString(),
+        token.toChainId.toString(),
+        token.tokenId.toString(),
+        token.txId.toString(),
+        reqId,
+        sigs,
+      ]
+
+      console.log('====================================')
+      console.log(args)
+      console.log('====================================')
+
       const value = 0
 
       return {
@@ -205,10 +222,10 @@ export function useClaimCallback(
         error,
       }
     }
-  }, [Contract, getMuonSignatures, amount, tokenId, fromChain, toChain, txId, chainId, account])
+  }, [Contract, getMuonSignatures, token, chainId, account])
 
   return useMemo(() => {
-    if (!account || !chainId || !library || !Token || !Contract || !toChain) {
+    if (!account || !chainId || !library || !token || !Contract) {
       return {
         state: BridgeCallbackState.INVALID,
         callback: null,
@@ -223,7 +240,7 @@ export function useClaimCallback(
         console.log('onClaim callback')
         const call = await constructCall()
         const { address, calldata, value } = call
-
+        console.log({ call })
         if ('error' in call) {
           throw new Error('Unexpected error. Could not construct calldata.')
         }
@@ -232,7 +249,10 @@ export function useClaimCallback(
           ? { from: account, to: address, data: calldata }
           : { from: account, to: address, data: calldata, value }
 
-        console.log(`ClAIM TRANSACTION ${Token?.symbol} > ${ChainInfo[toChain]}`, { tx, value })
+        console.log(`ClAIM TRANSACTION ${token.symbol} > ${ChainInfo[token.toChainId as SupportedChainId]}`, {
+          tx,
+          value,
+        })
 
         const estimatedGas = await library.estimateGas(tx).catch((gasError) => {
           console.debug('Gas estimate failed, trying eth_call to extract error', call)
@@ -269,7 +289,7 @@ export function useClaimCallback(
           })
           .then((response: TransactionResponse) => {
             console.log(response)
-            const summary = `Claim ${Token.symbol} > ${ChainInfo[toChain].label}`
+            const summary = `Claim ${token.symbol} > ${ChainInfo[token.toChainId as SupportedChainId].label}`
 
             addTransaction(response, { summary })
 
@@ -287,5 +307,5 @@ export function useClaimCallback(
           })
       },
     }
-  }, [Contract, Token, chainId, toChain, account, library, constructCall, addTransaction])
+  }, [Contract, token, chainId, account, library, constructCall, addTransaction])
 }

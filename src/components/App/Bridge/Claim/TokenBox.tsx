@@ -6,6 +6,7 @@ import { SupportedChainId } from 'constants/chains'
 import { RowBetween, RowStart } from 'components/Row'
 
 import ClaimButton from './ClaimButton'
+import { formatBalance } from 'utils/numbers'
 
 const TokenInfo = styled.div`
   color: ${({ theme }) => theme.bg0};
@@ -42,17 +43,22 @@ export const TokenBox = ({
   claimableBlock,
   currentBlock,
   amount,
+  onSwitchNetwork,
+  onClaim,
 }: {
   symbol: string | null
   logo: StaticImageData | string
   toChainId?: SupportedChainId
   claimableBlock?: number
   currentBlock?: number
-  amount?: number
+  amount?: number | null
+  onSwitchNetwork?: () => void
+  onClaim?: () => void
 }): JSX.Element => {
   if (!symbol || !toChainId || !claimableBlock || !currentBlock) {
     return <></>
   }
+
   return (
     <>
       <TokenInfo>
@@ -62,10 +68,16 @@ export const TokenBox = ({
             <TokenName>{symbol}</TokenName>
             <Chain>{ChainInfo[toChainId].label}</Chain>
           </RowStart>
-          <Amount>{amount}</Amount>
+          <Amount>{formatBalance(amount)}</Amount>
         </RowBetween>
         <RowBetween mt={'15px'}>
-          <ClaimButton toChainId={toChainId} claimableBlock={claimableBlock} currentBlock={currentBlock} />
+          <ClaimButton
+            toChainId={toChainId}
+            claimableBlock={claimableBlock}
+            currentBlock={currentBlock}
+            onClaim={onClaim}
+            onSwitchNetwork={onSwitchNetwork}
+          />
         </RowBetween>
       </TokenInfo>
     </>

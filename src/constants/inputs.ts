@@ -60,6 +60,11 @@ export const REDEEM__OUTPUTS: TokenMap = {
 /* =====================================
                   BRIDGE
 ===================================== */
+export const TokenID: { [id: string]: string } = {
+  '0': 'DEI',
+  '1': 'DEUS',
+}
+
 export const BRIDGE__TOKENS: { [symbol: string]: IBridgeToken } = {
   [Tokens.DEI[SupportedChainId.MAINNET].symbol]: {
     symbol: Tokens.DEI[SupportedChainId.MAINNET].symbol,

@@ -216,7 +216,7 @@ export default function Bridge() {
   }, [dispatch, depositCallbackState, depositCallback, depositCallbackError])
 
   function getApproveButton(): JSX.Element | null {
-    if (!account) {
+    if (!account || (TokenIn && chainId != TokenIn.chainId)) {
       return null
     }
     if (awaitingApproveConfirmation) {

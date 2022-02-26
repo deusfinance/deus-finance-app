@@ -3,6 +3,7 @@ import DeiUpdater from './dei/updater'
 import MulticallUpdater from './multicall/updater'
 import TransactionUpdater from './transactions/updater'
 import UserUpdater from './user/updater'
+import BridgeUpdater from './bridge/updater'
 
 export default function Updaters() {
   return (
@@ -11,6 +12,7 @@ export default function Updaters() {
       <DeiUpdater />
       <MulticallUpdater />
       <TransactionUpdater />
+      <BridgeUpdater />
       <UserUpdater />
     </>
   )

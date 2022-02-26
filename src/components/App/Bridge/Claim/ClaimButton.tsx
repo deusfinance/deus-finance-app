@@ -40,14 +40,19 @@ export default function ClaimButton({
   toChainId,
   claimableBlock,
   currentBlock,
+  onClaim,
+  onSwitchNetwork,
 }: {
   toChainId?: SupportedChainId
   claimableBlock?: number
   currentBlock?: number
+  onClaim?: () => void
+  onSwitchNetwork?: () => void
 }): JSX.Element {
   const { chainId } = useWeb3React()
+
   if (toChainId && chainId !== toChainId) {
-    return <Button>Switch to {ChainInfo[toChainId].label}</Button>
+    return <Button onClick={onSwitchNetwork}>Switch to {ChainInfo[toChainId].label}</Button>
   }
 
   if (!toChainId || !claimableBlock || !currentBlock) {
@@ -66,5 +71,5 @@ export default function ClaimButton({
       </RemainingWrap>
     )
   }
-  return <Button>Claim</Button>
+  return <Button onClick={onClaim}>Claim</Button>
 }
