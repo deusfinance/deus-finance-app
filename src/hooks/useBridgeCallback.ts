@@ -25,8 +25,7 @@ export enum BridgeCallbackState {
 export default function useDepositCallback(
   TokenIn: IToken | null,
   TokenOut: IToken | null,
-  amountIn: string,
-  tokenId: string
+  amountIn: string
 ): {
   state: BridgeCallbackState
   callback: null | (() => Promise<string>)
@@ -35,10 +34,11 @@ export default function useDepositCallback(
   const { account, chainId, library } = useWeb3React()
   const Contract = useBridgeContract()
   const addTransaction = useTransactionAdder()
-
+  const SelectedToken: IBridgeToken | undefined = find(BRIDGE__TOKENS, { symbol: TokenIn?.symbol })
+  const tokenId: number | null = SelectedToken ? SelectedToken.tokenId : null
   const constructCall = useCallback(async () => {
     try {
-      if (!chainId || !account || !TokenIn || !TokenOut || !Contract || !tokenId) {
+      if (!chainId || !account || !TokenIn || !TokenOut || !Contract || tokenId == null) {
         throw new Error('Missing dependencies.')
       }
 
@@ -60,7 +60,8 @@ export default function useDepositCallback(
   }, [Contract, TokenIn, TokenOut, amountIn, tokenId, chainId, account])
 
   return useMemo(() => {
-    if (!account || !chainId || !library || !TokenIn || !TokenOut || !Contract || !tokenId) {
+    // console.log({ Contract, TokenIn, TokenOut, amountIn, tokenId, chainId, account })
+    if (!account || !chainId || !library || !TokenIn || !TokenOut || !Contract || tokenId == null) {
       return {
         state: BridgeCallbackState.INVALID,
         callback: null,
@@ -82,6 +83,8 @@ export default function useDepositCallback(
       callback: async function onDeposit(): Promise<string> {
         console.log('onDeposit callback')
         const call = await constructCall()
+        console.log({ call })
+
         const { address, calldata, value } = call
 
         if ('error' in call) {

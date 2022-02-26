@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { BRIDGE_URL } from 'constants/keys'
 import { makeHttpRequest } from 'utils/http'
 
@@ -7,10 +7,22 @@ export enum UnClaimBridgeState {
   LOADING = 'LOADING',
   ERROR = 'ERROR',
 }
+export interface BridgeState {
+  status: UnClaimBridgeState
+  attemptingTxn: boolean
+  showReview: boolean
+  unClaimed: []
+  currentBlocks: []
+  error?: string
+}
 
-const initialState = {
+const initialState: BridgeState = {
   status: UnClaimBridgeState.OK,
+  attemptingTxn: false,
+  showReview: false,
   unClaimed: [],
+  currentBlocks: [],
+  error: undefined,
 }
 
 export const fetchUnClaimed = createAsyncThunk('bridge/fetchUnClaimed', async ({ address }: { address: string }) => {
@@ -22,10 +34,31 @@ export const fetchUnClaimed = createAsyncThunk('bridge/fetchUnClaimed', async ({
   return unClaimed
 })
 
+export const fetchCurrentBlocks = createAsyncThunk('bridge/fetchCurrentBlocks', async () => {
+  const { href: url } = new URL(`/blocks`, BRIDGE_URL)
+  const currentBlocks = await makeHttpRequest(url)
+  return currentBlocks
+})
+
 const bridgeSlice = createSlice({
   name: 'bridge',
   initialState,
-  reducers: {},
+  reducers: {
+    setBridgeState: (state, action: PayloadAction<BridgeState>) => {
+      state.attemptingTxn = action.payload.attemptingTxn
+      state.showReview = action.payload.showReview
+      state.error = action.payload.error
+    },
+    setAttemptingTxn: (state, action: PayloadAction<boolean>) => {
+      state.attemptingTxn = action.payload
+    },
+    setShowReview: (state, action: PayloadAction<boolean>) => {
+      state.showReview = action.payload
+    },
+    setError: (state, action: PayloadAction<string>) => {
+      state.error = action.payload
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchUnClaimed.pending, (state) => {
@@ -42,8 +75,14 @@ const bridgeSlice = createSlice({
           status: UnClaimBridgeState.ERROR,
         }
       })
+      .addCase(fetchCurrentBlocks.fulfilled, (state, { payload }) => {
+        state.currentBlocks = payload
+      })
+      .addCase(fetchCurrentBlocks.rejected, () => {
+        console.log('Unable to fetch current blocks')
+      })
   },
 })
-
-const { reducer } = bridgeSlice
+const { reducer, actions } = bridgeSlice
+export const { setBridgeState, setAttemptingTxn, setShowReview, setError } = actions
 export default reducer

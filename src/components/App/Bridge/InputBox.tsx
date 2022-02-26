@@ -193,7 +193,6 @@ export default function TokenSelect({
   }, [options])
 
   const onSelect = (chainIds: string[]) => {
-    console.log({ chainIds })
     setSelected(Number(chainIds[0]))
   }
 

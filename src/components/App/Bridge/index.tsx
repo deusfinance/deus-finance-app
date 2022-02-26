@@ -1,20 +1,28 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useCallback } from 'react'
 import { useAppDispatch } from 'state'
 import styled from 'styled-components'
 import Image from 'next/image'
 
-import { useWalletModalToggle } from 'state/application/hooks'
-import { DeiSupportedChains } from 'state/dei/reducer'
-
-import { IToken } from 'utils/token'
+import MUON_LOGO from 'assets/img/tokens/muon.svg'
 import { Tokens } from 'constants/tokens'
 import { SupportedChainId } from 'constants/chains'
-import MUON_LOGO from 'assets/img/tokens/muon.svg'
 import { BRIDGE__TOKENS } from 'constants/inputs'
+import { Bridge as BridgeAddress } from 'constants/addresses'
+import { ChainInfo } from 'constants/chainInfo'
+
+import { IToken } from 'utils/token'
+import { useWalletModalToggle } from 'state/application/hooks'
+import { DeiSupportedChains } from 'state/dei/reducer'
+import { useBridgeState } from 'state/bridge/hooks'
+import { setAttemptingTxn } from 'state/bridge/reducer'
+
 import useWeb3React from 'hooks/useWeb3'
+import useRpcChangerCallback from 'hooks/useRpcChangerCallback'
+import useDepositCallback from 'hooks/useBridgeCallback'
+import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
 
 import { Card } from 'components/Card'
-import { ArrowBubble, IconWrapper } from 'components/Icons'
+import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
 import { PrimaryButton } from 'components/Button'
 import TransactionSettings from 'components/TransactionSettings'
 import InputBox from 'components/App/Bridge/InputBox'
@@ -102,9 +110,10 @@ export default function Bridge() {
   const dispatch = useAppDispatch()
   const { chainId, account } = useWeb3React()
   const toggleWalletModal = useWalletModalToggle()
+  const switchRpcCallback = useRpcChangerCallback()
 
   const [tokenSymbol, setTokenSymbol] = useState<string>('DEI')
-  const [sourceChainId, setSourceChainId] = useState<SupportedChainId | null>(null)
+  const [sourceChainId, setSourceChainId] = useState<SupportedChainId | null | undefined>(chainId)
   const [destinationChainId, setDestinationChainId] = useState<SupportedChainId | null>(null)
   const [TokenIn, setTokenIn] = useState<IToken | null>(null)
   const [TokenOut, setTokenOut] = useState<IToken | null>(null)
@@ -112,8 +121,10 @@ export default function Bridge() {
   const [TokenAmountIn, setTokenAmountIn] = useState<string>('')
 
   const [awaitingApproveConfirmation, setAwaitingApproveConfirmation] = useState<boolean>(false)
-  const [insufficientBalance1, setInsufficientBalance1] = useState<boolean>(false)
+  const [insufficientBalance, setInsufficientBalance] = useState<boolean>(false)
   const [txHash, setTxHash] = useState<string>('')
+  const bridgeState = useBridgeState()
+  const { attemptingTxn, showReview, error: bridgeStateError } = bridgeState
 
   // Allow user to connect any chain globally, but restrict unsupported ones on this page
   const isSupportedChainId: boolean = useMemo(() => {
@@ -138,30 +149,114 @@ export default function Bridge() {
   }, [])
 
   useEffect(() => {
-    if (tokenSymbol != '' && chainId) {
-      const pickSourceChainId = inputChainOptions.includes(chainId) ? chainId : inputChainOptions[0]
-      const pickDestinationChainId = outputChainOptions.filter((chainId) => chainId != pickSourceChainId)[0]
+    if (tokenSymbol != '' && chainId && sourceChainId) {
+      const pickSourceChainId = inputChainOptions.includes(sourceChainId) ? sourceChainId : inputChainOptions[0]
+      const filterDestinationOptions = outputChainOptions.filter((chainId) => chainId != pickSourceChainId)
+      const pickDestinationChainId = destinationChainId
+        ? filterDestinationOptions.includes(destinationChainId)
+          ? destinationChainId
+          : filterDestinationOptions[0]
+        : filterDestinationOptions[0]
 
-      setTokenIn(Tokens[tokenSymbol][sourceChainId ?? pickSourceChainId])
+      setSourceChainId(pickSourceChainId)
+      setDestinationChainId(pickDestinationChainId)
+
+      setTokenIn(Tokens[tokenSymbol][pickSourceChainId])
       setTokenOut(Tokens[tokenSymbol][destinationChainId ?? pickDestinationChainId])
     }
   }, [tokenSymbol, inputChainOptions, outputChainOptions, sourceChainId, destinationChainId, chainId])
 
-  useEffect(() => {
-    console.log({ TokenIn })
-  }, [TokenIn])
+  const {
+    state: depositCallbackState,
+    callback: depositCallback,
+    error: depositCallbackError,
+  } = useDepositCallback(TokenIn, TokenOut, TokenAmountIn)
 
-  useEffect(() => {
-    console.log({ sourceChainId })
-  }, [sourceChainId])
+  // Claim data
+  // const [loading, error] = useMemo(() => {
+  //   return [deiStatus == bridgeState.LOADING, deiStatus == DeiStatus.ERROR]
+  // }, [deiStatus])
+
+  const spender = useMemo(() => {
+    return chainId ? BridgeAddress[chainId] : null
+  }, [chainId])
+
+  const [approvalState, approveCallback] = useApproveCallback(TokenIn, spender)
+
+  const [showApprove, showApproveLoader] = useMemo(() => {
+    const show = approvalState !== ApprovalState.APPROVED
+    return [show, show && approvalState === ApprovalState.PENDING]
+  }, [approvalState])
+
+  const handleApprove = async () => {
+    setAwaitingApproveConfirmation(true)
+    await approveCallback()
+    setAwaitingApproveConfirmation(false)
+  }
+
+  const handleDeposit = useCallback(async () => {
+    console.log('called handleDeposit')
+    console.log(depositCallbackState, depositCallback, depositCallbackError)
+
+    if (!depositCallback) return
+    dispatch(setAttemptingTxn(true))
+
+    let error = ''
+    try {
+      const txHash = await depositCallback()
+      setTxHash(txHash)
+    } catch (e) {
+      if (e instanceof Error) {
+        error = e.message
+      } else {
+        console.error(e)
+        error = 'An unknown error occurred.'
+      }
+    }
+  }, [dispatch, depositCallbackState, depositCallback, depositCallbackError])
+
+  function getApproveButton(): JSX.Element | null {
+    if (!account) {
+      return null
+    }
+    if (awaitingApproveConfirmation) {
+      return (
+        <PrimaryButton active>
+          Awaiting Confirmation <DotFlashing style={{ marginLeft: '10px' }} />
+        </PrimaryButton>
+      )
+    }
+    if (showApproveLoader || showApproveLoader) {
+      return (
+        <PrimaryButton active>
+          Approving <DotFlashing style={{ marginLeft: '10px' }} />
+        </PrimaryButton>
+      )
+    }
+    if (showApprove) {
+      return <PrimaryButton onClick={handleApprove}>Allow DEUS to spend your {TokenIn?.symbol}</PrimaryButton>
+    }
+    return null
+  }
 
   function getActionButton(): JSX.Element | null {
     if (!chainId || !account) {
       return <PrimaryButton onClick={toggleWalletModal}>Connect Wallet</PrimaryButton>
     }
-    if (!isSupportedChainId) {
+    if (TokenIn && chainId != TokenIn.chainId) {
+      return (
+        <PrimaryButton onClick={() => switchRpcCallback(TokenIn.chainId)}>
+          Switch to {ChainInfo[TokenIn.chainId as SupportedChainId].label}{' '}
+        </PrimaryButton>
+      )
+    }
+    if (showApprove || showApprove) {
       return null
     }
+    // if (error) {
+    //   return <PrimaryButton disabled>Critical Error</PrimaryButton>
+    // }
+
     // TODO: do we really want this? E.g. with it users are unable to mint if tx is pending
     // if (mintCallbackState == MintCallbackState.PENDING) {
     //   return (
@@ -170,7 +265,7 @@ export default function Bridge() {
     //     </PrimaryButton>
     //   )
     // }
-    if (insufficientBalance1) {
+    if (insufficientBalance) {
       return <PrimaryButton disabled>Insufficient {TokenIn?.symbol} Balance</PrimaryButton>
     }
     // TODO: turn the next line into: (loading || proxyLoading).
@@ -189,7 +284,7 @@ export default function Bridge() {
     return (
       <PrimaryButton
         onClick={() => {
-          console.log('Bridge...')
+          handleDeposit()
           // if (amountOut && amountOut != '0') {
           //   dispatch(setShowReview(true))
           // }
@@ -222,7 +317,7 @@ export default function Bridge() {
             amount={TokenAmountIn}
             setAmount={setTokenAmountIn}
             setSelected={(chainId: SupportedChainId) => setSourceChainId(chainId)}
-            setInsufficientBalance={setInsufficientBalance1}
+            setInsufficientBalance={setInsufficientBalance}
             disabled={false}
           />
           <ArrowWrapper size={'30px'} style={{ alignSelf: 'center' }}>
@@ -250,9 +345,12 @@ export default function Bridge() {
           <TransactionSettings style={{ marginLeft: '20px' }} />
         </ToggleRow>
         {getMainContent()}
-        <Row>{getActionButton()}</Row>
+        <Row>
+          {getApproveButton()}
+          {getActionButton()}
+        </Row>
       </DefaultWrapper>
-      <ExternalLink href="https://muon.network/">
+      <ExternalLink href="https://muon.net/">
         <MuonText>
           <Image src={MUON_LOGO} width="20px" height="20px" alt="muon" />
           <p style={{ marginLeft: '0.5rem' }}>Powered by Muon Network</p>

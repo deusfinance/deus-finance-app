@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useAppSelector, AppState } from 'state'
 
-const useBridgeState = () => {
+export const useBridgeState = () => {
   return useAppSelector((state: AppState) => state.bridge)
 }
 

@@ -64,13 +64,13 @@ export const BRIDGE__TOKENS: { [symbol: string]: IBridgeToken } = {
   [Tokens.DEI[SupportedChainId.MAINNET].symbol]: {
     symbol: Tokens.DEI[SupportedChainId.MAINNET].symbol,
     tokenId: 0,
-    sourceChains: [SupportedChainId.MAINNET, SupportedChainId.POLYGON, SupportedChainId.FANTOM],
-    destinationChains: [SupportedChainId.MAINNET, SupportedChainId.POLYGON, SupportedChainId.FANTOM],
+    sourceChains: [SupportedChainId.POLYGON, SupportedChainId.FANTOM, SupportedChainId.MAINNET],
+    destinationChains: [SupportedChainId.POLYGON, SupportedChainId.FANTOM, SupportedChainId.MAINNET],
   },
   [Tokens.DEUS[SupportedChainId.MAINNET].symbol]: {
     symbol: Tokens.DEUS[SupportedChainId.MAINNET].symbol,
     tokenId: 1,
-    sourceChains: [SupportedChainId.POLYGON, SupportedChainId.MAINNET, SupportedChainId.FANTOM],
-    destinationChains: [SupportedChainId.FANTOM, SupportedChainId.MAINNET, SupportedChainId.POLYGON],
+    sourceChains: [SupportedChainId.POLYGON, SupportedChainId.FANTOM, SupportedChainId.MAINNET],
+    destinationChains: [SupportedChainId.POLYGON, SupportedChainId.FANTOM, SupportedChainId.MAINNET],
   },
 }
