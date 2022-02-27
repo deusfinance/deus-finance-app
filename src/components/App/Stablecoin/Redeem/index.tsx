@@ -26,6 +26,7 @@ import { DefaultWrapper as Wrapper } from 'components/App/Stablecoin'
 import NetworkSelect from 'components/App/Stablecoin/NetworkSelect'
 import InputBox from 'components/App/Stablecoin/InputBox'
 import TransactionSettings from 'components/TransactionSettings'
+import ColletRedemption from './ColletRedemption'
 
 const ToggleRow = styled.div`
   position: relative;
@@ -323,38 +324,42 @@ export default function Redeem() {
   }
 
   return (
-    <Wrapper>
-      <ToggleRow>
-        <NetworkSelect chains={DeiSupportedChains} />
-        <TransactionSettings style={{ marginLeft: '20px' }} />
-      </ToggleRow>
-      {getMainContent()}
-      <Row>
-        {getApproveButton()}
-        {getActionButton()}
-      </Row>
+    <>
+      <Wrapper>
+        <ToggleRow>
+          <NetworkSelect chains={DeiSupportedChains} />
+          <TransactionSettings style={{ marginLeft: '20px' }} />
+        </ToggleRow>
+        {getMainContent()}
+        <Row>
+          {getApproveButton()}
+          {getActionButton()}
+        </Row>
 
-      <DefaultConfirmation
-        title="Redeem DEI"
-        isOpen={showReview}
-        onDismiss={handleOnDismiss}
-        onConfirm={handleRedeem}
-        onConfirmTitle="Redeem DEI"
-        attemptingTxn={attemptingTxn}
-        errorMessage={redeemStateError}
-        txHash={txHash}
-        TokensIn={TokensIn}
-        TokensOut={TokensOut}
-        amountsIn={[amountIn]}
-        amountsOut={[amountOut1, amountOut2]}
-        summary={`Redeem `}
+        <DefaultConfirmation
+          title="Redeem DEI"
+          isOpen={showReview}
+          onDismiss={handleOnDismiss}
+          onConfirm={handleRedeem}
+          onConfirmTitle="Redeem DEI"
+          attemptingTxn={attemptingTxn}
+          errorMessage={redeemStateError}
+          txHash={txHash}
+          TokensIn={TokensIn}
+          TokensOut={TokensOut}
+          amountsIn={[amountIn]}
+          amountsOut={[amountOut1, amountOut2]}
+          summary={`Redeem `}
+        />
+      </Wrapper>
+
+      <ColletRedemption
+        collateralToken={TokenOut1}
+        deusToken={TokenOut2}
+        redeemBalances={redeemBalances}
+        showClaim={showClaim}
+        onClaim={handleCollectRedemption}
       />
-
-      {showClaim && (
-        <PrimaryButton onClick={handleCollectRedemption}>
-          Claim {redeemBalances.collateral} {TokenOut1?.symbol} & {redeemBalances.deus} {TokenOut2?.symbol}
-        </PrimaryButton>
-      )}
-    </Wrapper>
+    </>
   )
 }

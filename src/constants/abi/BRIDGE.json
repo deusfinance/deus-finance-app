@@ -1,99 +1,6 @@
 [
   {
     "inputs": [
-      { "internalType": "uint256", "name": "minReqSigs_", "type": "uint256" },
-      { "internalType": "uint256", "name": "bridgeReserve_", "type": "uint256" },
-      { "internalType": "uint8", "name": "ETH_APP_ID_", "type": "uint8" },
-      { "internalType": "address", "name": "muon_", "type": "address" },
-      { "internalType": "address", "name": "deiAddress_", "type": "address" },
-      { "internalType": "bool", "name": "mintable_", "type": "bool" }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": false, "internalType": "uint256", "name": "bridgeReserve", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "_bridgeReserve", "type": "uint256" }
-    ],
-    "name": "BridgeReserveSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "indexed": true, "internalType": "uint256", "name": "fromChain", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "txId", "type": "uint256" }
-    ],
-    "name": "Claim",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "indexed": true, "internalType": "uint256", "name": "toChain", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "txId", "type": "uint256" }
-    ],
-    "name": "Deposit",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": true, "internalType": "address", "name": "user", "type": "address" },
-      { "indexed": false, "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "indexed": true, "internalType": "uint256", "name": "toChain", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "txId", "type": "uint256" },
-      { "indexed": false, "internalType": "uint256", "name": "referralCode", "type": "uint256" }
-    ],
-    "name": "DepositWithReferralCode",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
-      { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
-    "name": "Paused",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [{ "indexed": false, "internalType": "address", "name": "account", "type": "address" }],
-    "name": "Unpaused",
-    "type": "event"
-  },
-  {
-    "inputs": [],
-    "name": "ETH_APP_ID",
-    "outputs": [{ "internalType": "uint8", "name": "", "type": "uint8" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "bridgeReserve",
-    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
       { "internalType": "address", "name": "user", "type": "address" },
       { "internalType": "uint256", "name": "amount", "type": "uint256" },
       { "internalType": "uint256", "name": "fromChain", "type": "uint256" },
@@ -153,18 +60,6 @@
       { "internalType": "uint256", "name": "amount", "type": "uint256" },
       { "internalType": "uint256", "name": "toChain", "type": "uint256" },
       { "internalType": "uint256", "name": "tokenId", "type": "uint256" }
-    ],
-    "name": "deposit",
-    "outputs": [{ "internalType": "uint256", "name": "txId", "type": "uint256" }],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "uint256", "name": "amount", "type": "uint256" },
-      { "internalType": "uint256", "name": "toChain", "type": "uint256" },
-      { "internalType": "uint256", "name": "tokenId", "type": "uint256" },
-      { "internalType": "uint256", "name": "referralCode", "type": "uint256" }
     ],
     "name": "deposit",
     "outputs": [{ "internalType": "uint256", "name": "txId", "type": "uint256" }],

@@ -5,6 +5,8 @@ import RinkebyLogo from 'assets/img/networks/mainnet.svg'
 import BinanceLogo from 'assets/img/networks/binance.svg'
 import PolygonLogo from 'assets/img/networks/polygon.svg'
 import FantomLogo from 'assets/img/networks/fantom.svg'
+import MetisLogo from 'assets/img/networks/metis.svg'
+import ArbitrumLogo from 'assets/img/networks/arbitrum.svg'
 
 interface Info {
   chainId: string
@@ -103,7 +105,7 @@ export const ChainInfo: { [chainId in SupportedChainId]: Info } = {
     label: 'Arbitrum',
     chainId: '0xA4B1',
     chainName: 'Arbitrum',
-    logoUrl: FantomLogo, //TODO
+    logoUrl: ArbitrumLogo,
     nativeCurrency: {
       name: 'ETH',
       symbol: 'ETH',
@@ -116,7 +118,7 @@ export const ChainInfo: { [chainId in SupportedChainId]: Info } = {
     label: 'Metis',
     chainId: '0x61',
     chainName: 'Metis',
-    logoUrl: FantomLogo, //TODO
+    logoUrl: MetisLogo,
     nativeCurrency: {
       name: 'Metis',
       symbol: 'Metis',

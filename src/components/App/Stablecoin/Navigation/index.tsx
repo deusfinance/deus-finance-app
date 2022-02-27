@@ -11,7 +11,7 @@ const Wrapper = styled(Row)`
   margin: auto;
   margin-top: 21px;
   margin-bottom: 7px;
-  padding: 0 4px;
+  padding: 0 5px;
 `
 
 const Item = styled.div<{
@@ -36,15 +36,15 @@ const Item = styled.div<{
 export enum NavigationTypes {
   MINT = 'MINT',
   REDEEM = 'REDEEM',
-  ZAP = 'ZAP',
-  FARMS = 'FARMS',
+  // ZAP = 'ZAP',
+  // FARMS = 'FARMS',
 }
 
 const NavigationLabels = {
   [NavigationTypes.MINT]: 'Mint',
   [NavigationTypes.REDEEM]: 'Redeem',
-  [NavigationTypes.ZAP]: 'Zap',
-  [NavigationTypes.FARMS]: 'Farms',
+  // [NavigationTypes.ZAP]: 'Zap',
+  // [NavigationTypes.FARMS]: 'Farms',
 }
 
 export default function Navigation({

@@ -113,10 +113,6 @@ export default function BridgeClaim() {
     [dispatch, claimCallbackState, claimCallback, claimCallbackError]
   )
 
-  // useEffect(() => {
-  //   handleClaim()
-  // }, [handleClaim])
-
   return (
     <ActionWrap>
       <RowBetween mb="12px" margin="10px" marginBottom={0} width={'unset'}>
@@ -131,7 +127,6 @@ export default function BridgeClaim() {
       ) : (
         <ClaimBox>
           {unClaimed.map((token: IClaimToken, index: number) => {
-            console.log('token', token)
             const { symbol, toChainId, fromChainId, amount, claimableBlock, logo } = token
             return (
               <TokenBox
