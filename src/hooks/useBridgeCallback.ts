@@ -1,6 +1,8 @@
 import { useCallback, useMemo } from 'react'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
+import BigNumber from 'bignumber.js'
 import find from 'lodash/find'
+import toast from 'react-hot-toast'
 
 import { MuonClient } from 'constants/muon'
 import { Bridge } from 'constants/addresses'
@@ -11,12 +13,12 @@ import { IBridgeToken, BRIDGE__TOKENS } from 'constants/inputs'
 import { dynamicPrecision } from 'utils/numbers'
 import { IToken } from 'utils/token'
 import { calculateGasMargin, toWei } from 'utils/web3'
+import { BridgeErrorToUserReadableMessage } from 'utils/parseErrors'
 
 import { useBridgeContract } from './useContract'
 import useWeb3React from './useWeb3'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { IClaimToken } from 'state/bridge/reducer'
-import BigNumber from 'bignumber.js'
 
 export enum BridgeCallbackState {
   INVALID = 'INVALID',
@@ -157,16 +159,16 @@ export default function useDepositCallback(
   }, [Contract, TokenIn, TokenOut, amountIn, tokenId, chainId, account, library, constructCall, addTransaction])
 }
 
-export function useClaimCallback(token: IClaimToken | null): {
+export function useClaimCallback(): {
   state: BridgeCallbackState
-  callback: null | (() => Promise<string>)
+  callback: null | ((token: IClaimToken | null) => Promise<string>)
   error: string | null
 } {
   const { account, chainId, library } = useWeb3React()
   const Contract = useBridgeContract()
   const addTransaction = useTransactionAdder()
   //handle errors and other checks
-  const getMuonSignatures = useCallback(async () => {
+  const getMuonSignatures = useCallback(async (token: IClaimToken | null) => {
     if (!token) {
       console.error('No token provided')
       return
@@ -179,53 +181,50 @@ export function useClaimCallback(token: IClaimToken | null): {
       })
       .call()
     return muonResponse
-  }, [token])
+  }, [])
 
-  const constructCall = useCallback(async () => {
-    try {
-      if (!chainId || !account || !token || !Contract) {
-        throw new Error('Missing dependencies.')
+  const constructCall = useCallback(
+    async (token: IClaimToken | null) => {
+      try {
+        if (!chainId || !account || !token || !Contract) {
+          throw new Error('Missing dependencies.')
+        }
+        const response = await getMuonSignatures(token)
+        if (response?.success === false || response.error) {
+          toast.error(BridgeErrorToUserReadableMessage(response.error))
+          throw new Error(response)
+        }
+        const { sigs, reqId } = response
+        const amountBN = new BigNumber(token.amount).toFixed(0) //TODO : check if amount is in correct decimals base on tokenId
+        const methodName = 'claim'
+        const args: any = [
+          account,
+          amountBN,
+          token.fromChainId.toString(),
+          token.toChainId.toString(),
+          token.tokenId.toString(),
+          token.txId.toString(),
+          reqId,
+          sigs,
+        ]
+        const value = 0
+
+        return {
+          address: Contract.address,
+          calldata: Contract.interface.encodeFunctionData(methodName, args) ?? '',
+          value,
+        }
+      } catch (error) {
+        return {
+          error,
+        }
       }
-      console.log('====================================')
-      console.log(token)
-      console.log('====================================')
-      const muonSignitures = await getMuonSignatures()
-      console.log({ muonSignitures })
-
-      const { sigs, reqId } = muonSignitures
-      const amountBN = new BigNumber(token.amount).toFixed(0) //TODO : check if amount is in correct decimals base on tokenId
-      const methodName = 'claim'
-      const args: any = [
-        account,
-        amountBN,
-        token.fromChainId.toString(),
-        token.toChainId.toString(),
-        token.tokenId.toString(),
-        token.txId.toString(),
-        reqId,
-        sigs,
-      ]
-
-      console.log('====================================')
-      console.log(args)
-      console.log('====================================')
-
-      const value = 0
-
-      return {
-        address: Contract.address,
-        calldata: Contract.interface.encodeFunctionData(methodName, args) ?? '',
-        value,
-      }
-    } catch (error) {
-      return {
-        error,
-      }
-    }
-  }, [Contract, getMuonSignatures, token, chainId, account])
+    },
+    [Contract, getMuonSignatures, chainId, account]
+  )
 
   return useMemo(() => {
-    if (!account || !chainId || !library || !token || !Contract) {
+    if (!account || !chainId || !library || !Contract) {
       return {
         state: BridgeCallbackState.INVALID,
         callback: null,
@@ -236,9 +235,12 @@ export function useClaimCallback(token: IClaimToken | null): {
     return {
       state: BridgeCallbackState.VALID,
       error: null,
-      callback: async function onClaim(): Promise<string> {
+      callback: async function onClaim(token: IClaimToken | null): Promise<string> {
         console.log('onClaim callback')
-        const call = await constructCall()
+        if (!token) {
+          throw new Error('Missing token for claim.')
+        }
+        const call = await constructCall(token)
         const { address, calldata, value } = call
         console.log({ call })
         if ('error' in call) {
@@ -249,7 +251,7 @@ export function useClaimCallback(token: IClaimToken | null): {
           ? { from: account, to: address, data: calldata }
           : { from: account, to: address, data: calldata, value }
 
-        console.log(`ClAIM TRANSACTION ${token.symbol} > ${ChainInfo[token.toChainId as SupportedChainId]}`, {
+        console.log(`CLAIM TRANSACTION ${token.symbol} > ${ChainInfo[token.toChainId as SupportedChainId].label}`, {
           tx,
           value,
         })
@@ -307,5 +309,5 @@ export function useClaimCallback(token: IClaimToken | null): {
           })
       },
     }
-  }, [Contract, token, chainId, account, library, constructCall, addTransaction])
+  }, [Contract, chainId, account, library, constructCall, addTransaction])
 }

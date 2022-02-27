@@ -1,12 +1,13 @@
 import { useCallback, useMemo } from 'react'
 import BN from 'bignumber.js'
+import toast from 'react-hot-toast'
 
 import useWeb3React from './useWeb3'
 import { useProxyMinterContract } from './useContract'
-import { MINT__PATHS, Collateral } from 'constants/addresses'
+import { Collateral } from 'constants/addresses'
+import { MINT__PATHS } from 'constants/path'
 import { ProxyValues } from 'state/mint/reducer'
 import { ParseProxyMinterGetAmountOutError } from 'utils/parseErrors'
-import toast from 'react-hot-toast'
 
 type Params = Array<string | string[]>
 

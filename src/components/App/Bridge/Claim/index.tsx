@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { lighten } from 'polished'
 import Image from 'next/image'
@@ -9,7 +9,6 @@ import { Row, RowBetween } from 'components/Row'
 import { TokenBox } from './TokenBox'
 import { IClaimToken, setAttemptingTxn } from 'state/bridge/reducer'
 import { useClaimableTokens, useCurrentBlocks } from 'state/bridge/hooks'
-import { fromWei } from 'utils/numbers'
 import { useClaimCallback } from 'hooks/useBridgeCallback'
 import useRpcChangerCallback from 'hooks/useRpcChangerCallback'
 import { useAppDispatch } from 'state'
@@ -23,7 +22,7 @@ const ActionWrap = styled(Card)`
   max-width: 320px;
   width: 320px;
   min-height: 370px;
-  min-width: 200px;
+  min-width: 220px;
 `
 const Title = styled.div`
   font-size: 12px;
@@ -87,33 +86,36 @@ export default function BridgeClaim() {
   const currentBlocks = useCurrentBlocks()
   const dispatch = useAppDispatch()
   const onSwitchNetwork = useRpcChangerCallback()
-  const [token, setToken] = useState<IClaimToken | null>(null)
-  const { state: claimCallbackState, callback: claimCallback, error: claimCallbackError } = useClaimCallback(token)
+  // const [token, setToken] = useState<IClaimToken | null>(null)
+  const { state: claimCallbackState, callback: claimCallback, error: claimCallbackError } = useClaimCallback()
 
-  const handleClaim = useCallback(async () => {
-    console.log('called handleClaim')
-    console.log(claimCallbackState, claimCallback, claimCallbackError)
+  const handleClaim = useCallback(
+    async (token: IClaimToken | null) => {
+      // console.log('called handleClaim')
+      // console.log(claimCallbackState, claimCallback, claimCallbackError)
 
-    if (!claimCallback) return
-    dispatch(setAttemptingTxn(true))
+      if (!claimCallback) return
+      dispatch(setAttemptingTxn(true))
 
-    let error = ''
-    try {
-      const txHash = await claimCallback()
-      // setTxHash(txHash)
-    } catch (e) {
-      if (e instanceof Error) {
-        error = e.message
-      } else {
-        console.error(e)
-        error = 'An unknown error occurred.'
+      let error = ''
+      try {
+        const txHash = await claimCallback(token)
+        // setTxHash(txHash)
+      } catch (e) {
+        if (e instanceof Error) {
+          error = e.message
+        } else {
+          console.error(e)
+          error = 'An unknown error occurred.'
+        }
       }
-    }
-  }, [dispatch, claimCallbackState, claimCallback, claimCallbackError])
+    },
+    [dispatch, claimCallbackState, claimCallback, claimCallbackError]
+  )
 
-  useEffect(() => {
-    handleClaim()
-  }, [handleClaim])
+  // useEffect(() => {
+  //   handleClaim()
+  // }, [handleClaim])
 
   return (
     <ActionWrap>
@@ -129,21 +131,19 @@ export default function BridgeClaim() {
       ) : (
         <ClaimBox>
           {unClaimed.map((token: IClaimToken, index: number) => {
-            const { symbol, toChainId, amount, claimableBlock, logo } = token
-            const formattedAmount = fromWei(amount, 18)
+            console.log('token', token)
+            const { symbol, toChainId, fromChainId, amount, claimableBlock, logo } = token
             return (
               <TokenBox
                 key={index}
                 symbol={symbol}
                 toChainId={toChainId}
                 claimableBlock={claimableBlock}
-                currentBlock={currentBlocks[toChainId]}
+                currentBlock={currentBlocks[fromChainId]}
                 logo={logo}
-                amount={formattedAmount}
+                amount={amount}
                 onSwitchNetwork={() => onSwitchNetwork(toChainId)}
-                onClaim={() => {
-                  setToken(token)
-                }}
+                onClaim={() => handleClaim(token)}
               />
             )
           })}

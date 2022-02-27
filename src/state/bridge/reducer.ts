@@ -43,7 +43,7 @@ export interface IClaimToken {
 export const fetchUnClaimed = createAsyncThunk('bridge/fetchUnClaimed', async ({ address }: { address: string }) => {
   if (!address) throw new Error('No address present')
   console.log({ INFO_URL })
-  const { href: url } = new URL(`/bridge/deposits?address=${address}`, INFO_URL)
+  const { href: url } = new URL(`/bridge/deposits?address=${address}&isClaimed=false`, INFO_URL)
 
   // Destruct the response directly so if these params don't exist it will throw an error.
   const unClaimed = await makeHttpRequest(url)

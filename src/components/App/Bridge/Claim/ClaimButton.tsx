@@ -58,7 +58,6 @@ export default function ClaimButton({
   if (!toChainId || !claimableBlock || !currentBlock) {
     return <Button disabled>Claim</Button>
   }
-
   const diff = claimableBlock - currentBlock
   if (diff > 0) {
     const elapsed = (100 * (BridgeMinimumBlockNeed[toChainId] - diff)) / BridgeMinimumBlockNeed[toChainId]
