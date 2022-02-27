@@ -86,4 +86,43 @@ export const ChainInfo: { [chainId in SupportedChainId]: Info } = {
     rpcUrl: 'https://rpc.ftm.tools',
     blockExplorerUrl: 'https://ftmscan.com',
   },
+  // [SupportedChainId.BSC_TESTNET]: {
+  //   label: 'BTC Testnet',
+  //   chainId: '0x61',
+  //   chainName: 'Binance Smart Chain Testnet',
+  //   logoUrl: BinanceLogo,
+  //   nativeCurrency: {
+  //     name: 'BNB',
+  //     symbol: 'BNB',
+  //     decimals: 18,
+  //   },
+  //   rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+  //   blockExplorerUrl: 'https://testnet.bscscan.com',
+  // },
+  [SupportedChainId.ARBITRUM]: {
+    label: 'Arbitrum',
+    chainId: '0xA4B1',
+    chainName: 'Arbitrum',
+    logoUrl: FantomLogo, //TODO
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrl: 'https://arb1.arbitrum.io/rpc',
+    blockExplorerUrl: 'https://arbiscan.io',
+  },
+  [SupportedChainId.METIS]: {
+    label: 'Metis',
+    chainId: '0x61',
+    chainName: 'Metis',
+    logoUrl: FantomLogo, //TODO
+    nativeCurrency: {
+      name: 'Metis',
+      symbol: 'Metis',
+      decimals: 18,
+    },
+    rpcUrl: '"https://andromeda.metis.io/?owner=1088',
+    blockExplorerUrl: 'https://andromeda-explorer.metis.io',
+  },
 }
