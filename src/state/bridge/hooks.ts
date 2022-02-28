@@ -42,3 +42,8 @@ export const useCurrentBlocks = () => {
   const { currentBlocks } = useBridgeState()
   return useMemo(() => currentBlocks as { [chainId: string]: number }, [currentBlocks])
 }
+
+export const useBridgeInfo = () => {
+  const { info } = useBridgeState()
+  return useMemo(() => info as { [tokenId: string]: { [total_claimed_amount: string]: string } }, [info])
+}

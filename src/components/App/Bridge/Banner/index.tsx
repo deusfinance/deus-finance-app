@@ -4,6 +4,8 @@ import Image from 'next/image'
 
 import BannerImage from 'assets/img/MintBanner.svg'
 import { Card } from 'components/Card'
+import { useBridgeInfo } from 'state/bridge/hooks'
+import { formatAmount, fromWei } from 'utils/numbers'
 
 const Wrapper = styled(Card)`
   display: flex;
@@ -86,24 +88,32 @@ const Stat = styled.div`
 `
 
 export default function Banner() {
+  const info = useBridgeInfo()
+  let totalDei = undefined
+  let totalDeus = undefined
+  if (info) {
+    totalDei = fromWei(info['0']['total_claimed_amount'])
+    totalDeus = fromWei(info['1']['total_claimed_amount'])
+  }
   return (
     <Wrapper>
       <Left>
         <Title>
           <div>DEUS Bridge</div>
-          <div>bridge between the all networks</div>
+          <div>bridger of worlds</div>
         </Title>
-        <div>
-          <Stat>
-            {/* TODO: calculate total market cap */}
-            <div>Total DEI Bridged</div>
-            <div>15,335</div>
-          </Stat>
-          <Stat>
-            <div>Total DEUS Bridged</div>
-            <div>15,335</div>
-          </Stat>
-        </div>
+        {info && (
+          <div>
+            <Stat>
+              <div>Total DEI Bridged</div>
+              <div>{formatAmount(totalDei || undefined)}</div>
+            </Stat>
+            <Stat>
+              <div>Total DEUS Bridged</div>
+              <div>{formatAmount(totalDeus || undefined)}</div>
+            </Stat>
+          </div>
+        )}
       </Left>
       <Image src={BannerImage} alt="DEI Stablecoin" width={'200px'} />
     </Wrapper>

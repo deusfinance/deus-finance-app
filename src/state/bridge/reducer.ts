@@ -14,6 +14,7 @@ export interface BridgeState {
   showReview: boolean
   unClaimed: []
   currentBlocks: []
+  info: null
   error?: string
 }
 
@@ -23,6 +24,7 @@ const initialState: BridgeState = {
   showReview: false,
   unClaimed: [],
   currentBlocks: [],
+  info: null,
   error: undefined,
 }
 
@@ -53,6 +55,12 @@ export const fetchUnClaimed = createAsyncThunk('bridge/fetchUnClaimed', async ({
 
 export const fetchCurrentBlocks = createAsyncThunk('bridge/fetchCurrentBlocks', async () => {
   const { href: url } = new URL(`bridge/currentBlocks`, INFO_URL)
+  const currentBlocks = await makeHttpRequest(url)
+  return currentBlocks
+})
+
+export const fetchInfo = createAsyncThunk('bridge/totals', async () => {
+  const { href: url } = new URL(`bridge/totals`, INFO_URL)
   const currentBlocks = await makeHttpRequest(url)
   return currentBlocks
 })
@@ -97,6 +105,12 @@ const bridgeSlice = createSlice({
       })
       .addCase(fetchCurrentBlocks.rejected, () => {
         console.log('Unable to fetch current blocks')
+      })
+      .addCase(fetchInfo.fulfilled, (state, { payload }) => {
+        state.info = payload
+      })
+      .addCase(fetchInfo.rejected, () => {
+        console.log('Unable to fetch info')
       })
   },
 })

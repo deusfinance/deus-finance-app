@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { useAppDispatch, AppThunkDispatch } from 'state'
 
 import { autoRefresh } from 'utils/retry'
-import { fetchCurrentBlocks, fetchUnClaimed } from './reducer'
+import { fetchCurrentBlocks, fetchInfo, fetchUnClaimed } from './reducer'
 import useWeb3React from 'hooks/useWeb3'
 
 export default function Updater(): null {
@@ -20,6 +20,10 @@ export default function Updater(): null {
       return autoRefresh(() => thunkDispatch(fetchCurrentBlocks()), 15)
     }
   }, [thunkDispatch, account])
+
+  useEffect(() => {
+    return autoRefresh(() => thunkDispatch(fetchInfo()), 60)
+  }, [thunkDispatch])
 
   return null
 }
