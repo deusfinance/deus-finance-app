@@ -330,7 +330,7 @@ export default function Bridge() {
             setAmount={setTokenAmountIn}
             setSelected={(chainId: SupportedChainId) => setDestinationChainId(chainId)}
             disableBalance={true}
-            disabled={true}
+            disabled={false}
           />
         </BoxesRow>
       </>

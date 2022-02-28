@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 
 import { PrimaryButton } from 'components/Button'
@@ -6,6 +6,7 @@ import useWeb3React from 'hooks/useWeb3'
 import { ChainInfo } from 'constants/chainInfo'
 import { BridgeMinimumBlockNeed, SupportedChainId } from 'constants/chains'
 import { RowCenter } from 'components/Row'
+import { DotFlashing } from 'components/Icons'
 
 const RemainingWrap = styled(RowCenter)`
   position: relative;
@@ -50,9 +51,24 @@ export default function ClaimButton({
   onSwitchNetwork?: () => void
 }): JSX.Element {
   const { chainId } = useWeb3React()
+  const [awaitingClaimConfirmation, setAwaitingClaimConfirmation] = useState<boolean>(false)
+
+  const handleClaim = async () => {
+    setAwaitingClaimConfirmation(true)
+    if (onClaim) await onClaim()
+    setAwaitingClaimConfirmation(false)
+  }
 
   if (toChainId && chainId !== toChainId) {
     return <Button onClick={onSwitchNetwork}>Switch to {ChainInfo[toChainId].label}</Button>
+  }
+
+  if (awaitingClaimConfirmation) {
+    return (
+      <Button active>
+        Awaiting Confirmation <DotFlashing style={{ marginLeft: '10px' }} />
+      </Button>
+    )
   }
 
   if (!toChainId || !claimableBlock || !currentBlock) {
@@ -70,5 +86,5 @@ export default function ClaimButton({
       </RemainingWrap>
     )
   }
-  return <Button onClick={onClaim}>Claim</Button>
+  return <Button onClick={handleClaim}>Claim</Button>
 }

@@ -86,6 +86,7 @@ export default function BridgeClaim() {
   const currentBlocks = useCurrentBlocks()
   const dispatch = useAppDispatch()
   const onSwitchNetwork = useRpcChangerCallback()
+
   // const [token, setToken] = useState<IClaimToken | null>(null)
   const { state: claimCallbackState, callback: claimCallback, error: claimCallbackError } = useClaimCallback()
 
@@ -110,7 +111,7 @@ export default function BridgeClaim() {
         }
       }
     },
-    [dispatch, claimCallbackState, claimCallback, claimCallbackError]
+    [dispatch, claimCallback]
   )
 
   return (

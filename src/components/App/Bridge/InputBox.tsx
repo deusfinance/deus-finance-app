@@ -148,7 +148,7 @@ const InputOption = ({
   return (
     <>
       <BalanceLabel onClick={() => !disabled && setAmount(balanceUser)}>
-        {!disableBalance && `${balanceLabel} `}
+        {!disableBalance ? `${balanceLabel} ` : 'N/A '}
         {symbol}
       </BalanceLabel>
       <InputWrapper>
