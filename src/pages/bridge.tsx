@@ -1,6 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import BridgeUpdater from 'state/bridge/updater'
+
 import Banner from 'components/App/Bridge/Banner'
 import { RowBetween } from 'components/Row'
 import BridgeComponent from 'components/App/Bridge'
@@ -28,6 +30,7 @@ const Row = styled(RowBetween)`
 export default function Bridge() {
   return (
     <Container>
+      <BridgeUpdater />
       <Banner />
       <Row height={'380px'}>
         <BridgeComponent />

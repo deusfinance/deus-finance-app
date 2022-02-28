@@ -2,8 +2,10 @@ import { useEffect, useMemo } from 'react'
 import { useAppDispatch, AppThunkDispatch } from 'state'
 import BN from 'bignumber.js'
 
+import { autoRefresh } from 'utils/retry'
 import useWeb3React from 'hooks/useWeb3'
 import { useSingleContractMultipleMethods } from 'state/multicall/hooks'
+import { setRedeemBalances, setShowClaim } from 'state/redeem/reducer'
 import { useCollateralPoolContract, useDeiContract } from 'hooks/useContract'
 
 import { useCollateralPrice } from './hooks'
@@ -16,7 +18,6 @@ import {
   updateMintingFee,
   updateRedemptionFee,
 } from './reducer'
-import { setRedeemBalances, setShowClaim } from 'state/redeem/reducer'
 
 export default function Updater(): null {
   const { chainId, account } = useWeb3React()
@@ -142,7 +143,7 @@ export default function Updater(): null {
 
   useEffect(() => {
     if (chainId && isSupported) {
-      thunkDispatch(fetchPrices({ chainId })) // TODO do we need to poll every block?
+      return autoRefresh(() => thunkDispatch(fetchPrices({ chainId })), 45)
     }
   }, [thunkDispatch, chainId, isSupported])
 
