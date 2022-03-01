@@ -9,11 +9,12 @@ import ERC20_ABI from 'constants/abi/ERC20.json'
 import DEI_ABI from 'constants/abi/DEI.json'
 import COLLATERAL_POOL_ABI from 'constants/abi/COLLATERAL_POOL.json'
 import PROXY_MINTER_ABI from 'constants/abi/PROXY_MINTER.json'
+import BRIDGE_ABI from 'constants/abi/BRIDGE.json'
 import MULTICALL2_ABI from 'constants/abi/MULTICALL2.json'
 
 import { Tokens } from 'constants/tokens'
 import { Providers } from 'constants/providers'
-import { Multicall2, CollateralPool, MintProxy } from 'constants/addresses'
+import { Multicall2, CollateralPool, MintProxy, Bridge } from 'constants/addresses'
 import { SupportedChainId } from 'constants/chains'
 
 export function useContract(
@@ -41,6 +42,12 @@ export function useProxyMinterContract() {
   const { chainId } = useWeb3React()
   const address = useMemo(() => MintProxy[chainId ?? 1], [chainId])
   return useContract(address, PROXY_MINTER_ABI)
+}
+
+export function useBridgeContract() {
+  const { chainId } = useWeb3React()
+  const address = useMemo(() => Bridge[chainId ?? 1], [chainId])
+  return useContract(address, BRIDGE_ABI)
 }
 
 export function useCollateralPoolContract() {

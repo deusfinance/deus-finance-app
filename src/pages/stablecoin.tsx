@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Statistics, Redeem } from 'components/App/Stablecoin'
+import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Redeem } from 'components/App/Stablecoin'
+import { RowCenter } from 'components/Row'
 
 const Container = styled.div`
   display: flex;
@@ -16,25 +17,9 @@ const Container = styled.div`
     margin-top: 30px;
   `};
 `
-
-const Row = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  width: 100%;
-  gap: 13px;
-  transition: width 5s ease;
-  margin-top: 15px;
-  overflow: visible;
-
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-flow: column wrap;
-  `};
-
-  & > * {
-    &:nth-child(1) {
-      flex: 1;
-    }
-  }
+const Row = styled(RowCenter)`
+  align-items: flex-start;
+  gap: 20px;
 `
 
 export default function Stablecoin() {
@@ -47,9 +32,9 @@ export default function Stablecoin() {
     if (selected == NavigationTypes.REDEEM) {
       return <Redeem /> // TODO
     }
-    if (selected == NavigationTypes.ZAP) {
-      return <ComingSoon /> // TODO
-    }
+    // if (selected == NavigationTypes.ZAP) {
+    //   return <Bridge /> // TODO
+    // }
     // NavigationTypes.FARMS
     return <ComingSoon /> // TODO
   }
@@ -58,10 +43,7 @@ export default function Stablecoin() {
     <Container>
       <Banner />
       <Navigation selected={selected} setSelected={setSelected} />
-      <Row>
-        {getAppComponent()}
-        <Statistics />
-      </Row>
+      <Row>{getAppComponent()}</Row>
     </Container>
   )
 }

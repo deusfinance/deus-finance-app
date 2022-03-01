@@ -9,4 +9,6 @@ export const Providers = {
   [SupportedChainId.BSC]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.BSC]),
   [SupportedChainId.POLYGON]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.POLYGON]),
   [SupportedChainId.FANTOM]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.FANTOM]),
+  [SupportedChainId.METIS]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.METIS]),
+  [SupportedChainId.ARBITRUM]: new JsonRpcProvider(NETWORK_URLS[SupportedChainId.ARBITRUM]),
 }

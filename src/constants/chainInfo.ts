@@ -3,10 +3,10 @@ import { SupportedChainId } from './chains'
 import MainnetLogo from 'assets/img/networks/mainnet.svg'
 import RinkebyLogo from 'assets/img/networks/mainnet.svg'
 import BinanceLogo from 'assets/img/networks/binance.svg'
-import xDaiLogo from 'assets/img/networks/xdai.svg'
-import HecoLogo from 'assets/img/networks/heco.svg'
 import PolygonLogo from 'assets/img/networks/polygon.svg'
 import FantomLogo from 'assets/img/networks/fantom.svg'
+import MetisLogo from 'assets/img/networks/metis.svg'
+import ArbitrumLogo from 'assets/img/networks/arbitrum.svg'
 
 interface Info {
   chainId: string
@@ -62,32 +62,6 @@ export const ChainInfo: { [chainId in SupportedChainId]: Info } = {
     rpcUrl: 'https://bsc-dataseed1.binance.org',
     blockExplorerUrl: 'https://bscscan.com',
   },
-  [SupportedChainId.XDAI]: {
-    chainId: '0x64',
-    chainName: 'xDAI Chain',
-    label: 'xDAI',
-    logoUrl: xDaiLogo,
-    nativeCurrency: {
-      name: 'xDAI',
-      symbol: 'xDAI',
-      decimals: 18,
-    },
-    rpcUrl: 'https://rpc.xdaichain.com',
-    blockExplorerUrl: 'https://blockscout.com/poa/xdai',
-  },
-  [SupportedChainId.HECO]: {
-    chainId: '0x80',
-    chainName: 'Huobi ECO Chain Mainnet',
-    label: 'HECO',
-    logoUrl: HecoLogo,
-    nativeCurrency: {
-      name: 'HT',
-      symbol: 'HT',
-      decimals: 18,
-    },
-    rpcUrl: 'https://http-mainnet.hecochain.com',
-    blockExplorerUrl: 'https://hecoinfo.com',
-  },
   [SupportedChainId.POLYGON]: {
     chainId: '0x89',
     chainName: 'Matic Mainnet',
@@ -114,17 +88,43 @@ export const ChainInfo: { [chainId in SupportedChainId]: Info } = {
     rpcUrl: 'https://rpc.ftm.tools',
     blockExplorerUrl: 'https://ftmscan.com',
   },
-  // [SupportedChainId.AVALANCHE]: {
-  //   chainId: '0xa86a',
-  //   chainName: 'Avalanche Mainnet C-chain',
-  //   label: 'Avalanche',
-  //   logoUrl: AvalancheLogo,
+  // [SupportedChainId.BSC_TESTNET]: {
+  //   label: 'BTC Testnet',
+  //   chainId: '0x61',
+  //   chainName: 'Binance Smart Chain Testnet',
+  //   logoUrl: BinanceLogo,
   //   nativeCurrency: {
-  //     name: 'AVAX',
-  //     symbol: 'AVAX',
+  //     name: 'BNB',
+  //     symbol: 'BNB',
   //     decimals: 18,
   //   },
-  //   rpcUrl: 'https://api.avax.network/ext/bc/C/rpc',
-  //   blockExplorerUrl: 'https://snowtrace.io',
+  //   rpcUrl: 'https://data-seed-prebsc-1-s1.binance.org:8545',
+  //   blockExplorerUrl: 'https://testnet.bscscan.com',
   // },
+  [SupportedChainId.ARBITRUM]: {
+    label: 'Arbitrum',
+    chainId: '0xA4B1',
+    chainName: 'Arbitrum',
+    logoUrl: ArbitrumLogo,
+    nativeCurrency: {
+      name: 'ETH',
+      symbol: 'ETH',
+      decimals: 18,
+    },
+    rpcUrl: 'https://arb1.arbitrum.io/rpc',
+    blockExplorerUrl: 'https://arbiscan.io',
+  },
+  [SupportedChainId.METIS]: {
+    label: 'Metis',
+    chainId: '0x61',
+    chainName: 'Metis',
+    logoUrl: MetisLogo,
+    nativeCurrency: {
+      name: 'Metis',
+      symbol: 'Metis',
+      decimals: 18,
+    },
+    rpcUrl: '"https://andromeda.metis.io/?owner=1088',
+    blockExplorerUrl: 'https://andromeda-explorer.metis.io',
+  },
 }

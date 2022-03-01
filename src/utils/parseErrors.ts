@@ -89,3 +89,11 @@ export function MintErrorToUserReadableMessage(error: any): string {
         return `Unknown error${reason ? `: "${reason}"` : ''}. Try increasing your slippage tolerance.`
     } */
 }
+
+export function BridgeErrorToUserReadableMessage(error: any): string | null {
+  const reason = error
+  switch (reason) {
+    default:
+      return `${reason ? `${reason}` : ''}`
+  }
+}

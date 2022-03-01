@@ -99,7 +99,7 @@ function colors(darkMode: boolean): Colors {
     yellow2: '#FF8F00',
     yellow3: '#F3B71E',
     blue1: darkMode ? '#2172E5' : '#0068FC',
-    blue2: darkMode ? '#5199FF' : '#0068FC',
+    blue2: darkMode ? '#5199FF' : '#2172E5',
 
     error: darkMode ? '#FD4040' : '#DF1F38',
     success: darkMode ? '#27AE60' : '#007D35',

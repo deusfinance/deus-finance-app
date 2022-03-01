@@ -10,7 +10,8 @@ import { useProxyMinterContract, useCollateralPoolContract } from './useContract
 import { useTransactionAdder, useHasPendingMint } from 'state/transactions/hooks'
 import { useCollateralRatio } from 'state/dei/hooks'
 
-import { MINT__PATHS, Collateral } from 'constants/addresses'
+import { Collateral } from 'constants/addresses'
+import { MINT__PATHS } from 'constants/path'
 import { ORACLE_BASE_URL } from 'constants/muon'
 import { calculateGasMargin, toWei } from 'utils/web3'
 import { makeHttpRequest } from 'utils/http'

@@ -4,8 +4,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 import useWeb3React from './useWeb3'
 import { useERC20Contract } from './useContract'
 import { useBlockNumber } from 'state/application/hooks'
+import { SupportedChainId } from 'constants/chains'
 
-export default function useERC20Balance(tokenAddress: string, isToken: boolean): BigNumber {
+export default function useERC20Balance(
+  tokenAddress: string,
+  isToken: boolean,
+  tokenChainId?: SupportedChainId
+): BigNumber {
   const { chainId, account, library } = useWeb3React()
   const [balance, setBalance] = useState(BigNumber.from('0'))
   const Contract = useERC20Contract(tokenAddress)
@@ -30,8 +35,12 @@ export default function useERC20Balance(tokenAddress: string, isToken: boolean):
         setBalance(BigNumber.from('0'))
       }
     }
-    fetchBalance()
-  }, [chainId, account, library, Contract, tokenAddress, isToken, blockNumber])
+    if (tokenChainId && tokenChainId != chainId) {
+      setBalance(BigNumber.from('0'))
+    } else {
+      fetchBalance()
+    }
+  }, [chainId, account, library, Contract, tokenAddress, tokenChainId, isToken, blockNumber])
 
   return balance
 }

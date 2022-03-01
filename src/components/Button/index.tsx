@@ -8,7 +8,7 @@ export const BaseButton = styled(RebassButton)<
   {
     padding?: string
     width?: string
-    $borderRadius?: string
+    borderRadius?: string
     active?: boolean
     disabled?: boolean
   } & ButtonProps
@@ -17,7 +17,7 @@ export const BaseButton = styled(RebassButton)<
   width: ${({ width }) => width ?? '100%'};
   font-weight: 500;
   text-align: center;
-  border-radius: ${({ $borderRadius }) => $borderRadius ?? '20px'};
+  border-radius: ${({ borderRadius }) => borderRadius ?? '20px'};
   outline: none;
   border: 1px solid transparent;
   color: ${({ theme }) => theme.text1};

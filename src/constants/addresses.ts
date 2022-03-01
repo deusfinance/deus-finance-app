@@ -1,6 +1,6 @@
-import { constructSameAddressMap, AddressMap, ProxyPath } from 'utils/address'
+import { constructSameAddressMap, AddressMap } from 'utils/address'
 import { SupportedChainId } from './chains'
-import { Tokens, USDC } from './tokens'
+import { USDC } from './tokens'
 
 export const Multicall2: AddressMap = {
   [SupportedChainId.MAINNET]: '0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696',
@@ -44,41 +44,16 @@ export const MintProxy: AddressMap = {
   [SupportedChainId.FANTOM]: '0x9cB18f11DdEfbDEb8766fc52B1d7E384036eB0fc',
 }
 
-export const MINT__PATHS: ProxyPath = {
-  [SupportedChainId.MAINNET]: {
-    DEUS: [
-      Tokens.DEUS[SupportedChainId.MAINNET]['address'],
-      Tokens.DEI[SupportedChainId.MAINNET]['address'],
-      Collateral[SupportedChainId.MAINNET],
-    ],
-    ETH: [Tokens.WNATIVE[SupportedChainId.MAINNET]['address'], Collateral[SupportedChainId.MAINNET]],
-    USDC: [Collateral[SupportedChainId.MAINNET]],
-    DAI: [Tokens.DAI[SupportedChainId.MAINNET]['address'], Collateral[SupportedChainId.MAINNET]],
-    DEI: [Tokens.DEI[SupportedChainId.MAINNET]['address'], Collateral[SupportedChainId.MAINNET]],
-    WBTC: [
-      Tokens.WBTC[SupportedChainId.MAINNET]['address'],
-      Tokens.WETH[SupportedChainId.MAINNET]['address'],
-      Collateral[SupportedChainId.MAINNET],
-    ],
-  },
-
-  [SupportedChainId.POLYGON]: {
-    DEUS: [
-      Tokens.DEUS[SupportedChainId.POLYGON]['address'],
-      Tokens.DEI[SupportedChainId.POLYGON]['address'],
-      Collateral[SupportedChainId.POLYGON],
-    ],
-    DEI: [Tokens.DEI[SupportedChainId.POLYGON]['address'], Collateral[SupportedChainId.POLYGON]],
-    WETH: [Tokens.WETH[SupportedChainId.POLYGON]['address'], Collateral[SupportedChainId.POLYGON]],
-    USDC: [Collateral[SupportedChainId.POLYGON]],
-    MATIC: [Tokens.WNATIVE[SupportedChainId.POLYGON]['address'], Collateral[SupportedChainId.POLYGON]],
-  },
-
-  [SupportedChainId.FANTOM]: {
-    DEUS: [Tokens.DEUS[SupportedChainId.FANTOM]['address'], Collateral[SupportedChainId.FANTOM]],
-    DEI: [Tokens.DEI[SupportedChainId.FANTOM]['address'], Collateral[SupportedChainId.FANTOM]],
-    WETH: [Tokens.WETH[SupportedChainId.FANTOM]['address'], Collateral[SupportedChainId.FANTOM]],
-    USDC: [Collateral[SupportedChainId.FANTOM]],
-    FTM: [Tokens.WNATIVE[SupportedChainId.FANTOM]['address'], Collateral[SupportedChainId.FANTOM]],
-  },
+/* =====================================
+              BRIDGES
+===================================== */
+export const Bridge: AddressMap = {
+  [SupportedChainId.MAINNET]: '0x7aB4C5738e39E613186AFFD4c50DbfDFF6c22065',
+  [SupportedChainId.FANTOM]: '0x7aB4C5738e39E613186AFFD4c50DbfDFF6c22065',
+  [SupportedChainId.BSC]: '0x70A4c35eABFa973B27Cb3d489e154DB6d9A24ebD',
+  [SupportedChainId.POLYGON]: '0x7aB4C5738e39E613186AFFD4c50DbfDFF6c22065',
+  [SupportedChainId.METIS]: '0x7Be7EC9B8438Fbf91e3e00B02fd46cA53F9cC144',
+  [SupportedChainId.ARBITRUM]: '0x9A5d6D10F59fEe47694A154B472De5aC113C6C08',
+  // [ChainId.BSC_TESTNET]: '0x135Bd7be1c1e2162d4C8AEdD551bB1758C3AB110',
+  // [ChainId.RINKEBY]: '0x64F1CECCBbD039f70E8CB600a94429671629e418',
 }

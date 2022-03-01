@@ -5,6 +5,12 @@ import { Tokens } from './tokens'
 interface TokenMap {
   [chainId: number]: Array<IToken[]>
 }
+export interface IBridgeToken {
+  symbol: string
+  tokenId: number
+  sourceChains: SupportedChainId[]
+  destinationChains: SupportedChainId[]
+}
 
 /* =====================================
                   MINT
@@ -49,4 +55,27 @@ export const REDEEM__OUTPUTS: TokenMap = {
   [SupportedChainId.MAINNET]: [[Tokens.USDC[SupportedChainId.MAINNET], Tokens.DEUS[SupportedChainId.MAINNET]]],
   [SupportedChainId.POLYGON]: [[Tokens.USDC[SupportedChainId.POLYGON], Tokens.DEUS[SupportedChainId.POLYGON]]],
   [SupportedChainId.FANTOM]: [[Tokens.USDC[SupportedChainId.FANTOM], Tokens.DEUS[SupportedChainId.FANTOM]]],
+}
+
+/* =====================================
+                  BRIDGE
+===================================== */
+export const TokenID: { [id: string]: string } = {
+  '0': 'DEI',
+  '1': 'DEUS',
+}
+
+export const BRIDGE__TOKENS: { [symbol: string]: IBridgeToken } = {
+  [Tokens.DEI[SupportedChainId.MAINNET].symbol]: {
+    symbol: Tokens.DEI[SupportedChainId.MAINNET].symbol,
+    tokenId: 0,
+    sourceChains: [SupportedChainId.POLYGON, SupportedChainId.FANTOM, SupportedChainId.MAINNET],
+    destinationChains: [SupportedChainId.POLYGON, SupportedChainId.FANTOM, SupportedChainId.MAINNET],
+  },
+  [Tokens.DEUS[SupportedChainId.MAINNET].symbol]: {
+    symbol: Tokens.DEUS[SupportedChainId.MAINNET].symbol,
+    tokenId: 1,
+    sourceChains: [SupportedChainId.POLYGON, SupportedChainId.FANTOM, SupportedChainId.MAINNET],
+    destinationChains: [SupportedChainId.POLYGON, SupportedChainId.FANTOM, SupportedChainId.MAINNET],
+  },
 }

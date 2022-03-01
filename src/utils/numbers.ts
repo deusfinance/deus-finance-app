@@ -76,3 +76,25 @@ export function dynamicPrecision(
 
   return part.toString()
 }
+
+export const fromWei = (amount: any, decimals = 18): number | null => {
+  if (amount === 0) return 0
+  if (!amount) return null
+  const displayBalance = new BigNumber(amount).dividedBy(new BigNumber(10).pow(decimals))
+  return displayBalance.toNumber()
+}
+
+export const formatBalance = (balance: any, fixed = 5) => {
+  if (!balance) return '0'
+  BigNumber.config({ EXPONENTIAL_AT: 30 })
+  const BalanceBN = toBN(balance)
+  if (BalanceBN.isZero()) return 0
+
+  if (
+    toBN('10')
+      .pow(fixed - 1)
+      .lte(BalanceBN)
+  )
+    return BalanceBN.toFixed(0, BigNumber.ROUND_DOWN)
+  return BalanceBN.toPrecision(fixed, BigNumber.ROUND_DOWN).replace(/\.?0+$/, '')
+}

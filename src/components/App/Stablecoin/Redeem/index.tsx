@@ -5,30 +5,28 @@ import flattenDeep from 'lodash/flattenDeep'
 import useWeb3React from 'hooks/useWeb3'
 import { useAppDispatch } from 'state'
 
-import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { IToken } from 'utils/token'
 import { REDEEM__INPUTS, REDEEM__OUTPUTS } from 'constants/inputs'
-import { useDeiStatus } from 'state/dei/hooks'
-import useRedeemAmounts from 'hooks/useRedeemAmounts'
-import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
-import { Card } from 'components/Card'
-import InputBox from '../InputBox'
-import useRedeemCallback, { useCollectRedemptionCallback } from 'hooks/useRedeemCallback'
-import { PrimaryButton } from 'components/Button'
-import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
+
 import { CollateralPool } from 'constants/addresses'
 import { useWalletModalToggle } from 'state/application/hooks'
-import NetworkSelect from '../NetworkSelect'
-import TransactionSettings from 'components/TransactionSettings'
+import { useDeiStatus } from 'state/dei/hooks'
+import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { useRedeemState, useRedeemBalances, useShowClaim } from 'state/redeem/hooks'
-import DefaultConfirmation from 'components/TransactionConfirmationModal/DefaultConfirmation'
 import { setAttemptingTxn, setRedeemState, setShowReview } from 'state/redeem/reducer'
 
-const Wrapper = styled(Card)`
-  justify-content: flex-start;
-  overflow: visible;
-  box-shadow: ${({ theme }) => theme.boxShadow2};
-`
+import useRedeemAmounts from 'hooks/useRedeemAmounts'
+import useRedeemCallback, { useCollectRedemptionCallback } from 'hooks/useRedeemCallback'
+import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
+
+import { PrimaryButton } from 'components/Button'
+import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
+import DefaultConfirmation from 'components/TransactionConfirmationModal/DefaultConfirmation'
+import { DefaultWrapper as Wrapper } from 'components/App/Stablecoin'
+import NetworkSelect from 'components/App/Stablecoin/NetworkSelect'
+import InputBox from 'components/App/Stablecoin/InputBox'
+import TransactionSettings from 'components/TransactionSettings'
+import ColletRedemption from './ColletRedemption'
 
 const ToggleRow = styled.div`
   position: relative;
@@ -326,38 +324,42 @@ export default function Redeem() {
   }
 
   return (
-    <Wrapper>
-      <ToggleRow>
-        <NetworkSelect chains={DeiSupportedChains} />
-        <TransactionSettings style={{ marginLeft: '20px' }} />
-      </ToggleRow>
-      {getMainContent()}
-      <Row>
-        {getApproveButton()}
-        {getActionButton()}
-      </Row>
+    <>
+      <Wrapper>
+        <ToggleRow>
+          <NetworkSelect chains={DeiSupportedChains} />
+          <TransactionSettings style={{ marginLeft: '20px' }} />
+        </ToggleRow>
+        {getMainContent()}
+        <Row>
+          {getApproveButton()}
+          {getActionButton()}
+        </Row>
 
-      <DefaultConfirmation
-        title="Redeem DEI"
-        isOpen={showReview}
-        onDismiss={handleOnDismiss}
-        onConfirm={handleRedeem}
-        onConfirmTitle="Redeem DEI"
-        attemptingTxn={attemptingTxn}
-        errorMessage={redeemStateError}
-        txHash={txHash}
-        TokensIn={TokensIn}
-        TokensOut={TokensOut}
-        amountsIn={[amountIn]}
-        amountsOut={[amountOut1, amountOut2]}
-        summary={`Redeem `}
+        <DefaultConfirmation
+          title="Redeem DEI"
+          isOpen={showReview}
+          onDismiss={handleOnDismiss}
+          onConfirm={handleRedeem}
+          onConfirmTitle="Redeem DEI"
+          attemptingTxn={attemptingTxn}
+          errorMessage={redeemStateError}
+          txHash={txHash}
+          TokensIn={TokensIn}
+          TokensOut={TokensOut}
+          amountsIn={[amountIn]}
+          amountsOut={[amountOut1, amountOut2]}
+          summary={`Redeem `}
+        />
+      </Wrapper>
+
+      <ColletRedemption
+        collateralToken={TokenOut1}
+        deusToken={TokenOut2}
+        redeemBalances={redeemBalances}
+        showClaim={showClaim}
+        onClaim={handleCollectRedemption}
       />
-
-      {showClaim && (
-        <PrimaryButton onClick={handleCollectRedemption}>
-          Claim {redeemBalances.collateral} {TokenOut1?.symbol} & {redeemBalances.deus} {TokenOut2?.symbol}
-        </PrimaryButton>
-      )}
-    </Wrapper>
+    </>
   )
 }

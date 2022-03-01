@@ -15,7 +15,7 @@ const Wrapper = styled(Card)`
   justify-content: center;
   text-align: left;
   gap: 20px;
-  background: ${({ theme }) => theme.bg3};
+  background: ${({ theme }) => theme.bg0};
   height: 270px;
 `
 
