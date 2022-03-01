@@ -10,6 +10,9 @@ module.exports = {
       '/bridge': {
         page: '/bridge',
       },
+      '/bridge': {
+        page: '/dashboard',
+      },
     }
   },
 }
