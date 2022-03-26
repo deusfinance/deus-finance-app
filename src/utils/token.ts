@@ -1,3 +1,4 @@
+import { StaticImageData } from 'next/image'
 import { isAddress } from './address'
 import { SupportedChainId, SUPPORTED_CHAIN_IDS } from 'constants/chains'
 import { AddressMap, DecimalMap } from 'utils/address'

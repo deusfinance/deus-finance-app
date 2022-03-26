@@ -1,4 +1,5 @@
 import { AbstractConnector } from '@web3-react/abstract-connector'
+import { StaticImageData } from 'next/image'
 
 import INJECTED_ICON_URL from 'assets/img/wallets/injected.svg'
 import COINBASE_ICON_URL from 'assets/img/wallets/coinbaseWalletIcon.png'

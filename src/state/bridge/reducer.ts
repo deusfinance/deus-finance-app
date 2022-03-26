@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { SupportedChainId } from 'constants/chains'
 import { INFO_URL } from 'constants/keys'
+import { StaticImageData } from 'next/image'
 import { makeHttpRequest } from 'utils/http'
 
 export enum UnClaimBridgeState {
@@ -54,7 +55,7 @@ export const fetchUnClaimed = createAsyncThunk('bridge/fetchUnClaimed', async ({
 export const fetchCurrentBlocks = createAsyncThunk('bridge/fetchCurrentBlocks', async () => {
   const { href: url } = new URL(`bridge/currentBlocks`, INFO_URL)
   const currentBlocks = await makeHttpRequest(url)
-  return currentBlocks
+  return currentBlocks ?? []
 })
 
 export const fetchInfo = createAsyncThunk('bridge/totals', async () => {

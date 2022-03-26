@@ -2,9 +2,10 @@ import { useCallback, useMemo } from 'react'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
 import BigNumber from 'bignumber.js'
 import find from 'lodash/find'
-import toast from 'react-hot-toast'
+import { BridgeClient } from 'lib/muon'
+// import toast from 'react-hot-toast'
 
-import { MuonClient } from 'constants/muon'
+// import { MuonClient } from 'constants/muon'
 import { Bridge } from 'constants/addresses'
 import { ChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'
@@ -13,7 +14,7 @@ import { IBridgeToken, BRIDGE__TOKENS } from 'constants/inputs'
 import { dynamicPrecision } from 'utils/numbers'
 import { IToken } from 'utils/token'
 import { calculateGasMargin, toWei } from 'utils/web3'
-import { BridgeErrorToUserReadableMessage } from 'utils/parseErrors'
+// import { BridgeErrorToUserReadableMessage } from 'utils/parseErrors'
 
 import { useBridgeContract } from './useContract'
 import useWeb3React from './useWeb3'
@@ -173,17 +174,43 @@ export function useClaimCallback(): {
       console.error('No token provided')
       return
     }
-    const muonResponse = await MuonClient.app('deus_bridge')
-      .method('claim', {
-        depositAddress: Bridge[token.fromChainId],
-        depositTxId: token.txId,
-        depositNetwork: token.fromChainId,
-      })
-      .call()
-    return muonResponse
+    return BridgeClient.getClaimData(Bridge[token.fromChainId], token.txId, token.fromChainId)
   }, [])
 
   const constructCall = useCallback(
+    async (token: IClaimToken | null) => {
+      try {
+        if (!chainId || !account || !token || !Contract) {
+          throw new Error('Missing dependencies.')
+        }
+        const response = await getMuonSignatures(token)
+        if (!response) throw new Error('response is empty!')
+        if (!response.success) {
+          // toast.error(BridgeErrorToUserReadableMessage(response))
+          throw new Error(response.error)
+        }
+
+        const { reqId, txId, toChainId, fromChainId, tokenId, amount, sigs } = response.data.calldata
+        const amountBN = new BigNumber(amount).toFixed(0) //TODO : check if amount is in correct decimals base on tokenId
+        const methodName = 'claim'
+        const args: any = [account, amountBN, fromChainId, toChainId, tokenId, txId, reqId, sigs]
+        const value = 0
+
+        return {
+          address: Contract.address,
+          calldata: Contract.interface.encodeFunctionData(methodName, args) ?? '',
+          value,
+        }
+      } catch (error) {
+        return {
+          error,
+        }
+      }
+    },
+    [Contract, getMuonSignatures, chainId, account]
+  )
+
+  /*   const constructCall = useCallback(
     async (token: IClaimToken | null) => {
       try {
         if (!chainId || !account || !token || !Contract) {
@@ -221,7 +248,7 @@ export function useClaimCallback(): {
       }
     },
     [Contract, getMuonSignatures, chainId, account]
-  )
+  ) */
 
   return useMemo(() => {
     if (!account || !chainId || !library || !Contract) {

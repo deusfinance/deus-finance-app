@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 import LoaderGif from 'assets/images/fallback/loader.gif'
 import NotFound from 'assets/images/fallback/not_found.png'

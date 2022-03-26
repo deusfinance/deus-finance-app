@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 import { ChainInfo } from 'constants/chainInfo'
 import { SupportedChainId } from 'constants/chains'

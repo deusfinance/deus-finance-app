@@ -1,6 +1,6 @@
 import { useMemo, useEffect } from 'react'
 import styled from 'styled-components'
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 import Dropdown from 'components/Dropdown'
 

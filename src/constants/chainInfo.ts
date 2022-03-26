@@ -1,4 +1,5 @@
 import { SupportedChainId } from './chains'
+import { StaticImageData } from 'next/image'
 
 import MainnetLogo from 'assets/img/networks/mainnet.svg'
 import RinkebyLogo from 'assets/img/networks/mainnet.svg'

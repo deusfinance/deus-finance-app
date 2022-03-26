@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 import { IconWrapper, GreenCircle } from 'components/Icons'
 import { ExternalLink } from 'components/Link'

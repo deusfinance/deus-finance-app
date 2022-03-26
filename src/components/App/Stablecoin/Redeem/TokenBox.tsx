@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import Image from 'next/image'
+import Image, { StaticImageData } from 'next/image'
 
 import { RowBetween, RowStart } from 'components/Row'
 import { formatBalance } from 'utils/numbers'
