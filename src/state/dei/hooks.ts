@@ -54,3 +54,13 @@ export const usePoolBalance = () => {
   const { poolBalance } = useDeiState()
   return useMemo(() => poolBalance, [poolBalance])
 }
+
+export const useMintPaused = () => {
+  const { mintPaused } = useDeiState()
+  return useMemo(() => mintPaused, [mintPaused])
+}
+
+export const useRedeemPaused = () => {
+  const { redeemPaused } = useDeiState()
+  return useMemo(() => redeemPaused, [redeemPaused])
+}

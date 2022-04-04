@@ -9,7 +9,15 @@ import { setRedeemBalances, setShowClaim } from 'state/redeem/reducer'
 import { useCollateralPoolContract, useDeiContract } from 'hooks/useContract'
 
 import { useCollateralPrice } from './hooks'
-import { DeiSupportedChains, DeiStatus, Scales, NUMBER_OF_POOLS, fetchPrices } from './reducer'
+import {
+  DeiSupportedChains,
+  DeiStatus,
+  Scales,
+  NUMBER_OF_POOLS,
+  fetchPrices,
+  updateMintPaused,
+  updateRedeemPaused,
+} from './reducer'
 import {
   updateStatus,
   updateCollateralRatio,
@@ -69,6 +77,8 @@ export default function Updater(): null {
             { methodName: 'redemption_fee', callInputs: [] },
             { methodName: 'pool_ceiling', callInputs: [] },
             { methodName: 'collatDollarBalance', callInputs: [collateralPrice] },
+            { methodName: 'mintPaused', callInputs: [] },
+            { methodName: 'redeemPaused', callInputs: [] },
           ],
     [isSupported, collateralPrice]
   )
@@ -89,7 +99,7 @@ export default function Updater(): null {
 
   useEffect(() => {
     if (!collateralRatioScale || !feeScale || !poolCeilingScale || !poolBalanceScale) return
-    const [mintingFee, redemptionFee, poolCeiling, poolBalance] = poolResponse
+    const [mintingFee, redemptionFee, poolCeiling, poolBalance, mintPaused, redeemPaused] = poolResponse
 
     if (infoResponse[0]?.result) {
       const globalCollateralRatio = infoResponse[0].result[1]
@@ -102,6 +112,14 @@ export default function Updater(): null {
     if (redemptionFee?.result) {
       const result = new BN(redemptionFee.result[0].toString()).div(feeScale).toNumber()
       dispatch(updateRedemptionFee(result))
+    }
+    if (mintPaused?.result) {
+      const result = mintPaused.result[0]
+      dispatch(updateMintPaused(result))
+    }
+    if (redeemPaused?.result) {
+      const result = redeemPaused.result[0]
+      dispatch(updateRedeemPaused(result))
     }
     if (poolCeiling?.result) {
       const result = new BN(poolCeiling.result[0].toString()).div(poolCeilingScale).toNumber()

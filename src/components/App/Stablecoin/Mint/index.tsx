@@ -9,7 +9,7 @@ import useMintCallback from 'hooks/useMintCallback'
 import useMintPage from 'hooks/useMintPage'
 
 import { useWalletModalToggle } from 'state/application/hooks'
-import { useDeiStatus, useMintingFee } from 'state/dei/hooks'
+import { useDeiStatus, useMintingFee, useMintPaused } from 'state/dei/hooks'
 import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { useMintState, setMintState, setAttemptingTxn, setShowReview } from 'state/mint/reducer'
 
@@ -90,7 +90,7 @@ const TextBlock = styled.div`
 `
 
 const RowDetails = styled(RowBetween)`
-  margin-top: 0;
+  margin: 5px 0;
 `
 
 const FeeWrapper = styled.div`
@@ -119,7 +119,7 @@ export default function Mint() {
   const deiStatus = useDeiStatus()
   const mintingFee = useMintingFee()
   const mintState = useMintState()
-
+  const mintPaused = useMintPaused()
   const { isProxyMinter, attemptingTxn, showReview, error: mintStateError } = mintState
 
   const [selected, setSelected] = useState<string[]>([]) // [address1, optionalAddress2]
@@ -283,6 +283,9 @@ export default function Mint() {
     if (error) {
       return <PrimaryButton disabled>Critical Error</PrimaryButton>
     }
+    if (mintPaused) {
+      return <PrimaryButton disabled>Mint Paused</PrimaryButton>
+    }
     // TODO: do we really want this? E.g. with it users are unable to mint if tx is pending
     // if (mintCallbackState == MintCallbackState.PENDING) {
     //   return (
@@ -374,7 +377,7 @@ export default function Mint() {
             <div>Minting Fee</div>
             <div>{mintingFee}%</div>
           </FeeWrapper>
-          <MouseoverTooltipContent
+          {/* <MouseoverTooltipContent
             wrap={false}
             content={
               <ResponsiveTooltipContainer>
@@ -384,7 +387,7 @@ export default function Mint() {
             placement="right"
           >
             <DeiInfo size={'20'} />
-          </MouseoverTooltipContent>
+          </MouseoverTooltipContent> */}
         </RowDetails>
       )}
       <Row>

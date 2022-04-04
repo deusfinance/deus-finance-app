@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Redeem } from 'components/App/Stablecoin'
+import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Redeem, Statistics } from 'components/App/Stablecoin'
 import { RowCenter } from 'components/Row'
 
 const Container = styled.div`
@@ -27,7 +27,12 @@ export default function Stablecoin() {
 
   const getAppComponent = (): JSX.Element => {
     if (selected == NavigationTypes.MINT) {
-      return <Mint />
+      return (
+        <>
+          <Mint />
+          <Statistics />
+        </>
+      )
     }
     if (selected == NavigationTypes.REDEEM) {
       return <Redeem /> // TODO

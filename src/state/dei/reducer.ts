@@ -15,10 +15,8 @@ export enum DeiStatus {
 //TODO: add this info to state
 //buyBackPaused
 //buyback_fee
-//mintPaused
 //recollateralizePaused
 //recollat_fee
-//redeemPaused
 
 interface Scale {
   collateralRatio: number
@@ -61,7 +59,7 @@ export const Scales: { [chainId in SupportedChainId]?: Scale } = {
 export const NUMBER_OF_POOLS: { [chainId in SupportedChainId]?: number } = {
   [SupportedChainId.MAINNET]: 3,
   [SupportedChainId.POLYGON]: 4,
-  [SupportedChainId.FANTOM]: 6,
+  [SupportedChainId.FANTOM]: 20,
 }
 
 const initialState = {
@@ -76,6 +74,8 @@ const initialState = {
   redemptionFee: 0,
   poolBalance: 0,
   poolCeiling: 0,
+  mintPaused: false,
+  redeemPaused: false,
 }
 
 export const fetchPrices = createAsyncThunk<Prices, { chainId: number }>('dei/fetchPrices', async ({ chainId }) => {
@@ -113,6 +113,12 @@ const deiSlice = createSlice({
     updateRedemptionFee: (state, { payload }) => {
       state.redemptionFee = payload
     },
+    updateMintPaused: (state, { payload }) => {
+      state.mintPaused = payload
+    },
+    updateRedeemPaused: (state, { payload }) => {
+      state.redeemPaused = payload
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -141,5 +147,7 @@ export const {
   updatePoolCeiling,
   updateMintingFee,
   updateRedemptionFee,
+  updateMintPaused,
+  updateRedeemPaused,
 } = actions
 export default reducer

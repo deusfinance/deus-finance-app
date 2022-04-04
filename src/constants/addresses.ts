@@ -41,7 +41,20 @@ export const Collateral: AddressMap = USDC
 export const MintProxy: AddressMap = {
   [SupportedChainId.MAINNET]: '0xB095aA0A0A206ed943FAA7f5BD28A47Aaf2fEc09',
   [SupportedChainId.POLYGON]: '0x8E17742983CBa809bc554868D8a69A37e3a8a207',
-  [SupportedChainId.FANTOM]: '0x9cB18f11DdEfbDEb8766fc52B1d7E384036eB0fc',
+  [SupportedChainId.FANTOM]: '0xCaD69f845c4159ACfe2b840E5429146E11D8eB40',
+}
+
+/* =====================================
+              Old SSP (for minting DEI)
+===================================== */
+export const OldSSP: AddressMap = {
+  [SupportedChainId.FANTOM]: '0xef0b04E1ade75e27A589773f68002A7bFc5c28bD',
+}
+/* =====================================
+              SSPv4 (for minting DEI)
+===================================== */
+export const SSP: AddressMap = {
+  [SupportedChainId.FANTOM]: '0xa943C2867aF32144D7106176Fc9cf6888C279112',
 }
 
 /* =====================================

@@ -10,6 +10,8 @@ import Copy from 'components/Copy'
 import { truncateAddress } from 'utils/address'
 import { Tokens } from 'constants/tokens'
 import useWeb3React from 'hooks/useWeb3'
+import { useDeiMarketCap } from 'state/dashboard/hooks'
+import { formatAmount } from 'utils/numbers'
 
 const Wrapper = styled(Card)`
   display: flex;
@@ -93,6 +95,7 @@ const Stat = styled.div`
 
 export default function Banner() {
   const { chainId } = useWeb3React()
+  const deiMarketCap = useDeiMarketCap()
   const DEI_ADDRESS = useMemo(() => {
     const token = Tokens['DEI'][chainId ?? 1]
     return token.address
@@ -109,7 +112,7 @@ export default function Banner() {
           <Stat>
             {/* TODO: calculate total market cap */}
             <div>Total Market Cap</div>
-            <div>-</div>
+            <div>{formatAmount(deiMarketCap)} DEI</div>
           </Stat>
           <Stat>
             <div>Contract</div>

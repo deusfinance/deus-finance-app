@@ -6,7 +6,6 @@ export enum SupportedChainId {
   BSC = 56,
   POLYGON = 137,
   FANTOM = 250,
-  // BSC_TESTNET = 97,
   ARBITRUM = 42161,
   METIS = 1088,
 }
@@ -19,7 +18,6 @@ export const NETWORK_URLS = {
   [SupportedChainId.MAINNET]: `https://mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.RINKEBY]: `https://rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.BSC]: 'https://bsc-dataseed1.binance.org',
-  // [SupportedChainId.BSC_TESTNET]: 'https://data-seed-prebsc-1-s1.binance.org:8545',
   [SupportedChainId.POLYGON]: 'https://polygon-rpc.com',
   [SupportedChainId.FANTOM]: 'https://rpc.ftm.tools',
   [SupportedChainId.ARBITRUM]: 'https://arb1.arbitrum.io/rpc',
@@ -31,7 +29,6 @@ export const BridgeMinimumBlockNeed = {
   [SupportedChainId.POLYGON]: 256,
   [SupportedChainId.RINKEBY]: 24,
   [SupportedChainId.BSC]: 30,
-  // [SupportedChainId.BSC_TESTNET]: 30,
   [SupportedChainId.FANTOM]: 6,
   [SupportedChainId.METIS]: 35,
   [SupportedChainId.ARBITRUM]: 12,

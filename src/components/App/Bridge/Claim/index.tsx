@@ -17,7 +17,7 @@ const ActionWrap = styled(Card)`
   padding: 0;
   max-height: 100%;
   box-shadow: ${({ theme }) => theme.boxShadow2};
-  background-color: ${({ theme }) => theme.bg3};
+  background-color: ${({ theme }) => theme.bg1};
   border: 1px solid ${({ theme }) => theme.border2};
   max-width: 320px;
   width: 320px;
@@ -69,7 +69,7 @@ const EmptyToken = styled.p`
   margin-top: 0.75rem;
   font-size: 14px;
   text-align: center;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text4};
 `
 
 const getInfoComponent = (): JSX.Element => {
@@ -123,7 +123,7 @@ export default function BridgeClaim() {
       {!unClaimed || unClaimed.length == 0 ? (
         <ClaimBox style={{ justifyContent: 'center' }}>
           <Image src={CLAIM_LOGO} alt="claim" />
-          <EmptyToken>No Token to claim</EmptyToken>
+          <EmptyToken> - nothing to claim -</EmptyToken>
         </ClaimBox>
       ) : (
         <ClaimBox>

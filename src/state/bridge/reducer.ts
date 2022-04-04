@@ -49,7 +49,7 @@ export const fetchUnClaimed = createAsyncThunk('bridge/fetchUnClaimed', async ({
 
   // Destruct the response directly so if these params don't exist it will throw an error.
   const unClaimed = await makeHttpRequest(url)
-  return unClaimed
+  return unClaimed ?? []
 })
 
 export const fetchCurrentBlocks = createAsyncThunk('bridge/fetchCurrentBlocks', async () => {

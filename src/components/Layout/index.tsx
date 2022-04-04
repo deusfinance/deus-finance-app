@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import NavBar from './NavBar'
+import NavBar from './NavBar2'
 
 const Wrapper = styled.div`
   display: flex;

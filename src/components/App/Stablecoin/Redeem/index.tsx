@@ -10,7 +10,7 @@ import { REDEEM__INPUTS, REDEEM__OUTPUTS } from 'constants/inputs'
 
 import { CollateralPool } from 'constants/addresses'
 import { useWalletModalToggle } from 'state/application/hooks'
-import { useDeiStatus } from 'state/dei/hooks'
+import { useDeiStatus, useRedeemPaused } from 'state/dei/hooks'
 import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { useRedeemState, useRedeemBalances, useShowClaim } from 'state/redeem/hooks'
 import { setAttemptingTxn, setRedeemState, setShowReview } from 'state/redeem/reducer'
@@ -106,6 +106,7 @@ export default function Redeem() {
   const { attemptingTxn, showReview, error: redeemStateError } = redeemState
   const redeemBalances = useRedeemBalances()
   const showClaim = useShowClaim()
+  const redeemPaused = useRedeemPaused()
 
   const [selected, setSelected] = useState<string[]>([]) // [address1, optionalAddress2]
   const [insufficientBalance1, setInsufficientBalance1] = useState<boolean>(false)
@@ -257,6 +258,9 @@ export default function Redeem() {
     }
     if (error) {
       return <PrimaryButton disabled>Critical Error</PrimaryButton>
+    }
+    if (redeemPaused) {
+      return <PrimaryButton disabled>Redeem Paused</PrimaryButton>
     }
 
     if (insufficientBalance1) {

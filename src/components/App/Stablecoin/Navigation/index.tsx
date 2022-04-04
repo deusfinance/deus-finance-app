@@ -1,17 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Row } from 'components/Row'
 
-const Wrapper = styled(Row)`
-  height: 34px;
-  border: 1px solid ${({ theme }) => theme.bg2};
-  background-color: ${({ theme }) => theme.bg0};
-  border-radius: 12px;
-  width: fit-content;
-  margin: auto;
-  margin-top: 21px;
-  margin-bottom: 7px;
-  padding: 0 5px;
+const Wrapper = styled.div`
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  gap: 20px;
+  margin-left: 30px;
 `
 
 const Item = styled.div<{
@@ -19,16 +14,9 @@ const Item = styled.div<{
 }>`
   font-size: 15px;
   transition: all 0.3s ease;
+  border-bottom: 1px solid ${({ selected, theme }) => (selected ? theme.text1 : 'transparent')};
   color: ${({ selected, theme }) => (selected ? theme.text1 : theme.text3)};
-  background-color: ${({ selected, theme }) => (selected ? theme.secondary2 : 'transparent')};
-  overflow: hidden;
-  outline: none;
-  white-space: nowrap;
-  border-radius: 8px;
-  padding: 4px 8px;
-  &:hover,
-  :focus {
-    color: ${({ theme }) => theme.text1};
+  &:hover {
     cursor: pointer;
   }
 `
@@ -36,15 +24,11 @@ const Item = styled.div<{
 export enum NavigationTypes {
   MINT = 'MINT',
   REDEEM = 'REDEEM',
-  // ZAP = 'ZAP',
-  // FARMS = 'FARMS',
 }
 
 const NavigationLabels = {
   [NavigationTypes.MINT]: 'Mint',
   [NavigationTypes.REDEEM]: 'Redeem',
-  // [NavigationTypes.ZAP]: 'Zap',
-  // [NavigationTypes.FARMS]: 'Farms',
 }
 
 export default function Navigation({
