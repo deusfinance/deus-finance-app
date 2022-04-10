@@ -2,36 +2,29 @@ import React from 'react'
 import styled from 'styled-components'
 import { Label } from './Option'
 import Metric from './Metric'
+import Image from 'next/image'
+import CUBE_ICON_URL from 'assets/img/dashboard/cube.svg'
+import SPIRIT_ICON_URL from 'assets/img/dashboard/spirit.svg'
+import GetMetricsButton from './GetMetricsButton'
 
 const Wrap = styled.div`
-  margin-top: 10px;
+  margin-top: 20px;
   background: ${({ theme }) => theme.bg0};
+  width: 100%;
 `
 
 const CenterLabel = styled(Label)`
   text-align: center;
-`
-
-const BuyButton = styled.button`
-  height: 43px;
-  width: 126px;
-  border-radius: 100px;
-  border: 2px solid;
-  text-align: center;
-  margin-left: 10px;
-`
-
-const ViewButton = styled(BuyButton)`
-  height: 43px;
-  width: 165px;
-  align: right;
-  margin-left: 0px;
-  margin-right: 10px;
+  margin-top: 20px;
 `
 
 const ButtonsDiv = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+`
+
+const Value = styled.p`
+  color: rgba(3, 158, 241, 1);
 `
 
 export default function Metrics({
@@ -47,9 +40,20 @@ export default function Metrics({
       {metrics.map((metric, index) => {
         return <Metric key={index} label={metric.label} value={metric.value} />
       })}
+
       <ButtonsDiv>
-        <BuyButton>Buy {label}</BuyButton>
-        <ViewButton>View</ViewButton>
+        {GetMetricsButton(
+          <>
+            <Image src={SPIRIT_ICON_URL} alt={`${label} logo`} />
+            <Value>BUY {label}</Value>
+          </>
+        )}
+        {GetMetricsButton(
+          <>
+            <Image src={CUBE_ICON_URL} alt={`${label} logo`} />
+            <Value>VIEW FTMScan</Value>
+          </>
+        )}
       </ButtonsDiv>
     </Wrap>
   )

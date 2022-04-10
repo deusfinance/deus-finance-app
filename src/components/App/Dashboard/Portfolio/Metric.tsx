@@ -1,26 +1,22 @@
+import { RowBetween } from 'components/Row'
 import React from 'react'
 import styled from 'styled-components'
 
-export const Wrap = styled.div`
-  display: flex;
-  flex-flow: column nowrap;
+export const Wrap = styled(RowBetween)`
   text-align: left;
-  column-gap: 5px;
 `
 export const Label = styled.p`
-  font-weight: bold;
-  font-size: 22px;
+  font-size: 18px;
   text-aligh: left;
-  margin-left: 30px;
+  font-weight: bold;
+  margin: 10px 0px 0px 30px;
   color: ${({ theme }) => theme.text1};
 `
 export const Value = styled.p`
   font-size: 18px;
-  font-weight: bold;
-  line-height: 18px;
-  margin-top: 9px;
-  margin-right: 50px;
   text-align: right;
+  font-weight: bold;
+  margin: 10px 30px 0px 0px;
   color: ${({ theme }) => theme.text1};
 `
 
