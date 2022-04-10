@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { Banner, Navigation, NavigationTypes, Mint, ComingSoon, Redeem, Statistics } from 'components/App/Stablecoin'
+import { Banner, ComingSoon, Mint, Navigation, NavigationTypes, Redeem, Statistics } from 'components/App/Stablecoin'
 import { RowCenter } from 'components/Row'
 
 const Container = styled.div`
@@ -18,6 +18,9 @@ const Container = styled.div`
   `};
 `
 const Row = styled(RowCenter)`
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    flex-wrap: wrap;
+  `};
   align-items: flex-start;
   gap: 20px;
 `
