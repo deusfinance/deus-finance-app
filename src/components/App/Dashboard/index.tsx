@@ -10,6 +10,7 @@ import FRONTENDS_ICON_URL from 'assets/img/dashboard/frontends.svg'
 import MIGRATOR_ICON_URL from 'assets/img/dashboard/migrator.svg'
 import STABLECOIN_ICON_URL from 'assets/img/dashboard/stablecoin.svg'
 import SWAP_ICON_URL from 'assets/img/dashboard/swap.svg'
+import { RowCenter } from 'components/Row'
 
 export const Wrap = styled.div`
   width: 100%;
@@ -19,23 +20,19 @@ export const Wrap = styled.div`
 `
 
 const BottomDiv = styled.div`
-  width: 100%;
-  // max-width: 1075px;
   flex-wrap: wrap;
   display: flex;
   justify-content: center;
 `
 
-const ButtonsBar = styled.div`
-  display: flex;
-  justify-content: center;
+const ButtonsBar = styled(RowCenter)`
   flex-wrap: wrap;
   width: 100%;
-  max-width: 1075px;
+  margin: auto;
 `
 
 const MetricsDiv = styled.div`
-  flex-grow: 3;
+  flex-grow: 2;
   flex-wrap: wrap;
   & > * {
     &:last-child {
