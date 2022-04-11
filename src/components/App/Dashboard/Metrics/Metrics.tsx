@@ -1,0 +1,116 @@
+import React from 'react'
+import styled from 'styled-components'
+import Image from 'next/image'
+
+import Metric from './Metric'
+import { Label } from '../Portfolio/Option'
+import GetMetricsButton from './GetMetricsButton'
+import { useDeiMarketCap, useDeusPrice } from 'state/dashboard/hooks'
+
+import CUBE_ICON_URL from 'assets/img/dashboard/cube.svg'
+import SPIRIT_ICON_URL from 'assets/img/dashboard/spirit.svg'
+
+const Wrap = styled.div`
+  margin-top: 20px;
+  background: ${({ theme }) => theme.bg0};
+  width: 100%;
+`
+
+const CenterLabel = styled(Label)`
+  text-align: center;
+  margin-top: 20px;
+`
+
+const ButtonsDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+const Value = styled.p`
+  color: rgba(3, 158, 241, 1);
+`
+
+function MakeMetrics({ label, metrics }: { label: string; metrics: Array<{ label: string; value: string }> }) {
+  return (
+    <Wrap>
+      <CenterLabel>{label} Metrics</CenterLabel>
+      {metrics.map((metric, index) => {
+        return <Metric key={index} label={metric.label} value={metric.value} />
+      })}
+
+      <ButtonsDiv>
+        {GetMetricsButton(
+          <>
+            <Image src={SPIRIT_ICON_URL} alt={`${label} logo`} />
+            <Value>BUY {label}</Value>
+          </>
+        )}
+        {GetMetricsButton(
+          <>
+            <Image src={CUBE_ICON_URL} alt={`${label} logo`} />
+            <Value>VIEW FTMScan</Value>
+          </>
+        )}
+      </ButtonsDiv>
+    </Wrap>
+  )
+}
+
+export default function Metrics() {
+  const { deusMarketCap, deusTotalSupply, deusFullyDilutedValuation, deusEmissions, deusBurnedEvents } = useDeusPrice()
+  const { deiMarketCap, deiTotalSupply, deiDexLiquidity, mintedDei, stakedDeiLiquidity } = useDeiMarketCap()
+
+  const metrics = {
+    DEUS: [
+      {
+        label: 'marketcap',
+        value: `$ ${deusMarketCap}`,
+      },
+      {
+        label: 'total supply',
+        value: `${deusTotalSupply} DEUS`,
+      },
+      {
+        label: 'fully diluted Marketcap',
+        value: `$ ${deusFullyDilutedValuation}`,
+      },
+      {
+        label: 'emission per day',
+        value: `$ ${deusEmissions}`,
+      },
+      {
+        label: 'burnt last week',
+        value: `$ ${deusBurnedEvents}`,
+      },
+    ],
+    DEI: [
+      {
+        label: 'marketcap',
+        value: `$ ${deiMarketCap}`,
+      },
+      {
+        label: 'total supply',
+        value: `${deiTotalSupply} DEI`,
+      },
+      {
+        label: 'staked DEI liquidity',
+        value: `${stakedDeiLiquidity}`,
+      },
+      {
+        label: 'dex liquidity',
+        value: `$ ${deiDexLiquidity}`,
+      },
+      {
+        label: 'minted DEI',
+        value: `${mintedDei}`,
+      },
+    ],
+  }
+  return (
+    <>
+      {Object.entries(metrics).map((metric, index) => {
+        return <MakeMetrics key={index} label={metric[0]} metrics={metric[1]} />
+      })}
+    </>
+  )
+}

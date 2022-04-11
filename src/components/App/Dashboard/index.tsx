@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import Portfolio, { PortfolioProps } from './Portfolio'
-import Metrics from './Portfolio/Metrics'
-import { TwitterTimelineEmbed } from 'react-twitter-embed'
 
-import { useDeiMarketCap, useDeusPrice } from 'state/dashboard/hooks'
 import Dashbar from './Dashbar'
+import Metrics from './Metrics/Metrics'
+import { useDeusPrice } from 'state/dashboard/hooks'
+import Portfolio, { PortfolioProps } from './Portfolio'
+import { TwitterTimelineEmbed } from 'react-twitter-embed'
 
 export const Wrap = styled.div`
   width: 100%;
@@ -33,17 +33,8 @@ const Twitter = styled.div`
 `
 
 export default function Dashboard() {
-  const {
-    deusPrice,
-    deusMarketCap,
-    deusTotalSupply,
-    deusFullyDilutedValuation,
-    deusEmissions,
-    deusBurnedEvents,
-    deusDexLiquidity,
-    stakedDeusLiquidity,
-  } = useDeusPrice()
-  const { deiMarketCap, deiTotalSupply, deiDexLiquidity, mintedDei, stakedDeiLiquidity } = useDeiMarketCap()
+  const { deusDexLiquidity, stakedDeusLiquidity } = useDeusPrice()
+
   const options = [
     {
       label: 'DEUS Price',
@@ -79,66 +70,14 @@ export default function Dashboard() {
     } as PortfolioProps,
   ]
 
-  const metrics = {
-    DEUS: [
-      {
-        label: 'marketcap',
-        value: `$ ${deusMarketCap}`,
-      },
-      {
-        label: 'total supply',
-        value: `${deusTotalSupply} DEUS`,
-      },
-      {
-        label: 'fully diluted Marketcap',
-        value: `$ ${deusFullyDilutedValuation}`,
-      },
-      {
-        label: 'emission per day',
-        value: `$ ${deusEmissions}`,
-      },
-      {
-        label: 'burnt last week',
-        value: `$ ${deusBurnedEvents}`,
-      },
-    ],
-    DEI: [
-      {
-        label: 'marketcap',
-        value: `$ ${deiMarketCap}`,
-      },
-      {
-        label: 'total supply',
-        value: `${deiTotalSupply} DEI`,
-      },
-      {
-        label: 'staked DEI liquidity',
-        value: `${stakedDeiLiquidity}`,
-      },
-      {
-        label: 'dex liquidity',
-        value: `$ ${deiDexLiquidity}`,
-      },
-      {
-        label: 'minted DEI',
-        value: `${mintedDei}`,
-      },
-    ],
-  }
-
   return (
     <Wrap>
       <Portfolio options={options} />
-
       <Dashbar />
-
       <InfoWrapper>
         <InfoItem>
           <Portfolio options={liquidityOptions} />
-
-          {Object.entries(metrics).map((metric, index) => {
-            return <Metrics key={index} label={metric[0]} metrics={metric[1]} />
-          })}
+          <Metrics />
         </InfoItem>
         <Twitter>
           <TwitterTimelineEmbed
