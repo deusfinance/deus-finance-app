@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Metric from './Metric'
 import { Label } from '../Portfolio/Option'
 import GetMetricsButton from './GetMetricsButton'
+import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import { useDeiMarketCap, useDeusPrice } from 'state/dashboard/hooks'
 
 import CUBE_ICON_URL from 'assets/img/dashboard/cube.svg'
@@ -14,12 +15,12 @@ const Wrap = styled.div`
   margin-top: 20px;
   background: ${({ theme }) => theme.bg0};
   width: 100%;
-  border-radius: 10px;
+  border-radius: 20px;
 `
 
 const CenterLabel = styled(Label)`
   text-align: center;
-  margin-top: 20px;
+  padding: 10px;
 `
 
 const ButtonsDiv = styled.div`
@@ -65,45 +66,45 @@ export default function Metrics() {
     DEUS: [
       {
         label: 'marketcap',
-        value: `$ ${deusMarketCap}`,
+        value: `${formatDollarAmount(deusMarketCap)}`,
       },
       {
         label: 'total supply',
-        value: `${deusTotalSupply} DEUS`,
+        value: `${formatAmount(deusTotalSupply)} DEUS`,
       },
       {
         label: 'fully diluted Marketcap',
-        value: `$ ${deusFullyDilutedValuation}`,
+        value: `${formatDollarAmount(deusFullyDilutedValuation)}`,
       },
       {
         label: 'emission per day',
-        value: `$ ${deusEmissions}`,
+        value: `${formatAmount(deusEmissions)}`,
       },
       {
         label: 'burnt last week',
-        value: `$ ${deusBurnedEvents}`,
+        value: `${formatAmount(deusBurnedEvents)}`,
       },
     ],
     DEI: [
       {
         label: 'marketcap',
-        value: `$ ${deiMarketCap}`,
+        value: `${formatDollarAmount(deiMarketCap)}`,
       },
       {
         label: 'total supply',
-        value: `${deiTotalSupply} DEI`,
+        value: `${formatAmount(deiTotalSupply)} DEI`,
       },
       {
         label: 'staked DEI liquidity',
-        value: `${stakedDeiLiquidity}`,
+        value: `${formatDollarAmount(stakedDeiLiquidity)}`,
       },
       {
         label: 'dex liquidity',
-        value: `$ ${deiDexLiquidity}`,
+        value: `${formatDollarAmount(deiDexLiquidity)}`,
       },
       {
         label: 'minted DEI',
-        value: `${mintedDei}`,
+        value: `${formatDollarAmount(mintedDei)}`,
       },
     ],
   }
