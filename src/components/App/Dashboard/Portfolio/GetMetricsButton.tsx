@@ -7,7 +7,7 @@ const MetricsButton = styled(RowBetween)`
   background: black;
   height: 100%;
   width: unset;
-  padding: 7px;
+  padding: 15px 15px 15px 8px;
   & > * {
     &:last-child {
       margin-left: 10px;
