@@ -2,15 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import Portfolio, { PortfolioProps } from './Portfolio'
 import Metrics from './Portfolio/Metrics'
-import Button from './Portfolio/Button'
 import { TwitterTimelineEmbed } from 'react-twitter-embed'
-import BRIDGE_ICON_URL from 'assets/img/dashboard/bridge.svg'
-import FARMS_ICON_URL from 'assets/img/dashboard/farms.svg'
-import FRONTENDS_ICON_URL from 'assets/img/dashboard/frontends.svg'
-import MIGRATOR_ICON_URL from 'assets/img/dashboard/migrator.svg'
-import STABLECOIN_ICON_URL from 'assets/img/dashboard/stablecoin.svg'
-import SWAP_ICON_URL from 'assets/img/dashboard/swap.svg'
-import { RowCenter } from 'components/Row'
+
+import { useDeiMarketCap, useDeusPrice } from 'state/dashboard/hooks'
+import Dashbar from './Dashbar'
 
 export const Wrap = styled.div`
   width: 100%;
@@ -19,62 +14,68 @@ export const Wrap = styled.div`
   margin-top: 75px;
 `
 
-const BottomDiv = styled.div`
+const InfoWrapper = styled.div`
   flex-wrap: wrap;
   display: flex;
   justify-content: center;
 `
 
-const ButtonsBar = styled(RowCenter)`
-  flex-wrap: wrap;
-  width: 100%;
-  margin: auto;
-`
-
-const MetricsDiv = styled.div`
+const InfoItem = styled.div`
   flex-grow: 2;
   flex-wrap: wrap;
-  & > * {
-    &:last-child {
-      margin-left: 18px;
-      flex-grow: 1;
-      flex-wrap: wrap;
-    }
-  }
+`
+
+const Twitter = styled.div`
+  border: 1px solid #14181e;
+  border-radius: 10px;
+  flex-grow: 1;
+  margin-left: 18px;
 `
 
 export default function Dashboard() {
+  const {
+    deusPrice,
+    deusMarketCap,
+    deusTotalSupply,
+    deusFullyDilutedValuation,
+    deusEmissions,
+    deusBurnedEvents,
+    deusDexLiquidity,
+    stakedDeusLiquidity,
+  } = useDeusPrice()
+  const { deiMarketCap, deiTotalSupply, deiDexLiquidity, mintedDei, stakedDeiLiquidity } = useDeiMarketCap()
   const options = [
     {
       label: 'DEUS Price',
-      value: '$30',
+      value: '$',
     } as PortfolioProps,
     {
       label: 'Portfolio Value',
-      value: '$12,000',
+      value: '$',
     } as PortfolioProps,
     {
       label: 'DEUS in Wallet',
-      value: '12.56',
+      value: '0',
     } as PortfolioProps,
     {
       label: 'DEI in Wallet',
-      value: '89.56',
+      value: '0',
     } as PortfolioProps,
   ]
 
   const liquidityOptions = [
-    {
-      label: 'Total Value Locked',
-      value: '$440,89,456',
-    } as PortfolioProps,
+    // TODO: get TVL from defi llama
+    // {
+    //   label: 'Total Value Locked',
+    //   value: '$',
+    // } as PortfolioProps,
     {
       label: 'Liquidity on DEXs',
-      value: '$440,89,456',
+      value: `$ ${deusDexLiquidity}`,
     } as PortfolioProps,
     {
       label: 'Staked Assets',
-      value: '$440,89,456',
+      value: `$ ${stakedDeusLiquidity}`,
     } as PortfolioProps,
   ]
 
@@ -82,81 +83,73 @@ export default function Dashboard() {
     DEUS: [
       {
         label: 'marketcap',
-        value: '$440,89,456',
+        value: `$ ${deusMarketCap}`,
       },
       {
         label: 'total supply',
-        value: '300,000 DEUS',
+        value: `${deusTotalSupply} DEUS`,
       },
       {
         label: 'fully diluted Marketcap',
-        value: '$15,043,300',
+        value: `$ ${deusFullyDilutedValuation}`,
       },
       {
         label: 'emission per day',
-        value: '$300,000',
+        value: `$ ${deusEmissions}`,
       },
       {
         label: 'burnt last week',
-        value: '$300,000',
+        value: `$ ${deusBurnedEvents}`,
       },
     ],
     DEI: [
       {
         label: 'marketcap',
-        value: '$440,89,456',
+        value: `$ ${deiMarketCap}`,
       },
       {
         label: 'total supply',
-        value: '300,000 DEUS',
+        value: `${deiTotalSupply} DEI`,
       },
       {
-        label: 'fully diluted Marketcap',
-        value: '$15,043,300',
+        label: 'staked DEI liquidity',
+        value: `${stakedDeiLiquidity}`,
       },
       {
-        label: 'emission per day',
-        value: '$300,000',
+        label: 'dex liquidity',
+        value: `$ ${deiDexLiquidity}`,
       },
       {
-        label: 'burnt last week',
-        value: '$300,000',
+        label: 'minted DEI',
+        value: `${mintedDei}`,
       },
     ],
   }
 
-  const buttons = [
-    { img: STABLECOIN_ICON_URL, label: 'Stablecoin' },
-    { img: BRIDGE_ICON_URL, label: 'Bridge' },
-    { img: FRONTENDS_ICON_URL, label: 'Frontends' },
-    { img: MIGRATOR_ICON_URL, label: 'Migrator' },
-    { img: SWAP_ICON_URL, label: 'Swap' },
-    { img: FARMS_ICON_URL, label: 'Farms' },
-  ]
-
   return (
-    <>
-      <Wrap>
-        <Portfolio options={options} />
+    <Wrap>
+      <Portfolio options={options} />
 
-        <ButtonsBar>
-          {buttons.map((button, index) => {
-            return <Button key={index} icon={button.img} label={button.label} />
+      <Dashbar />
+
+      <InfoWrapper>
+        <InfoItem>
+          <Portfolio options={liquidityOptions} />
+
+          {Object.entries(metrics).map((metric, index) => {
+            return <Metrics key={index} label={metric[0]} metrics={metric[1]} />
           })}
-        </ButtonsBar>
-
-        <BottomDiv>
-          <MetricsDiv>
-            <Portfolio options={liquidityOptions} />
-            {Object.entries(metrics).map((metric) => {
-              return <Metrics label={metric[0]} metrics={metric[1]} />
-            })}
-          </MetricsDiv>
-          <MetricsDiv>
-            <TwitterTimelineEmbed sourceType="profile" screenName="DeusDao" options={{ height: 652 }} theme="dark" />
-          </MetricsDiv>
-        </BottomDiv>
-      </Wrap>
-    </>
+        </InfoItem>
+        <Twitter>
+          <TwitterTimelineEmbed
+            sourceType="profile"
+            screenName="DeusDao"
+            options={{ height: 652 }}
+            transparent
+            slug="breakingnews"
+          />
+        </Twitter>
+      </InfoWrapper>
+    </Wrap>
   )
 }
