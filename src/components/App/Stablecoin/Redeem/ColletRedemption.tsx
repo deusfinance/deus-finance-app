@@ -15,10 +15,14 @@ const ActionWrap = styled(Card)`
   box-shadow: ${({ theme }) => theme.boxShadow2};
   background-color: ${({ theme }) => theme.bg0};
   min-height: 250px;
-  min-width: 300px;
-  width: 100%;
-  max-width: 600px;
-  margin: auto;
+  width: 233px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+      min-width: 300px;
+      max-width: 600px;
+      width: 100%;
+      margin: auto;
+  `};
 `
 const Title = styled.div`
   color: ${({ theme }) => theme.text2};

@@ -27,7 +27,10 @@ import NetworkSelect from 'components/App/Stablecoin/NetworkSelect'
 import InputBox from 'components/App/Stablecoin/InputBox'
 import TransactionSettings from 'components/TransactionSettings'
 import ColletRedemption from './ColletRedemption'
-import ReedemStateSwitch, { ReedemSwitchValues } from 'components/App/Stablecoin/Navigation/ReedemStateSwitch'
+import ReedemStateSwitch, { ReedemSwitchValues } from 'components/App/Stablecoin/Redeem/ReedemStateSwitch'
+import { useMediaQuery } from 'react-responsive'
+import { MEDIA_WIDTHS } from 'theme'
+import { StableCoinRow } from '../StableCoinRow'
 
 const ToggleRow = styled.div`
   position: relative;
@@ -61,7 +64,10 @@ const BoxesRow = styled(Row)`
 `
 
 const RedeemBodyWrapper = styled(Wrapper)`
-  margin: auto;
+  margin: 0;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: auto;
+  `};
 `
 
 const ArrowWrapper = styled(IconWrapper)`
@@ -307,31 +313,29 @@ export default function Redeem() {
     }
 
     return (
-      <>
-        <BoxesRow style={{ gap: '6px' }}>
-          <InputBox
-            options={inputOptions}
-            selected={[TokenIn?.address ?? '']}
-            setSelected={(addresses: string[]) => setSelected(addresses)}
-            amount1={amountIn}
-            setAmount1={onUserInput}
-            setInsufficientBalance1={setInsufficientBalance1}
-            disabled={loading}
-          />
-          <ArrowWrapper size={'30px'} style={{ alignSelf: 'center' }}>
-            <ArrowBubble size={30} />
-          </ArrowWrapper>
-          <InputBox
-            options={outputOptions}
-            selected={selected}
-            amount1={amountOut1}
-            amount2={amountOut2}
-            setAmount1={onUserOutput1}
-            setAmount2={onUserOutput2}
-            disabled={loading}
-          />
-        </BoxesRow>
-      </>
+      <BoxesRow style={{ gap: '6px' }}>
+        <InputBox
+          options={inputOptions}
+          selected={[TokenIn?.address ?? '']}
+          setSelected={(addresses: string[]) => setSelected(addresses)}
+          amount1={amountIn}
+          setAmount1={onUserInput}
+          setInsufficientBalance1={setInsufficientBalance1}
+          disabled={loading}
+        />
+        <ArrowWrapper size={'30px'} style={{ alignSelf: 'center' }}>
+          <ArrowBubble size={30} />
+        </ArrowWrapper>
+        <InputBox
+          options={outputOptions}
+          selected={selected}
+          amount1={amountOut1}
+          amount2={amountOut2}
+          setAmount1={onUserOutput1}
+          setAmount2={onUserOutput2}
+          disabled={loading}
+        />
+      </BoxesRow>
     )
   }
 
@@ -369,12 +373,29 @@ export default function Redeem() {
     )
   }
 
-  return (
-    <>
-      <ReedemStateSwitch selected={redeemSwitchState} setSelected={setRedeemSwitchState} showClaim={showClaim} />
-      {redeemSwitchState === ReedemSwitchValues.REDEEM ? (
-        getRedeemBodyComponent()
-      ) : (
+  function getRedeemMobileComponent() {
+    return (
+      <>
+        <ReedemStateSwitch selected={redeemSwitchState} setSelected={setRedeemSwitchState} showClaim={showClaim} />
+        {redeemSwitchState === ReedemSwitchValues.REDEEM ? (
+          getRedeemBodyComponent()
+        ) : (
+          <ColletRedemption
+            collateralToken={TokenOut1}
+            deusToken={TokenOut2}
+            redeemBalances={redeemBalances}
+            showClaim={showClaim}
+            onClaim={handleCollectRedemption}
+          />
+        )}
+      </>
+    )
+  }
+
+  function getRedeemDesktopComponent() {
+    return (
+      <StableCoinRow>
+        {getRedeemBodyComponent()}
         <ColletRedemption
           collateralToken={TokenOut1}
           deusToken={TokenOut2}
@@ -382,7 +403,11 @@ export default function Redeem() {
           showClaim={showClaim}
           onClaim={handleCollectRedemption}
         />
-      )}
-    </>
-  )
+      </StableCoinRow>
+    )
+  }
+
+  const upToMedium = useMediaQuery({ query: `(max-width: ${MEDIA_WIDTHS.upToMedium}px)` })
+
+  return upToMedium ? getRedeemMobileComponent() : getRedeemDesktopComponent()
 }

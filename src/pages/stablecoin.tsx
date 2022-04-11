@@ -1,8 +1,16 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 
-import { Banner, ComingSoon, Mint, Navigation, NavigationTypes, Redeem, Statistics } from 'components/App/Stablecoin'
-import { RowCenter } from 'components/Row'
+import {
+  Banner,
+  ComingSoon,
+  Mint,
+  Navigation,
+  NavigationTypes,
+  Redeem,
+  StableCoinRow as Row,
+  Statistics,
+} from 'components/App/Stablecoin'
 
 const Container = styled.div`
   display: flex;
@@ -16,13 +24,6 @@ const Container = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-top: 30px;
   `};
-`
-const Row = styled(RowCenter)`
-  ${({ theme }) => theme.mediaWidth.upToMedium`
-    flex-wrap: wrap;
-  `};
-  align-items: flex-start;
-  gap: 20px;
 `
 
 export default function Stablecoin() {
