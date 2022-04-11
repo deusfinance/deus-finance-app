@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import find from 'lodash/find'
 import flattenDeep from 'lodash/flattenDeep'
@@ -12,7 +12,7 @@ import { CollateralPool } from 'constants/addresses'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useDeiStatus, useRedeemPaused } from 'state/dei/hooks'
 import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
-import { useRedeemState, useRedeemBalances, useShowClaim } from 'state/redeem/hooks'
+import { useRedeemBalances, useRedeemState, useShowClaim } from 'state/redeem/hooks'
 import { setAttemptingTxn, setRedeemState, setShowReview } from 'state/redeem/reducer'
 
 import useRedeemAmounts from 'hooks/useRedeemAmounts'
@@ -22,11 +22,12 @@ import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
 import { PrimaryButton } from 'components/Button'
 import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
 import DefaultConfirmation from 'components/TransactionConfirmationModal/DefaultConfirmation'
-import { DefaultWrapper as Wrapper } from 'components/App/Stablecoin'
+import { DefaultWrapper as Wrapper } from '../DefaultWrapper'
 import NetworkSelect from 'components/App/Stablecoin/NetworkSelect'
 import InputBox from 'components/App/Stablecoin/InputBox'
 import TransactionSettings from 'components/TransactionSettings'
 import ColletRedemption from './ColletRedemption'
+import ReedemStateSwitch, { ReedemSwitchValues } from 'components/App/Stablecoin/Navigation/ReedemStateSwitch'
 
 const ToggleRow = styled.div`
   position: relative;
@@ -59,6 +60,10 @@ const BoxesRow = styled(Row)`
   `};
 `
 
+const RedeemBodyWrapper = styled(Wrapper)`
+  margin: auto;
+`
+
 const ArrowWrapper = styled(IconWrapper)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     transform: rotate(90deg);
@@ -82,9 +87,11 @@ const FeeWrapper = styled.div`
   justify-content: space-between;
   margin-top: 10px;
   padding: 0px 10px;
+
   & > * {
     font-size: 0.8rem;
     color: ${({ theme }) => theme.text2};
+
     &:first-child {
       color: ${({ theme }) => theme.text3};
     }
@@ -288,6 +295,7 @@ export default function Redeem() {
       </PrimaryButton>
     )
   }
+
   const TokensIn = []
   if (TokenIn) TokensIn.push(TokenIn)
   const TokensOut = []
@@ -327,9 +335,11 @@ export default function Redeem() {
     )
   }
 
-  return (
-    <>
-      <Wrapper>
+  const [redeemSwitchState, setRedeemSwitchState] = useState<ReedemSwitchValues>(ReedemSwitchValues.REDEEM)
+
+  function getRedeemBodyComponent() {
+    return (
+      <RedeemBodyWrapper>
         <ToggleRow>
           <NetworkSelect chains={DeiSupportedChains} />
           <TransactionSettings style={{ marginLeft: '20px' }} />
@@ -355,15 +365,24 @@ export default function Redeem() {
           amountsOut={[amountOut1, amountOut2]}
           summary={`Redeem `}
         />
-      </Wrapper>
+      </RedeemBodyWrapper>
+    )
+  }
 
-      <ColletRedemption
-        collateralToken={TokenOut1}
-        deusToken={TokenOut2}
-        redeemBalances={redeemBalances}
-        showClaim={showClaim}
-        onClaim={handleCollectRedemption}
-      />
+  return (
+    <>
+      <ReedemStateSwitch selected={redeemSwitchState} setSelected={setRedeemSwitchState} showClaim={showClaim} />
+      {redeemSwitchState === ReedemSwitchValues.REDEEM ? (
+        getRedeemBodyComponent()
+      ) : (
+        <ColletRedemption
+          collateralToken={TokenOut1}
+          deusToken={TokenOut2}
+          redeemBalances={redeemBalances}
+          showClaim={showClaim}
+          onClaim={handleCollectRedemption}
+        />
+      )}
     </>
   )
 }

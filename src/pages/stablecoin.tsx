@@ -31,14 +31,15 @@ export default function Stablecoin() {
   const getAppComponent = (): JSX.Element => {
     if (selected == NavigationTypes.MINT) {
       return (
-        <>
+        <Row>
           <Mint />
           <Statistics />
-        </>
+        </Row>
       )
     }
     if (selected == NavigationTypes.REDEEM) {
-      return <Redeem /> // TODO
+      // TODO
+      return <Redeem />
     }
     // if (selected == NavigationTypes.ZAP) {
     //   return <Bridge /> // TODO
@@ -51,7 +52,7 @@ export default function Stablecoin() {
     <Container>
       <Banner />
       <Navigation selected={selected} setSelected={setSelected} />
-      <Row>{getAppComponent()}</Row>
+      {getAppComponent()}
     </Container>
   )
 }
