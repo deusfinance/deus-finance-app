@@ -14,6 +14,7 @@ const Wrap = styled.div`
   margin-top: 20px;
   background: ${({ theme }) => theme.bg0};
   width: 100%;
+  border-radius: 10px;
 `
 
 const CenterLabel = styled(Label)`
