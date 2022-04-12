@@ -3,6 +3,7 @@ import styled from 'styled-components'
 
 import Dashbar from './Dashbar'
 import Metrics from './Metrics/Metrics'
+import { formatDollarAmount } from 'utils/numbers'
 import { useDeusPrice } from 'state/dashboard/hooks'
 import Portfolio, { PortfolioProps } from './Portfolio'
 import { TwitterTimelineEmbed } from 'react-twitter-embed'
@@ -62,11 +63,11 @@ export default function Dashboard() {
     // } as PortfolioProps,
     {
       label: 'Liquidity on DEXs',
-      value: `$ ${deusDexLiquidity}`,
+      value: `${formatDollarAmount(deusDexLiquidity)}`,
     } as PortfolioProps,
     {
       label: 'Staked Assets',
-      value: `$ ${stakedDeusLiquidity}`,
+      value: `${formatDollarAmount(stakedDeusLiquidity)}`,
     } as PortfolioProps,
   ]
 
