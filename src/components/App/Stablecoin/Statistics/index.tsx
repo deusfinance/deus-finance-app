@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled, { useTheme } from 'styled-components'
 
 import { formatAmount } from 'utils/numbers'
@@ -51,45 +51,34 @@ export default function Statistics() {
     ]
   }, [deiStatus, chainId])
 
+  const renderLabel = useCallback(
+    (labelData: string) => {
+      return loading || !isSupported ? (
+        <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
+      ) : error ? (
+        'Error'
+      ) : (
+        labelData
+      )
+    },
+    [isSupported, theme, loading, error]
+  )
+
   const deiPriceLabel = useMemo(() => {
-    return loading || !isSupported ? (
-      <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
-    ) : error ? (
-      'Error'
-    ) : (
-      `$${deiPrice.toFixed(5)}`
-    )
-  }, [deiPrice, isSupported, theme, loading, error])
+    return renderLabel(`$${deiPrice.toFixed(5)}`)
+  }, [isSupported, theme, loading, error, deiPrice])
 
   const collateralRatioLabel = useMemo(() => {
-    return loading || !isSupported ? (
-      <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
-    ) : error ? (
-      'Error'
-    ) : (
-      `${(collateralRatio * 100).toFixed(2)}%`
-    )
-  }, [collateralRatio, isSupported, theme, loading, error])
+    return renderLabel(`${(collateralRatio * 100).toFixed(2)}%`)
+  }, [isSupported, theme, loading, error, collateralRatio])
 
   const poolLabel = useMemo(() => {
-    return loading || !isSupported ? (
-      <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
-    ) : error ? (
-      'Error'
-    ) : (
-      `${formatAmount(poolBalance)} / ${formatAmount(poolCeiling)}`
-    )
-  }, [poolBalance, poolCeiling, isSupported, theme, loading, error])
+    return renderLabel(`${formatAmount(poolBalance)} / ${formatAmount(poolCeiling)}`)
+  }, [isSupported, theme, loading, error, poolBalance, poolCeiling])
 
   const mintLabel = useMemo(() => {
-    return loading || !isSupported ? (
-      <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
-    ) : error ? (
-      'Error'
-    ) : (
-      `${formatAmount(poolCeiling - poolBalance)}`
-    )
-  }, [poolBalance, poolCeiling, isSupported, theme, loading, error])
+    return renderLabel(`${formatAmount(poolCeiling - poolBalance)}`)
+  }, [isSupported, theme, loading, error, poolBalance, poolCeiling])
 
   return (
     <Wrapper>
