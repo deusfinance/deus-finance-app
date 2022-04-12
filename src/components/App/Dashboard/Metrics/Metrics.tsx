@@ -10,6 +10,7 @@ import { useDeiMarketCap, useDeusPrice } from 'state/dashboard/hooks'
 
 import CUBE_ICON_URL from 'assets/img/dashboard/cube.svg'
 import SPIRIT_ICON_URL from 'assets/img/dashboard/spirit.svg'
+import { ExternalLink } from 'components/Link'
 
 const Wrap = styled.div`
   margin-top: 20px;
@@ -45,13 +46,15 @@ function MakeMetrics({ label, metrics }: { label: string; metrics: Array<{ label
           <>
             <Image src={SPIRIT_ICON_URL} alt={`${label} logo`} />
             <Value>BUY {label}</Value>
-          </>
+          </>,
+          'https://www.solidly.vision/swap'
         )}
         {GetMetricsButton(
           <>
             <Image src={CUBE_ICON_URL} alt={`${label} logo`} />
             <Value>VIEW FTMScan</Value>
-          </>
+          </>,
+          'https://ftmscan.com/'
         )}
       </ButtonsDiv>
     </Wrap>

@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { RowBetween } from 'components/Row'
+import { ExternalLink } from 'components/Link'
 
 const MetricsButton = styled(RowBetween)`
   border-radius: 25px;
@@ -23,10 +24,12 @@ const MetricsButtonWrap = styled.div`
   height: 43px;
 `
 
-export default function GetMetricsButton(child: JSX.Element): JSX.Element | null {
+export default function GetMetricsButton(child: JSX.Element, link: string): JSX.Element | null {
   return (
     <MetricsButtonWrap>
-      <MetricsButton>{child}</MetricsButton>
+      <ExternalLink href={link} style={{ textDecoration: 'none' }}>
+        <MetricsButton>{child}</MetricsButton>
+      </ExternalLink>
     </MetricsButtonWrap>
   )
 }
