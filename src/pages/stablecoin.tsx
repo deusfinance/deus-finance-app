@@ -8,7 +8,7 @@ import {
   Navigation,
   NavigationTypes,
   Redeem,
-  StableCoinRow as Row,
+  StableCoinRow,
   Statistics,
 } from 'components/App/Stablecoin'
 
@@ -32,10 +32,10 @@ export default function Stablecoin() {
   const getAppComponent = (): JSX.Element => {
     if (selected == NavigationTypes.MINT) {
       return (
-        <Row>
+        <StableCoinRow>
           <Mint />
           <Statistics />
-        </Row>
+        </StableCoinRow>
       )
     }
     if (selected == NavigationTypes.REDEEM) {

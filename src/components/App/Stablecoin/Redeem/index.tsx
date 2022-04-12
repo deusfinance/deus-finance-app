@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import find from 'lodash/find'
 import flattenDeep from 'lodash/flattenDeep'
-import useWeb3React from 'hooks/useWeb3'
 import { useAppDispatch } from 'state'
+import { useMediaQuery } from 'react-responsive'
+import { MEDIA_WIDTHS } from 'theme'
 
 import { IToken } from 'utils/token'
 import { REDEEM__INPUTS, REDEEM__OUTPUTS } from 'constants/inputs'
@@ -18,19 +19,17 @@ import { setAttemptingTxn, setRedeemState, setShowReview } from 'state/redeem/re
 import useRedeemAmounts from 'hooks/useRedeemAmounts'
 import useRedeemCallback, { useCollectRedemptionCallback } from 'hooks/useRedeemCallback'
 import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
+import useWeb3React from 'hooks/useWeb3'
 
 import { PrimaryButton } from 'components/Button'
 import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
 import DefaultConfirmation from 'components/TransactionConfirmationModal/DefaultConfirmation'
-import { DefaultWrapper as Wrapper } from '../DefaultWrapper'
+import { DefaultWrapper as Wrapper, StableCoinRow } from 'components/App/Stablecoin/StableCoinContainers'
 import NetworkSelect from 'components/App/Stablecoin/NetworkSelect'
 import InputBox from 'components/App/Stablecoin/InputBox'
 import TransactionSettings from 'components/TransactionSettings'
-import ColletRedemption from './ColletRedemption'
-import ReedemStateSwitch, { ReedemSwitchValues } from 'components/App/Stablecoin/Redeem/ReedemStateSwitch'
-import { useMediaQuery } from 'react-responsive'
-import { MEDIA_WIDTHS } from 'theme'
-import { StableCoinRow } from '../StableCoinRow'
+import CollectRedemption from './CollectRedemption'
+import RedeemStateSwitch, { ReedemSwitchValues } from 'components/App/Stablecoin/Redeem/ReedemStateSwitch'
 
 const ToggleRow = styled.div`
   position: relative;
@@ -376,11 +375,11 @@ export default function Redeem() {
   function getRedeemMobileComponent() {
     return (
       <>
-        <ReedemStateSwitch selected={redeemSwitchState} setSelected={setRedeemSwitchState} showClaim={showClaim} />
+        <RedeemStateSwitch selected={redeemSwitchState} setSelected={setRedeemSwitchState} showClaim={showClaim} />
         {redeemSwitchState === ReedemSwitchValues.REDEEM ? (
           getRedeemBodyComponent()
         ) : (
-          <ColletRedemption
+          <CollectRedemption
             collateralToken={TokenOut1}
             deusToken={TokenOut2}
             redeemBalances={redeemBalances}
@@ -396,7 +395,7 @@ export default function Redeem() {
     return (
       <StableCoinRow>
         {getRedeemBodyComponent()}
-        <ColletRedemption
+        <CollectRedemption
           collateralToken={TokenOut1}
           deusToken={TokenOut2}
           redeemBalances={redeemBalances}

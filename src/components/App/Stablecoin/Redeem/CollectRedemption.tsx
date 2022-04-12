@@ -23,7 +23,7 @@ const StableCoinClaimBox = styled(ClaimBox)`
   }
 `
 
-export default function ColletRedemption({
+export default function CollectRedemption({
   showClaim,
   redeemBalances,
   collateralToken,
