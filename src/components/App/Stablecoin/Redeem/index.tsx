@@ -339,8 +339,6 @@ export default function Redeem() {
     )
   }
 
-  const [redeemSwitchState, setRedeemSwitchState] = useState<ReedemSwitchValues>(ReedemSwitchValues.REDEEM)
-
   function getRedeemBodyComponent() {
     return (
       <RedeemBodyWrapper>
@@ -372,6 +370,8 @@ export default function Redeem() {
       </RedeemBodyWrapper>
     )
   }
+
+  const [redeemSwitchState, setRedeemSwitchState] = useState<ReedemSwitchValues>(ReedemSwitchValues.REDEEM)
 
   function getRedeemMobileComponent() {
     return (

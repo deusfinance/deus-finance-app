@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from 'state'
 import styled from 'styled-components'
 import Image from 'next/image'
@@ -28,11 +28,17 @@ import TransactionSettings from 'components/TransactionSettings'
 import InputBox from 'components/App/Bridge/InputBox'
 import TokenSelect from 'components/App/Bridge/TokenSelect'
 import { ExternalLink } from 'components/Link'
+import { useMediaQuery } from 'react-responsive'
+import { MEDIA_WIDTHS } from 'theme'
+import BridgeStateSwitch, { BridgeSwitchValues } from 'components/App/Bridge/BridgeStateSwitch'
+import { DefaultWrapper as Wrapper } from 'components/App/Stablecoin'
+import BridgeClaim from 'components/App/Bridge/Claim'
 
 const BridgeWrap = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  gap: 20px;
 `
 const ToggleRow = styled.div`
   position: relative;
@@ -55,6 +61,10 @@ const Row = styled.div`
   z-index: 0;
 `
 
+const BridgeBodyDesktopRow = styled(Row)`
+  margin: 0;
+`
+
 const BoxesRow = styled(Row)`
   z-index: 1;
   margin-top: 1rem;
@@ -64,6 +74,13 @@ const BoxesRow = styled(Row)`
     & > * {
       width: 100%;
     }
+  `};
+`
+
+const BridgeBodyWrapper = styled(Wrapper)`
+  margin: 0;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: auto;
   `};
 `
 
@@ -92,6 +109,7 @@ const MuonText = styled.div`
   align-items: flex-end;
   text-align: center;
   color: ${({ theme }) => theme.text2};
+
   &:hover {
     opacity: 0.7;
   }
@@ -337,9 +355,9 @@ export default function Bridge() {
     )
   }
 
-  return (
-    <BridgeWrap>
-      <DefaultWrapper>
+  function getBridgeBody() {
+    return (
+      <BridgeBodyWrapper>
         <ToggleRow>
           <p>Bridge</p>
           <TransactionSettings style={{ marginLeft: '20px' }} />
@@ -349,13 +367,45 @@ export default function Bridge() {
           {getApproveButton()}
           {getActionButton()}
         </Row>
-      </DefaultWrapper>
-      <ExternalLink href="https://muon.net/">
-        <MuonText>
-          <Image src={MUON_LOGO} width="20px" height="20px" alt="muon" />
-          <p style={{ marginLeft: '0.5rem' }}>Powered by Muon Network</p>
-        </MuonText>
-      </ExternalLink>
-    </BridgeWrap>
-  )
+      </BridgeBodyWrapper>
+    )
+  }
+
+  function getBridgeDesktopComponent() {
+    return (
+      <BridgeWrap>
+        <BridgeBodyDesktopRow>
+          {getBridgeBody()}
+          <BridgeClaim />
+        </BridgeBodyDesktopRow>
+        <ExternalLink href="https://muon.net/">
+          <MuonText>
+            <Image src={MUON_LOGO} width="20px" height="20px" alt="muon" />
+            <p style={{ marginLeft: '0.5rem' }}>Powered by Muon Network</p>
+          </MuonText>
+        </ExternalLink>
+      </BridgeWrap>
+    )
+  }
+
+  const [bridgeSwitchState, setBridgeSwitchState] = useState<BridgeSwitchValues>(BridgeSwitchValues.BRIDGE)
+
+  function getBridgeMobileComponent() {
+    return (
+      <BridgeWrap>
+        <BridgeStateSwitch selected={bridgeSwitchState} setSelected={setBridgeSwitchState} />
+        {bridgeSwitchState === BridgeSwitchValues.BRIDGE ? getBridgeBody() : <BridgeClaim />}
+        <ExternalLink href="https://muon.net/">
+          <MuonText>
+            <Image src={MUON_LOGO} width="20px" height="20px" alt="muon" />
+            <p style={{ marginLeft: '0.5rem' }}>Powered by Muon Network</p>
+          </MuonText>
+        </ExternalLink>
+      </BridgeWrap>
+    )
+  }
+
+  const upToMedium = useMediaQuery({ query: `(max-width: ${MEDIA_WIDTHS.upToMedium}px)` })
+
+  return upToMedium ? getBridgeMobileComponent() : getBridgeDesktopComponent()
 }

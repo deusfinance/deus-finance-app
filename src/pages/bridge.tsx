@@ -6,7 +6,6 @@ import BridgeUpdater from 'state/bridge/updater'
 import Banner from 'components/App/Bridge/Banner'
 import { RowBetween } from 'components/Row'
 import BridgeComponent from 'components/App/Bridge'
-import BridgeClaim from 'components/App/Bridge/Claim'
 
 const Container = styled.div`
   display: flex;
@@ -32,10 +31,7 @@ export default function Bridge() {
     <Container>
       <BridgeUpdater />
       <Banner />
-      <Row height={'380px'}>
-        <BridgeComponent />
-        <BridgeClaim />
-      </Row>
+      <BridgeComponent />
     </Container>
   )
 }
