@@ -4,7 +4,6 @@ import styled from 'styled-components'
 import BridgeUpdater from 'state/bridge/updater'
 
 import Banner from 'components/App/Bridge/Banner'
-import { RowBetween } from 'components/Row'
 import BridgeComponent from 'components/App/Bridge'
 
 const Container = styled.div`
@@ -19,11 +18,6 @@ const Container = styled.div`
   ${({ theme }) => theme.mediaWidth.upToMedium`
     margin-top: 30px;
   `};
-`
-const Row = styled(RowBetween)`
-  /* flex-wrap: wrap; */
-  align-items: flex-start;
-  gap: 20px;
 `
 
 export default function Bridge() {
