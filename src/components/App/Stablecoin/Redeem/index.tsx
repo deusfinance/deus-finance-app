@@ -302,9 +302,9 @@ export default function Redeem() {
     )
   }
 
-  const TokensIn = []
+  const TokensIn: IToken[] = []
   if (TokenIn) TokensIn.push(TokenIn)
-  const TokensOut = []
+  const TokensOut: IToken[] = []
   if (TokenOut1 && TokenOut2) TokensOut.push(...[TokenOut1, TokenOut2])
 
   function getMainContent(): JSX.Element {
