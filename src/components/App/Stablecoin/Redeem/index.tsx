@@ -317,7 +317,7 @@ export default function Redeem() {
         <InputBox
           options={inputOptions}
           selected={[TokenIn?.address ?? '']}
-          setSelected={(addresses: string[]) => setSelected(addresses)}
+          // setSelected={(addresses: string[]) => setSelected(addresses)}
           amount1={amountIn}
           setAmount1={onUserInput}
           setInsufficientBalance1={setInsufficientBalance1}
