@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Dashbar from './Dashbar'
-import Metrics from './Metrics/Metrics'
+import Metrics from './Metrics'
 import { formatDollarAmount } from 'utils/numbers'
-import { useDeusPrice } from 'state/dashboard/hooks'
+import { useDeusMetrics } from 'state/dashboard/hooks'
 import Portfolio, { PortfolioProps } from './Portfolio'
 import { TwitterTimelineEmbed } from 'react-twitter-embed'
 
@@ -34,7 +34,7 @@ const Twitter = styled.div`
 `
 
 export default function Dashboard() {
-  const { deusDexLiquidity, stakedDeusLiquidity } = useDeusPrice()
+  const { deusDexLiquidity, stakedDeusLiquidity } = useDeusMetrics()
 
   const options = [
     {
