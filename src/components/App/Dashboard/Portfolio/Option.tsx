@@ -6,14 +6,21 @@ export const Wrap = styled.div`
   flex-flow: column nowrap;
   text-align: center;
   column-gap: 5px;
+  margin: 5px;
 `
 export const Label = styled.p`
-  font-weight: bold;
-  font-size: 22px;
+  font-size: 20px;
   color: ${({ theme }) => theme.text1};
+  background: ${({ theme }) => theme.specialBG3};
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    font-size: 16px;
+  `};
 `
 export const Value = styled.p`
-  font-size: 18px;
+  font-size: 16px;
   line-height: 18px;
   margin-top: 9px;
   color: ${({ theme }) => theme.text2};

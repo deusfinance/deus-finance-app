@@ -1,12 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import { useDeusMetrics, useDeusPrice } from 'state/dashboard/hooks'
+import { formatDollarAmount } from 'utils/numbers'
+import useWeb3React from 'hooks/useWeb3'
+
+import Portfolio, { PortfolioProps } from './Portfolio'
+import Twitter from './Twitter'
 import Dashbar from './Dashbar'
 import Metrics from './Metrics'
-import { formatDollarAmount } from 'utils/numbers'
-import { useDeusMetrics } from 'state/dashboard/hooks'
-import Portfolio, { PortfolioProps } from './Portfolio'
-import { TwitterTimelineEmbed } from 'react-twitter-embed'
 
 export const Wrap = styled.div`
   width: 100%;
@@ -26,32 +28,28 @@ const InfoItem = styled.div`
   flex-wrap: wrap;
 `
 
-const Twitter = styled.div`
-  border: 1px solid #14181e;
-  border-radius: 10px;
-  flex-grow: 1;
-  margin-left: 18px;
-`
-
 export default function Dashboard() {
   const { deusDexLiquidity, stakedDeusLiquidity } = useDeusMetrics()
+  const dPrice = useDeusPrice()
+  const { account } = useWeb3React()
 
   const options = [
     {
       label: 'DEUS Price',
-      value: '$',
+      value: `${formatDollarAmount(dPrice)}`,
     } as PortfolioProps,
+    // TODO: add wallet connect for complete
     {
       label: 'Portfolio Value',
-      value: '$',
+      value: account ? '-' : 'Locked',
     } as PortfolioProps,
     {
       label: 'DEUS in Wallet',
-      value: '0',
+      value: account ? '-' : 'Locked',
     } as PortfolioProps,
     {
       label: 'DEI in Wallet',
-      value: '0',
+      value: account ? '-' : 'Locked',
     } as PortfolioProps,
   ]
 
@@ -80,15 +78,7 @@ export default function Dashboard() {
           <Portfolio options={liquidityOptions} />
           <Metrics />
         </InfoItem>
-        <Twitter>
-          <TwitterTimelineEmbed
-            sourceType="profile"
-            screenName="DeusDao"
-            options={{ height: 652 }}
-            transparent
-            slug="breakingnews"
-          />
-        </Twitter>
+        <Twitter />
       </InfoWrapper>
     </Wrap>
   )

@@ -3,8 +3,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import styled from 'styled-components'
 
-import { RowCenter } from 'components/Row'
-import { ExternalLink } from 'components/Link'
 import SWAP_ICON_URL from 'assets/img/dashboard/swap.svg'
 import FARMS_ICON_URL from 'assets/img/dashboard/farms.svg'
 import BRIDGE_ICON_URL from 'assets/img/dashboard/bridge.svg'
@@ -12,10 +10,16 @@ import MIGRATOR_ICON_URL from 'assets/img/dashboard/migrator.svg'
 import FRONTENDS_ICON_URL from 'assets/img/dashboard/frontends.svg'
 import STABLECOIN_ICON_URL from 'assets/img/dashboard/stablecoin.svg'
 
+import { RowCenter } from 'components/Row'
+import { ExternalLink } from 'components/Link'
+
 const DashboardButtons = styled(RowCenter)`
   flex-wrap: wrap;
   width: 100%;
   margin: auto;
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin:20px auto;
+  `};
 `
 
 const ButtonWrap = styled.div`
@@ -24,6 +28,10 @@ const ButtonWrap = styled.div`
   margin: 20px auto;
   border-radius: 0px 16px 16px 16px;
   background: linear-gradient(180deg, #de86d2 0%, rgba(0, 184, 242, 0.21) 100%);
+
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    margin:10px;
+  `};
 `
 
 const StyledButton = styled(RowCenter)`
@@ -47,11 +55,10 @@ const InternalLink = styled.a`
 `
 
 const buttons = [
-  { img: STABLECOIN_ICON_URL, label: 'Stablecoin', link: '/stablecoin' },
-  { img: BRIDGE_ICON_URL, label: 'Bridge', link: '/bridge' },
-  // TODO: Add frontend & migrator links
-  { img: FRONTENDS_ICON_URL, label: 'Frontends', link: '' },
-  { img: MIGRATOR_ICON_URL, label: 'Migrator', link: '' },
+  { img: STABLECOIN_ICON_URL, label: 'Stablecoin', link: 'https://app.deus.finance/stable/mint/' },
+  { img: BRIDGE_ICON_URL, label: 'Bridge', link: 'https://app.deus.finance/bridge' },
+  { img: FRONTENDS_ICON_URL, label: 'Frontends', link: 'https://app.dsynths.com/trade' },
+  { img: MIGRATOR_ICON_URL, label: 'Migrator', link: 'https://app.deus.finance/migrator' },
   { img: SWAP_ICON_URL, label: 'Swap', link: 'https://www.solidly.vision/swap' },
   { img: FARMS_ICON_URL, label: 'Farms', link: 'https://app.deus.finance/stable/farms' },
 ]

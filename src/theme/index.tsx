@@ -56,7 +56,7 @@ function colors(darkMode: boolean): Colors {
 
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#78787B',
+    text2: darkMode ? '#A5A5C4' : '#78787B',
     text3: darkMode ? '#8F96AC' : '#808086',
     text4: darkMode ? '#B2B9D2' : '#B8B8BE',
 
@@ -76,6 +76,9 @@ function colors(darkMode: boolean): Colors {
       : 'radial-gradient(95.21% 95.21% at 50% 4.79%, rgba(138, 148, 220, 0.2) 0%, rgba(255, 255, 255, 0.2) 100%)',
     specialBG2: darkMode
       ? '#14181E'
+      : 'linear-gradient(90deg, rgba(81, 171, 255, 0.1) 0%, rgba(22, 72, 250, 0.1) 100%), linear-gradient(0deg, #FFFFFF, #FFFFFF)',
+    specialBG3: darkMode
+      ? 'linear-gradient(267.38deg, #7d7beb 31.09%, #de86d2 93.99%)'
       : 'linear-gradient(90deg, rgba(81, 171, 255, 0.1) 0%, rgba(22, 72, 250, 0.1) 100%), linear-gradient(0deg, #FFFFFF, #FFFFFF)',
 
     // primary colors
