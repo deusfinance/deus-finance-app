@@ -1,6 +1,7 @@
 import { ThemedCssFunction } from 'styled-components/macro'
 
 export type Color = string
+
 export interface Colors {
   darkMode: boolean
 
@@ -70,5 +71,9 @@ declare module 'styled-components' {
       upToMedium: ThemedCssFunction<DefaultTheme>
       upToLarge: ThemedCssFunction<DefaultTheme>
     }
+
+    // css snippets
+    flexColumnNoWrap: FlattenSimpleInterpolation
+    flexRowNoWrap: FlattenSimpleInterpolation
   }
 }
