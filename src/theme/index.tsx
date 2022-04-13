@@ -131,6 +131,16 @@ function theme(darkMode: boolean): DefaultTheme {
 
     // media queries
     mediaWidth: mediaWidthTemplates,
+
+    // css snippets
+    flexColumnNoWrap: css`
+      display: flex;
+      flex-flow: column nowrap;
+    `,
+    flexRowNoWrap: css`
+      display: flex;
+      flex-flow: row nowrap;
+    `,
   }
 }
 
@@ -207,8 +217,9 @@ export const ThemedGlobalStyle = createGlobalStyle`
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
   }
+
   a {
-    color: ${({ theme }) => theme.text1}; 
+    color: ${({ theme }) => theme.text1};
   }
 
   * {
@@ -238,6 +249,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
     scrollbar-width: none; /* for Firefox */
     /* overflow-y: scroll; //TODO: Why? */
   }
+
   *::-webkit-scrollbar {
     display: none; /* for Chrome, Safari, and Opera */
   }

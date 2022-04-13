@@ -17,28 +17,37 @@ export default function useERC20Balance(
   const blockNumber = useBlockNumber()
 
   useEffect(() => {
+    let mounted = true
+    const setBalanceSafe = (walletBalance: BigNumber) => {
+      if (mounted) {
+        setBalance(walletBalance)
+      }
+    }
     const fetchBalance = async () => {
       try {
         if (account && library && tokenAddress) {
           if (isToken) {
             const walletBalance = await Contract?.balanceOf(account)
-            setBalance(walletBalance)
+            setBalanceSafe(walletBalance)
           } else {
             const walletBalance = await library.getBalance(account) // same functionality as `useCurrencyBalance`
-            setBalance(walletBalance)
+            setBalanceSafe(walletBalance)
           }
         } else {
-          setBalance(BigNumber.from('0'))
+          setBalanceSafe(BigNumber.from('0'))
         }
       } catch (err) {
         console.error(err)
-        setBalance(BigNumber.from('0'))
+        setBalanceSafe(BigNumber.from('0'))
       }
     }
-    if (tokenChainId && tokenChainId != chainId) {
-      setBalance(BigNumber.from('0'))
+    if (tokenChainId && tokenChainId != chainId && mounted) {
+      setBalanceSafe(BigNumber.from('0'))
     } else {
       fetchBalance()
+    }
+    return () => {
+      mounted = false
     }
   }, [chainId, account, library, Contract, tokenAddress, tokenChainId, isToken, blockNumber])
 
