@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import Image from 'next/image'
 import BannerImage from 'assets/img/MintBanner.svg'
+import DeiLogo from 'assets/img/tokens/dei.svg'
+import DeiText from 'assets/img/DeiLogoText.svg'
 
 import { Card } from 'components/Card'
 import Copy from 'components/Copy'
@@ -12,6 +14,7 @@ import { Tokens } from 'constants/tokens'
 import useWeb3React from 'hooks/useWeb3'
 import { useDeiMarketCap } from 'state/dashboard/hooks'
 import { formatAmount } from 'utils/numbers'
+import { RowStart } from 'components/Row'
 
 const Wrapper = styled(Card)`
   display: flex;
@@ -44,6 +47,7 @@ const Left = styled.div`
 
 const Title = styled.div`
   display: flex;
+  align-items: center;
   flex-flow: row nowrap;
   font-size: 1.25rem;
 
@@ -89,8 +93,18 @@ const Stat = styled.div`
       font-size: 1rem;
       margin-top: 3px;
       color: ${({ theme }) => theme.primary1};
+      background: ${({ theme }) => theme.primary1};
+      background-clip: text;
+      text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
   }
+`
+
+const DeiImageWrap = styled(RowStart)`
+  width: unset;
+  gap: 5px;
 `
 
 export default function Banner() {
@@ -105,7 +119,10 @@ export default function Banner() {
     <Wrapper>
       <Left>
         <Title>
-          <div>DEI</div>
+          <DeiImageWrap>
+            <Image src={DeiLogo} alt={'Dei logo'} height="28.5px" width="30px" />
+            <Image src={DeiText} alt={'Dei text'} height="28.5px" width="30px" />
+          </DeiImageWrap>
           <div>MultiChain fractional stablecoin</div>
         </Title>
         <div>

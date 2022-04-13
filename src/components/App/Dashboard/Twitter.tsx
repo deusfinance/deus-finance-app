@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { TwitterTimelineEmbed } from 'react-twitter-embed'
+import { useDarkModeManager } from 'state/user/hooks'
 
 const TwitterWrap = styled.div`
   border-radius: 10px;
@@ -20,12 +21,15 @@ const TwitterWrap = styled.div`
 const Header = styled.h2`
   text-align: center;
   margin-bottom: 20px;
-  background: ${({ theme }) => theme.specialBG3};
+  background-color: ${({ theme }) => theme.primary1};
+  background-image: ${({ theme }) => theme.primary1};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `
 
 export default function Twitter() {
+  const [darkMode] = useDarkModeManager()
+
   return (
     <TwitterWrap>
       <Header>Announcements</Header>
@@ -34,7 +38,7 @@ export default function Twitter() {
         screenName="DeusDao"
         options={{ height: 652 }}
         noHeader={true}
-        theme="dark"
+        theme={darkMode ? 'dark' : 'light'}
         transparent
         noBorders={true}
       />

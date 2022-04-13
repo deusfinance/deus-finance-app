@@ -10,8 +10,8 @@ export const Wrap = styled.div`
 `
 export const Label = styled.p`
   font-size: 20px;
-  color: ${({ theme }) => theme.text1};
-  background: ${({ theme }) => theme.specialBG3};
+  background-color: ${({ theme }) => theme.primary1};
+  background-image: ${({ theme }) => theme.primary1};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
@@ -23,7 +23,7 @@ export const Value = styled.p`
   font-size: 16px;
   line-height: 18px;
   margin-top: 9px;
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text1};
 `
 
 export default function Option({ label, value }: { label: string; value: string }) {

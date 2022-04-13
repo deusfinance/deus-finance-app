@@ -82,9 +82,10 @@ function colors(darkMode: boolean): Colors {
       : 'linear-gradient(90deg, rgba(81, 171, 255, 0.1) 0%, rgba(22, 72, 250, 0.1) 100%), linear-gradient(0deg, #FFFFFF, #FFFFFF)',
 
     // primary colors
-    primary1: '#FFB463',
+    primary1: darkMode ? 'linear-gradient(91.89deg, #7480EC 5.63%, #CF84D6 100.89%);' : '#FFB463',
     primary2: '#FFA76A',
     primary3: 'linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 167, 106, 0) 100%), #FFA76A',
+    primary4: darkMode ? 'linear-gradient(238.61deg, #171615 56.45%, rgba(125, 123, 235, 0.65) 114.3%)' : '#FFFFFF',
 
     // color text
     primaryText1: darkMode ? '#1749FA' : '#FFB463', // TODO check if we want these values
@@ -92,6 +93,9 @@ function colors(darkMode: boolean): Colors {
     // secondary colors
     secondary1: '#1749FA',
     secondary2: 'rgba(23, 73, 250, 0.2)',
+
+    //hover colors
+    hover1: darkMode ? 'linear-gradient(91.89deg, #7480EC 5.63%, #CF84D6 100.89%);' : '#FFB463',
 
     // other
     red1: darkMode ? '#FF4343' : '#DA2D2B',

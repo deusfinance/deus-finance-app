@@ -34,7 +34,7 @@ const MetricsButtonWrap = styled.div`
 
 const MetricsButton = styled(RowBetween)`
   border-radius: 25px;
-  background: black;
+  background: ${({ theme }) => theme.bg0};
   height: 100%;
   width: unset;
   padding: 15px 15px 15px 8px;
@@ -65,7 +65,8 @@ const CenterLabel = styled(Label)`
   text-align: center;
   font-size: 20px;
   margin-bottom: 20px;
-  background: ${({ theme }) => theme.specialBG3};
+  background-color: ${({ theme }) => theme.primary1};
+  background-image: ${({ theme }) => theme.primary1};
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `
@@ -78,6 +79,12 @@ export const Value = styled.p`
   text-align: right;
   color: ${({ theme }) => theme.text1};
 `
+
+type Links = {
+  DEUS: string
+  DEI: string
+  SOLIDLY: string
+}
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
@@ -98,7 +105,16 @@ function GetMetricsButton(child: JSX.Element, link: string): JSX.Element | null 
   )
 }
 
-function MakeMetrics({ label, metrics }: { label: string; metrics: Array<{ label: string; value: string }> }) {
+function MakeMetrics({
+  label,
+  metrics,
+  links,
+}: {
+  label: string
+  metrics: Array<{ label: string; value: string }>
+  links: Links
+}) {
+  const { SOLIDLY, DEI, DEUS } = links
   return (
     <Wrap>
       <MetricsWrap>
@@ -114,14 +130,14 @@ function MakeMetrics({ label, metrics }: { label: string; metrics: Array<{ label
             <Image src={SPIRIT_ICON_URL} alt={`${label} logo`} />
             <Text>BUY {label}</Text>
           </>,
-          'https://www.solidly.vision/swap'
+          SOLIDLY
         )}
         {GetMetricsButton(
           <>
             <Image src={CUBE_ICON_URL} alt={`${label} logo`} />
             <Text>VIEW FTMScan</Text>
           </>,
-          'https://ftmscan.com/'
+          label === 'DEI' ? DEI : DEUS
         )}
       </ButtonsWrap>
     </Wrap>
@@ -179,10 +195,15 @@ export default function Metrics() {
       },
     ],
   }
+  const metricsLink = {
+    DEUS: 'https://ftmscan.com/token/0xde5ed76e7c05ec5e4572cfc88d1acea165109e44',
+    DEI: 'https://ftmscan.com/token/0xde12c7959e1a72bbe8a5f7a1dc8f8eef9ab011b3',
+    SOLIDLY: 'https://www.solidly.vision/swap',
+  }
   return (
     <>
       {Object.entries(metrics).map((metric, index) => {
-        return <MakeMetrics key={index} label={metric[0]} metrics={metric[1]} />
+        return <MakeMetrics key={index} label={metric[0]} metrics={metric[1]} links={metricsLink} />
       })}
     </>
   )

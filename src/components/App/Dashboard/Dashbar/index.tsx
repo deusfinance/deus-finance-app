@@ -39,7 +39,7 @@ const StyledButton = styled(RowCenter)`
   height: 100%;
   flex-direction: column;
   border-radius: 0px 16px 16px 16px;
-  background: linear-gradient(238.61deg, #171615 56.45%, rgba(125, 123, 235, 0.65) 114.3%);
+  background: ${({ theme }) => theme.primary4};
 `
 
 const Label = styled.div`

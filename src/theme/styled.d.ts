@@ -32,12 +32,16 @@ export interface Colors {
   primary1: Color
   primary2: Color
   primary3: Color
+  primary4: Color
 
   primaryText1: Color
 
   // pinks
   secondary1: Color
   secondary2: Color
+
+  // hover
+  hover1: Color
 
   // other
   red1: Color
