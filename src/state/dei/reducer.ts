@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import { SupportedChainId } from 'constants/chains'
 import { ORACLE_BASE_URL } from 'constants/muon'
@@ -9,6 +9,7 @@ export const DeiSupportedChains = [SupportedChainId.FANTOM, SupportedChainId.MAI
 export enum DeiStatus {
   OK = 'OK',
   LOADING = 'LOADING',
+  REFRESHING = 'REFRESHING',
   ERROR = 'ERROR',
 }
 
@@ -123,7 +124,11 @@ const deiSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchPrices.pending, (state) => {
-        state.status = DeiStatus.LOADING
+        if (state.status === DeiStatus.OK) {
+          state.status = DeiStatus.REFRESHING
+        } else {
+          state.status = DeiStatus.LOADING
+        }
       })
       .addCase(fetchPrices.fulfilled, (state, { payload }) => {
         state.status = DeiStatus.OK
