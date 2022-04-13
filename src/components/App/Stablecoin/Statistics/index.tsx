@@ -25,11 +25,17 @@ const Wrapper = styled(Card)`
 `
 
 const Stat = styled.div`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text1};
 
   & > * {
     &:nth-child(2) {
       margin-top: 3px;
+      background-color: ${({ theme }) => theme.primary1};
+      background-image: ${({ theme }) => theme.primary1};
+      background-clip: text;
+      text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       color: ${({ theme }) => theme.primary1};
     }
   }

@@ -114,6 +114,9 @@ export default function NavBar() {
       <DefaultWrapper>
         <NavLogo />
         <Routes>
+          <Link href="/dashboard" passHref>
+            <NavLink active={router.route === '/dashboard'}>Dashboard</NavLink>
+          </Link>
           <Link href="/stablecoin" passHref>
             <NavLink active={router.route === '/stablecoin'}>Stablecoin</NavLink>
           </Link>
