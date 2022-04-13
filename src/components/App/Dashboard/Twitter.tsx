@@ -14,7 +14,7 @@ const TwitterWrap = styled.div`
   background: ${({ theme }) => theme.bg0};
 
   ${({ theme }) => theme.mediaWidth.upToSmall`
-  margin: 20px;
+    margin: 20px;
   `};
 `
 

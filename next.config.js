@@ -2,7 +2,7 @@ module.exports = {
   exportPathMap: async function () {
     return {
       '/': {
-        page: '/stablecoin',
+        page: '/dashboard',
       },
       '/stablecoin': {
         page: '/stablecoin',

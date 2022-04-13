@@ -40,6 +40,7 @@ const StyledButton = styled(RowCenter)`
   flex-direction: column;
   border-radius: 0px 16px 16px 16px;
   background: ${({ theme }) => theme.primary4};
+  cursor: pointer;
 `
 
 const Label = styled.div`
@@ -50,40 +51,30 @@ const Label = styled.div`
   font-size: 20px;
 `
 
-const InternalLink = styled.a`
-  text-decoration: none;
-`
-
-const buttons = [
-  { img: STABLECOIN_ICON_URL, label: 'Stablecoin', link: 'https://app.deus.finance/stable/mint/' },
-  { img: BRIDGE_ICON_URL, label: 'Bridge', link: 'https://app.deus.finance/bridge' },
-  { img: FRONTENDS_ICON_URL, label: 'Frontends', link: 'https://app.dsynths.com/trade' },
-  { img: MIGRATOR_ICON_URL, label: 'Migrator', link: 'https://app.deus.finance/migrator' },
-  { img: SWAP_ICON_URL, label: 'Swap', link: 'https://www.solidly.vision/swap' },
-  { img: FARMS_ICON_URL, label: 'Farms', link: 'https://app.deus.finance/stable/farms' },
+const config = [
+  { img: STABLECOIN_ICON_URL, label: 'Stablecoin', path: 'https://app.deus.finance/stable' },
+  { img: BRIDGE_ICON_URL, label: 'Bridge', path: 'https://app.deus.finance/bridge' },
+  { img: FRONTENDS_ICON_URL, label: 'Frontends', path: 'https://app.dsynths.com/trade' },
+  { img: MIGRATOR_ICON_URL, label: 'Migrator', path: 'https://app.deus.finance/migrator' },
+  { img: SWAP_ICON_URL, label: 'Swap', path: 'https://www.solidly.vision/swap' },
+  { img: FARMS_ICON_URL, label: 'Farms', path: 'https://app.deus.finance/stable/farms' },
 ]
 
-function DashButton({ icon, label, link }: { icon: string; label: string; link: string }) {
+function DashButton({ icon, label, path }: { icon: string; label: string; path: string }) {
   return (
     <ButtonWrap>
-      {link.charAt(0) === '/' ? (
-        <Link href={link} passHref>
-          <InternalLink>
-            <StyledButton>
-              <>
-                <Image src={icon} alt={`${label} logo`} />
-                <Label>{label}</Label>
-              </>
-            </StyledButton>
-          </InternalLink>
+      {path.charAt(0) === '/' ? (
+        <Link href={path} passHref>
+          <StyledButton>
+            <Image src={icon} alt={`${label} logo`} />
+            <Label>{label}</Label>
+          </StyledButton>
         </Link>
       ) : (
-        <ExternalLink href={link} style={{ textDecoration: 'none' }}>
+        <ExternalLink href={path} style={{ textDecoration: 'none' }}>
           <StyledButton>
-            <>
-              <Image src={icon} alt={`${label} logo`} />
-              <Label>{label}</Label>
-            </>
+            <Image src={icon} alt={`${label} logo`} />
+            <Label>{label}</Label>
           </StyledButton>
         </ExternalLink>
       )}
@@ -94,8 +85,8 @@ function DashButton({ icon, label, link }: { icon: string; label: string; link: 
 export default function Dashbar() {
   return (
     <DashboardButtons>
-      {buttons.map((button, index) => (
-        <DashButton key={index} icon={button.img} label={button.label} link={button.link} />
+      {config.map((item, index) => (
+        <DashButton key={index} icon={item.img} label={item.label} path={item.path} />
       ))}
     </DashboardButtons>
   )
