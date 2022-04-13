@@ -57,7 +57,6 @@ const MetricsWrap = styled.div`
 `
 
 const Label = styled.p`
-  text-aligh: left;
   color: ${({ theme }) => theme.text1};
 `
 
@@ -88,10 +87,10 @@ function Metric({ label, value }: { label: string; value: string }) {
   )
 }
 
-function GetMetricsButton(child: JSX.Element, link: string): JSX.Element | null {
+function GetMetricsButton(child: JSX.Element, path: string): JSX.Element | null {
   return (
     <MetricsButtonWrap>
-      <ExternalLink href={link} style={{ textDecoration: 'none' }}>
+      <ExternalLink href={path} style={{ textDecoration: 'none' }}>
         <MetricsButton>{child}</MetricsButton>
       </ExternalLink>
     </MetricsButtonWrap>
