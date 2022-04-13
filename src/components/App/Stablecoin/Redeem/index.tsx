@@ -1,9 +1,10 @@
-import { useMemo, useState, useEffect, useCallback } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import find from 'lodash/find'
 import flattenDeep from 'lodash/flattenDeep'
-import useWeb3React from 'hooks/useWeb3'
 import { useAppDispatch } from 'state'
+import { useMediaQuery } from 'react-responsive'
+import { MEDIA_WIDTHS } from 'theme'
 
 import { IToken } from 'utils/token'
 import { REDEEM__INPUTS, REDEEM__OUTPUTS } from 'constants/inputs'
@@ -12,21 +13,23 @@ import { CollateralPool } from 'constants/addresses'
 import { useWalletModalToggle } from 'state/application/hooks'
 import { useDeiStatus, useRedeemPaused } from 'state/dei/hooks'
 import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
-import { useRedeemState, useRedeemBalances, useShowClaim } from 'state/redeem/hooks'
+import { useRedeemBalances, useRedeemState, useShowClaim } from 'state/redeem/hooks'
 import { setAttemptingTxn, setRedeemState, setShowReview } from 'state/redeem/reducer'
 
 import useRedeemAmounts from 'hooks/useRedeemAmounts'
 import useRedeemCallback, { useCollectRedemptionCallback } from 'hooks/useRedeemCallback'
 import useApproveCallback, { ApprovalState } from 'hooks/useApproveCallback'
+import useWeb3React from 'hooks/useWeb3'
 
 import { PrimaryButton } from 'components/Button'
 import { ArrowBubble, DotFlashing, IconWrapper } from 'components/Icons'
 import DefaultConfirmation from 'components/TransactionConfirmationModal/DefaultConfirmation'
-import { DefaultWrapper as Wrapper } from 'components/App/Stablecoin'
+import { DefaultWrapper as Wrapper, StableCoinRow } from 'components/App/Stablecoin/StableCoinContainers'
 import NetworkSelect from 'components/App/Stablecoin/NetworkSelect'
 import InputBox from 'components/App/Stablecoin/InputBox'
 import TransactionSettings from 'components/TransactionSettings'
-import ColletRedemption from './ColletRedemption'
+import CollectRedemption from './CollectRedemption'
+import RedeemStateSwitch, { ReedemSwitchValues } from 'components/App/Stablecoin/Redeem/ReedemStateSwitch'
 
 const ToggleRow = styled.div`
   position: relative;
@@ -59,6 +62,13 @@ const BoxesRow = styled(Row)`
   `};
 `
 
+const RedeemBodyWrapper = styled(Wrapper)`
+  margin: 0;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    margin: auto;
+  `};
+`
+
 const ArrowWrapper = styled(IconWrapper)`
   ${({ theme }) => theme.mediaWidth.upToSmall`
     transform: rotate(90deg);
@@ -82,9 +92,11 @@ const FeeWrapper = styled.div`
   justify-content: space-between;
   margin-top: 10px;
   padding: 0px 10px;
+
   & > * {
     font-size: 0.8rem;
     color: ${({ theme }) => theme.text2};
+
     &:first-child {
       color: ${({ theme }) => theme.text3};
     }
@@ -288,9 +300,10 @@ export default function Redeem() {
       </PrimaryButton>
     )
   }
-  const TokensIn = []
+
+  const TokensIn: IToken[] = []
   if (TokenIn) TokensIn.push(TokenIn)
-  const TokensOut = []
+  const TokensOut: IToken[] = []
   if (TokenOut1 && TokenOut2) TokensOut.push(...[TokenOut1, TokenOut2])
 
   function getMainContent(): JSX.Element {
@@ -299,37 +312,35 @@ export default function Redeem() {
     }
 
     return (
-      <>
-        <BoxesRow style={{ gap: '6px' }}>
-          <InputBox
-            options={inputOptions}
-            selected={[TokenIn?.address ?? '']}
-            setSelected={(addresses: string[]) => setSelected(addresses)}
-            amount1={amountIn}
-            setAmount1={onUserInput}
-            setInsufficientBalance1={setInsufficientBalance1}
-            disabled={loading}
-          />
-          <ArrowWrapper size={'30px'} style={{ alignSelf: 'center' }}>
-            <ArrowBubble size={30} />
-          </ArrowWrapper>
-          <InputBox
-            options={outputOptions}
-            selected={selected}
-            amount1={amountOut1}
-            amount2={amountOut2}
-            setAmount1={onUserOutput1}
-            setAmount2={onUserOutput2}
-            disabled={loading}
-          />
-        </BoxesRow>
-      </>
+      <BoxesRow style={{ gap: '6px' }}>
+        <InputBox
+          options={inputOptions}
+          selected={[TokenIn?.address ?? '']}
+          // setSelected={(addresses: string[]) => setSelected(addresses)}
+          amount1={amountIn}
+          setAmount1={onUserInput}
+          setInsufficientBalance1={setInsufficientBalance1}
+          disabled={loading}
+        />
+        <ArrowWrapper size={'30px'} style={{ alignSelf: 'center' }}>
+          <ArrowBubble size={30} />
+        </ArrowWrapper>
+        <InputBox
+          options={outputOptions}
+          selected={selected}
+          amount1={amountOut1}
+          amount2={amountOut2}
+          setAmount1={onUserOutput1}
+          setAmount2={onUserOutput2}
+          disabled={loading}
+        />
+      </BoxesRow>
     )
   }
 
-  return (
-    <>
-      <Wrapper>
+  function getRedeemBodyComponent() {
+    return (
+      <RedeemBodyWrapper>
         <ToggleRow>
           <NetworkSelect chains={DeiSupportedChains} />
           <TransactionSettings style={{ marginLeft: '20px' }} />
@@ -355,15 +366,47 @@ export default function Redeem() {
           amountsOut={[amountOut1, amountOut2]}
           summary={`Redeem `}
         />
-      </Wrapper>
+      </RedeemBodyWrapper>
+    )
+  }
 
-      <ColletRedemption
-        collateralToken={TokenOut1}
-        deusToken={TokenOut2}
-        redeemBalances={redeemBalances}
-        showClaim={showClaim}
-        onClaim={handleCollectRedemption}
-      />
-    </>
-  )
+  const [redeemSwitchState, setRedeemSwitchState] = useState<ReedemSwitchValues>(ReedemSwitchValues.REDEEM)
+
+  function getRedeemMobileComponent() {
+    return (
+      <>
+        <RedeemStateSwitch selected={redeemSwitchState} setSelected={setRedeemSwitchState} showClaim={showClaim} />
+        {redeemSwitchState === ReedemSwitchValues.REDEEM ? (
+          getRedeemBodyComponent()
+        ) : (
+          <CollectRedemption
+            collateralToken={TokenOut1}
+            deusToken={TokenOut2}
+            redeemBalances={redeemBalances}
+            showClaim={showClaim}
+            onClaim={handleCollectRedemption}
+          />
+        )}
+      </>
+    )
+  }
+
+  function getRedeemDesktopComponent() {
+    return (
+      <StableCoinRow>
+        {getRedeemBodyComponent()}
+        <CollectRedemption
+          collateralToken={TokenOut1}
+          deusToken={TokenOut2}
+          redeemBalances={redeemBalances}
+          showClaim={showClaim}
+          onClaim={handleCollectRedemption}
+        />
+      </StableCoinRow>
+    )
+  }
+
+  const upToMedium = useMediaQuery({ query: `(max-width: ${MEDIA_WIDTHS.upToMedium}px)` })
+
+  return upToMedium ? getRedeemMobileComponent() : getRedeemDesktopComponent()
 }

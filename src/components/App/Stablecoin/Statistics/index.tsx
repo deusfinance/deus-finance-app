@@ -3,7 +3,7 @@ import styled, { useTheme } from 'styled-components'
 
 import { formatAmount } from 'utils/numbers'
 
-import { useDeiStatus, useDeiPrice, useCollateralRatio, usePoolBalance, usePoolCeiling } from 'state/dei/hooks'
+import { useCollateralRatio, useDeiPrice, useDeiStatus, usePoolBalance, usePoolCeiling } from 'state/dei/hooks'
 import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { Card } from 'components/Card'
 import useWeb3React from 'hooks/useWeb3'
@@ -17,10 +17,16 @@ const Wrapper = styled(Card)`
   gap: 20px;
   background: ${({ theme }) => theme.bg0};
   height: 270px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 100%;
+    max-width: 600px;
+  `};
 `
 
 const Stat = styled.div`
   color: ${({ theme }) => theme.text2};
+
   & > * {
     &:nth-child(2) {
       margin-top: 3px;
