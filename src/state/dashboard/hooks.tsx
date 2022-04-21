@@ -5,12 +5,57 @@ export const useDashboardState = () => {
   return useAppSelector((state: AppState) => state.dashboard)
 }
 
+export const useDeusMetrics = () => {
+  const {
+    deusPrice,
+    deusMarketCap,
+    deusTotalSupply,
+    deusFullyDilutedValuation,
+    deusEmissions,
+    deusBurnedEvents,
+    deusDexLiquidity,
+    stakedDeusLiquidity,
+  } = useDashboardState()
+  return useMemo(() => {
+    return {
+      deusPrice,
+      deusMarketCap,
+      deusTotalSupply,
+      deusFullyDilutedValuation,
+      deusEmissions,
+      deusBurnedEvents,
+      deusDexLiquidity,
+      stakedDeusLiquidity,
+    }
+  }, [
+    deusPrice,
+    deusMarketCap,
+    deusTotalSupply,
+    deusFullyDilutedValuation,
+    deusEmissions,
+    deusBurnedEvents,
+    deusDexLiquidity,
+    stakedDeusLiquidity,
+  ])
+}
+
+export const useDeiMetrics = () => {
+  const { deiMarketCap, deiTotalSupply, deiDexLiquidity, mintedDei, stakedDeiLiquidity } = useDashboardState()
+  return useMemo(() => {
+    return { deiMarketCap, deiTotalSupply, deiDexLiquidity, mintedDei, stakedDeiLiquidity }
+  }, [deiMarketCap, deiTotalSupply, deiDexLiquidity, mintedDei, stakedDeiLiquidity])
+}
+
 export const useDeusPrice = () => {
-  const { deusPrice } = useDashboardState()
-  return useMemo(() => deusPrice, [deusPrice])
+  const { deusPrice } = useDeusMetrics()
+  return useMemo(() => {
+    return deusPrice
+  }, [deusPrice])
 }
 
 export const useDeiMarketCap = () => {
-  const { deiMarketCap } = useDashboardState()
-  return useMemo(() => deiMarketCap, [deiMarketCap])
+  const { deiMarketCap } = useDeiMetrics()
+  return useMemo(() => {
+    return deiMarketCap
+  }, [deiMarketCap])
 }

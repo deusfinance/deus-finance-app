@@ -56,7 +56,7 @@ function colors(darkMode: boolean): Colors {
 
     // text
     text1: darkMode ? '#FFFFFF' : '#000000',
-    text2: darkMode ? '#C3C5CB' : '#78787B',
+    text2: darkMode ? '#A5A5C4' : '#78787B',
     text3: darkMode ? '#8F96AC' : '#808086',
     text4: darkMode ? '#B2B9D2' : '#B8B8BE',
 
@@ -77,11 +77,15 @@ function colors(darkMode: boolean): Colors {
     specialBG2: darkMode
       ? '#14181E'
       : 'linear-gradient(90deg, rgba(81, 171, 255, 0.1) 0%, rgba(22, 72, 250, 0.1) 100%), linear-gradient(0deg, #FFFFFF, #FFFFFF)',
+    specialBG3: darkMode
+      ? 'linear-gradient(267.38deg, #7d7beb 31.09%, #de86d2 93.99%)'
+      : 'linear-gradient(90deg, rgba(81, 171, 255, 0.1) 0%, rgba(22, 72, 250, 0.1) 100%), linear-gradient(0deg, #FFFFFF, #FFFFFF)',
 
     // primary colors
-    primary1: '#FFB463',
+    primary1: darkMode ? 'linear-gradient(91.89deg, #7480EC 5.63%, #CF84D6 100.89%);' : '#FFB463',
     primary2: '#FFA76A',
     primary3: 'linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 167, 106, 0) 100%), #FFA76A',
+    primary4: darkMode ? 'linear-gradient(238.61deg, #171615 56.45%, rgba(125, 123, 235, 0.65) 114.3%)' : '#FFFFFF',
 
     // color text
     primaryText1: darkMode ? '#1749FA' : '#FFB463', // TODO check if we want these values
@@ -89,6 +93,9 @@ function colors(darkMode: boolean): Colors {
     // secondary colors
     secondary1: '#1749FA',
     secondary2: 'rgba(23, 73, 250, 0.2)',
+
+    //hover colors
+    hover1: darkMode ? 'linear-gradient(91.89deg, #7480EC 5.63%, #CF84D6 100.89%);' : '#FFB463',
 
     // other
     red1: darkMode ? '#FF4343' : '#DA2D2B',
@@ -124,6 +131,16 @@ function theme(darkMode: boolean): DefaultTheme {
 
     // media queries
     mediaWidth: mediaWidthTemplates,
+
+    // css snippets
+    flexColumnNoWrap: css`
+      display: flex;
+      flex-flow: column nowrap;
+    `,
+    flexRowNoWrap: css`
+      display: flex;
+      flex-flow: row nowrap;
+    `,
   }
 }
 
@@ -200,8 +217,9 @@ export const ThemedGlobalStyle = createGlobalStyle`
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
   }
+
   a {
-    color: ${({ theme }) => theme.text1}; 
+    color: ${({ theme }) => theme.text1};
   }
 
   * {
@@ -231,6 +249,7 @@ export const ThemedGlobalStyle = createGlobalStyle`
     scrollbar-width: none; /* for Firefox */
     /* overflow-y: scroll; //TODO: Why? */
   }
+
   *::-webkit-scrollbar {
     display: none; /* for Chrome, Safari, and Opera */
   }

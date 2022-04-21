@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import styled, { useTheme } from 'styled-components'
 
 import { formatAmount } from 'utils/numbers'
 
-import { useDeiStatus, useDeiPrice, useCollateralRatio, usePoolBalance, usePoolCeiling } from 'state/dei/hooks'
+import { useCollateralRatio, useDeiPrice, useDeiStatus, usePoolBalance, usePoolCeiling } from 'state/dei/hooks'
 import { DeiStatus, DeiSupportedChains } from 'state/dei/reducer'
 import { Card } from 'components/Card'
 import useWeb3React from 'hooks/useWeb3'
@@ -17,13 +17,25 @@ const Wrapper = styled(Card)`
   gap: 20px;
   background: ${({ theme }) => theme.bg0};
   height: 270px;
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    width: 100%;
+    max-width: 600px;
+  `};
 `
 
 const Stat = styled.div`
-  color: ${({ theme }) => theme.text2};
+  color: ${({ theme }) => theme.text1};
+
   & > * {
     &:nth-child(2) {
       margin-top: 3px;
+      background-color: ${({ theme }) => theme.primary1};
+      background-image: ${({ theme }) => theme.primary1};
+      background-clip: text;
+      text-fill-color: transparent;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
       color: ${({ theme }) => theme.primary1};
     }
   }
@@ -45,45 +57,34 @@ export default function Statistics() {
     ]
   }, [deiStatus, chainId])
 
+  const renderLabel = useCallback(
+    (labelData: string) => {
+      return loading || !isSupported ? (
+        <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
+      ) : error ? (
+        'Error'
+      ) : (
+        labelData
+      )
+    },
+    [isSupported, theme, loading, error]
+  )
+
   const deiPriceLabel = useMemo(() => {
-    return loading || !isSupported ? (
-      <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
-    ) : error ? (
-      'Error'
-    ) : (
-      `$${deiPrice.toFixed(5)}`
-    )
-  }, [deiPrice, isSupported, theme, loading, error])
+    return renderLabel(`$${deiPrice.toFixed(5)}`)
+  }, [isSupported, theme, loading, error, deiPrice])
 
   const collateralRatioLabel = useMemo(() => {
-    return loading || !isSupported ? (
-      <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
-    ) : error ? (
-      'Error'
-    ) : (
-      `${(collateralRatio * 100).toFixed(2)}%`
-    )
-  }, [collateralRatio, isSupported, theme, loading, error])
+    return renderLabel(`${(collateralRatio * 100).toFixed(2)}%`)
+  }, [isSupported, theme, loading, error, collateralRatio])
 
   const poolLabel = useMemo(() => {
-    return loading || !isSupported ? (
-      <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
-    ) : error ? (
-      'Error'
-    ) : (
-      `${formatAmount(poolBalance)} / ${formatAmount(poolCeiling)}`
-    )
-  }, [poolBalance, poolCeiling, isSupported, theme, loading, error])
+    return renderLabel(`${formatAmount(poolBalance)} / ${formatAmount(poolCeiling)}`)
+  }, [isSupported, theme, loading, error, poolBalance, poolCeiling])
 
   const mintLabel = useMemo(() => {
-    return loading || !isSupported ? (
-      <DotFlashing colour={theme.primary1} size={'10px'} gap={'3px'} />
-    ) : error ? (
-      'Error'
-    ) : (
-      `${formatAmount(poolCeiling - poolBalance)}`
-    )
-  }, [poolBalance, poolCeiling, isSupported, theme, loading, error])
+    return renderLabel(`${formatAmount(poolCeiling - poolBalance)}`)
+  }, [isSupported, theme, loading, error, poolBalance, poolCeiling])
 
   return (
     <Wrapper>

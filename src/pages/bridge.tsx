@@ -4,9 +4,7 @@ import styled from 'styled-components'
 import BridgeUpdater from 'state/bridge/updater'
 
 import Banner from 'components/App/Bridge/Banner'
-import { RowBetween } from 'components/Row'
 import BridgeComponent from 'components/App/Bridge'
-import BridgeClaim from 'components/App/Bridge/Claim'
 
 const Container = styled.div`
   display: flex;
@@ -21,21 +19,13 @@ const Container = styled.div`
     margin-top: 30px;
   `};
 `
-const Row = styled(RowBetween)`
-  /* flex-wrap: wrap; */
-  align-items: flex-start;
-  gap: 20px;
-`
 
 export default function Bridge() {
   return (
     <Container>
       <BridgeUpdater />
       <Banner />
-      <Row height={'380px'}>
-        <BridgeComponent />
-        <BridgeClaim />
-      </Row>
+      <BridgeComponent />
     </Container>
   )
 }

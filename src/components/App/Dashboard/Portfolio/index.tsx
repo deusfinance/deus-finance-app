@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { RowBetween } from 'components/Row'
 
+import { RowBetween } from 'components/Row'
 import Option from './Option'
 
 export const Row = styled(RowBetween)`

@@ -67,21 +67,25 @@ export const NavButton = styled.button`
 
 export const PrimaryButton = styled(BaseButton)`
   background-color: ${({ theme }) => theme.primary1};
+  background-image: ${({ theme }) => theme.primary1};
   color: white;
   z-index: 0;
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary1};
+    background-color: ${({ theme }) => theme.primary1};
+    background-image: ${({ theme }) => theme.primary1};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary1)};
+    background-color: ${({ theme }) => theme.hover1};
+    background-image: ${({ theme }) => theme.hover1};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary1)};
-    background-color: ${({ theme }) => darken(0.1, theme.primary1)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => theme.primary1};
+    background-color: ${({ theme }) => theme.primary1};
   }
   &:disabled {
     background-color: ${({ theme, disabled }) => (disabled ? theme.primary1 : theme.bg2)};
+    background-image: ${({ theme, disabled }) => (disabled ? theme.primary1 : theme.bg2)};
     color: ${({ theme, disabled }) => (disabled ? theme.white : theme.text2)};
     cursor: auto;
     box-shadow: none;
